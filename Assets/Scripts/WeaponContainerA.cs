@@ -12,11 +12,16 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     }
     private void Update()
     {
+        if (Time.timeScale == 0f)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Add();
         }
-        
+
         transform.Rotate(Vector3.forward * speed);
     }
     public override void Add()
