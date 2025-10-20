@@ -112,6 +112,10 @@ public class Player : MonoBehaviour
                 weaponTexts[rewardInfo.id].text = weaponLevels[rewardInfo.id].ToString();
                 break;
             case 2:
+                weaponContainers[rewardInfo.id].GetComponent<WeaponContainerC>().Add();
+                weaponLevels[rewardInfo.id]++;
+                weaponTexts[rewardInfo.id].text = weaponLevels[rewardInfo.id].ToString();
+                break;
             case 3:
                 weaponLevels[rewardInfo.id]++;
                 weaponTexts[rewardInfo.id].text = weaponLevels[rewardInfo.id].ToString();

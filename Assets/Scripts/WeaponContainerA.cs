@@ -17,11 +17,6 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
             return;
         }
 
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    Add();
-        //}
-
         transform.Rotate(Vector3.forward * speed);
     }
     public override void Add()

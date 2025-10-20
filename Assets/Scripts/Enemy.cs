@@ -5,6 +5,8 @@ public class Enemy : MonoBehaviour
 {
     [Header("Current Value")]
     [SerializeField] protected int hp = 1;
+    [SerializeField] protected bool isAddict = false;
+    [SerializeField] protected int addictDamage = 0;
 
     [Header("Init Value")]
     [SerializeField] private int hpMax = 1;
@@ -19,11 +21,26 @@ public class Enemy : MonoBehaviour
     private Transform player;
     private EnemyContainer container;
     private Rigidbody2D rigidbody;
+
+    private float addictTimer = 0f;
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
     }
     private void Update()
+    {
+        if (isAddict)
+        {
+            if (addictTimer > 1f)
+            {
+                OnDamage(addictDamage);
+                addictTimer = 0f;
+            }
+
+            addictTimer += Time.deltaTime;
+        }
+    }
+    private void FixedUpdate()
     {
         Move();
     }
@@ -42,6 +59,8 @@ public class Enemy : MonoBehaviour
     }
     public virtual void Die()
     {
+        OffAddict();
+
         gameObject.SetActive(false);
         container.Charge(this);
 
@@ -63,6 +82,18 @@ public class Enemy : MonoBehaviour
             canvasGO.SetActive(true);
             guage.fillAmount = (float)hp / (float)hpMax;
         }
+    }
+    public virtual void OnAddict(int value)
+    {
+        isAddict = true;
+        addictDamage = value;
+        addictTimer = 0f;
+    }
+    public virtual void OffAddict()
+    {
+        addictTimer = 0f;
+        addictDamage = 0;
+        isAddict = false;
     }
     protected virtual void Move()
     {

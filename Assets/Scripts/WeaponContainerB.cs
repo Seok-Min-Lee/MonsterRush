@@ -21,11 +21,6 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
             return;
         }
 
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    Add();
-        //}
-
         if (timer > 1f)
         {
             Launch();
