@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Image expGuage;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI killText;
+    [SerializeField] private TextMeshProUGUI[] weaponTexts;
 
     public int Strength => strength;
 
@@ -28,6 +29,12 @@ public class Player : MonoBehaviour
     private int level = 1;
     private int killCount = 0;
 
+    private int[] weaponLevels;
+
+    private void Awake()
+    {
+        weaponLevels = new int[weaponTexts.Length];
+    }
     private void Start()
     {
         Instance = this;
@@ -38,6 +45,12 @@ public class Player : MonoBehaviour
         expGuage.fillAmount = 0f;
         levelText.text = level.ToString();
         killText.text = killCount.ToString();
+        for (int i = 0; i < weaponTexts.Length; i++)
+        {
+            weaponTexts[i].text = weaponLevels[i].ToString();
+        }
+
+        weaponContainers[1].GetComponent<WeaponContainerB>().Add();
     }
     private void Update()
     {
@@ -83,6 +96,27 @@ public class Player : MonoBehaviour
 
         expGuage.fillAmount = exp / (float)expMax;
         Debug.Log(expGuage.fillAmount);
+    }
+    public void GainReward(RewardInfo rewardInfo)
+    {
+        switch (rewardInfo.id)
+        {
+            case 0:
+                weaponContainers[rewardInfo.id].GetComponent<WeaponContainerA>().Add();
+                weaponLevels[rewardInfo.id]++;
+                weaponTexts[rewardInfo.id].text = weaponLevels[rewardInfo.id].ToString();
+                break;
+            case 1:
+                weaponContainers[rewardInfo.id].GetComponent<WeaponContainerB>().Add();
+                weaponLevels[rewardInfo.id]++;
+                weaponTexts[rewardInfo.id].text = weaponLevels[rewardInfo.id].ToString();
+                break;
+            case 2:
+            case 3:
+                weaponLevels[rewardInfo.id]++;
+                weaponTexts[rewardInfo.id].text = weaponLevels[rewardInfo.id].ToString();
+                break;
+        }
     }
     private void OnMove(InputValue value)
     {

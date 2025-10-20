@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 2778511288672675682}
   - component: {fileID: 3334539159404307548}
   - component: {fileID: 1816605087875137664}
+  - component: {fileID: 3038110749474687899}
   m_Layer: 5
   m_Name: Reward Button
   m_TagString: Untagged
@@ -284,7 +285,33 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2778511288672675682}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3038110749474687899}
+        m_TargetAssemblyTypeName: RewardButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3038110749474687899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3257295553748030438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406b07c8b069ca24bb0a64bc982730d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 5363466762763333499}
+  desc: {fileID: 742200073677219971}
 --- !u!1 &4928954453216684961
 GameObject:
   m_ObjectHideFlags: 0

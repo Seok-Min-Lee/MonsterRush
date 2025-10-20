@@ -6,7 +6,7 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
 {
     [SerializeField] private float radius = 1f;
     [SerializeField] private float speed = 1f;
-    private void Start()
+    private void Awake()
     {
         base.Init();
     }
@@ -17,10 +17,10 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Add();
-        }
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    Add();
+        //}
 
         transform.Rotate(Vector3.forward * speed);
     }

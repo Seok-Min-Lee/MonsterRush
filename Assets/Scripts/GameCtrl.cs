@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
 public class GameCtrl : MonoBehaviour
 {
     public static GameCtrl Instance;
@@ -9,6 +9,8 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private GameObject pauseWindow;
     [SerializeField] private GameObject rewardWindow;
 
+    [SerializeField] private RewardButton[] rewardButtons;
+    [SerializeField] private RewardInfo[] rewardInfoes;
     private void Start()
     {
         Instance = this;
@@ -40,6 +42,14 @@ public class GameCtrl : MonoBehaviour
     public void OnLevelUp()
     {
         Time.timeScale = 0f;
+        
+        List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(rewardInfoes);
+
+        for (int i = 0; i < rewardButtons.Length; i++)
+        {
+            rewardButtons[i].Init(randoms[i]);
+        }
+
         rewardWindow.SetActive(true);
     }
     public void OnClickReward()

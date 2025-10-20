@@ -10,7 +10,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
 
     private Queue<Bullet> bulletPool = new Queue<Bullet>();
     private float timer = 0f;
-    private void Start()
+    private void Awake()
     {
         base.Init();
     }
@@ -21,10 +21,10 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Add();
-        }
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    Add();
+        //}
 
         if (timer > 1f)
         {
@@ -54,6 +54,11 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
 
     public void Launch()
     {
+        if (activeCount == 0)
+        {
+            return;
+        }
+
         StartCoroutine(Cor());
 
         IEnumerator Cor()
