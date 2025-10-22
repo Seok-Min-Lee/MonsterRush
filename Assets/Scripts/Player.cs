@@ -11,8 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform[] weaponContainers;
     [SerializeField] private CircleCollider2D magnetCollider;
 
-    [SerializeField] private float speed;
-    [SerializeField] private int strength;
+    [SerializeField] private float speed = 0.025f;
+    [SerializeField] private int strength = 1;
 
     [Header("UI")]
     [SerializeField] private VariableJoystick joystick;
@@ -35,9 +35,13 @@ public class Player : MonoBehaviour
 
     private int exp = 0;
     private int expMax = 100;
+
+    private int hp = 100;
+    private int hpMax = 100;
+
+    public int killCount { get; private set; } = 0;
     private int level = 1;
     private int lifeCount = 0;
-    private int killCount = 0;
     private int magnetLevel = 1;
     private int speedLevel = 1;
     private int strengthLevel = 1;
@@ -160,6 +164,22 @@ public class Player : MonoBehaviour
                 lifeCount += 1;
                 lifeText.text = lifeCount.ToString();
                 break;
+        }
+    }
+    public virtual void OnDamage(int damage)
+    {
+        hp -= damage;
+
+        if (hp > 0)
+        {
+            canvasGO.SetActive(true);
+            hpGuage.fillAmount = (float)hp / (float)hpMax;
+
+            animator.SetTrigger("doHit");
+        }
+        else
+        {
+            GameCtrl.Instance.OnGameEnd();
         }
     }
     private void OnMove(InputValue value)

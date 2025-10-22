@@ -5,6 +5,7 @@ public class Enemy : MonoBehaviour
 {
     [Header("Current Value")]
     [SerializeField] protected int hp = 1;
+    [SerializeField] protected int power;
     [SerializeField] protected bool isAddict = false;
     [SerializeField] protected int addictDamage = 0;
 
@@ -22,12 +23,14 @@ public class Enemy : MonoBehaviour
     private EnemyContainer container;
     private Rigidbody2D rigidbody;
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
 
     private float addictTimer = 0f;
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
     private void Update()
     {
@@ -45,6 +48,14 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Player.Instance.OnDamage(power);
+            Die();
+        }
     }
 
     public virtual void Spawn(Vector3 position, Quaternion rotation, EnemyContainer container)
@@ -66,16 +77,6 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
         container.Charge(this);
 
-        if (ItemContainer.Instance != null)
-        {
-            ItemContainer.Instance.Batch(transform.position);
-        }
-
-        if (Player.Instance != null)
-        {
-            Player.Instance.KillEnemy();
-        }
-
         target = null;
         container = null;
     }
@@ -86,9 +87,21 @@ public class Enemy : MonoBehaviour
         if (hp < 0)
         {
             Die();
+
+            if (ItemContainer.Instance != null)
+            {
+                ItemContainer.Instance.Batch(transform.position);
+            }
+
+            if (Player.Instance != null)
+            {
+                Player.Instance.KillEnemy();
+            }
         }
         else
         {
+            animator.SetTrigger("onDamage");
+
             canvasGO.SetActive(true);
             guage.fillAmount = (float)hp / (float)hpMax;
         }

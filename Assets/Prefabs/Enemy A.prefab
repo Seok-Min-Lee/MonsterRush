@@ -178,6 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 25
+  power: 10
   isAddict: 0
   addictDamage: 0
   hpMax: 25
