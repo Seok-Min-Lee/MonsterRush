@@ -16,10 +16,12 @@ public class GameCtrl : MonoBehaviour
 
     [SerializeField] private RewardButton[] rewardButtons;
     [SerializeField] private RewardInfo[] rewardInfoes;
-    private void Start()
+    private void Awake()
     {
         Instance = this;
-
+    }
+    private void Start()
+    {
         timeText.text = "00:00";
     }
     private void Update()

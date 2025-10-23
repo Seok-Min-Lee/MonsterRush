@@ -49,14 +49,16 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         weaponLevels = new int[weaponTexts.Length];
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        GameObject character = GameObject.Instantiate(Resources.Load<GameObject>("Players/Character_" + StaticValues.playerCharacterNum), transform);
+        animator = character.GetComponent<Animator>();
+        spriteRenderer = character.GetComponent<SpriteRenderer>();
     }
     private void Start()
     {
-        Instance = this;
-
         canvasGO.SetActive(false);
         hpGuage.fillAmount = 1f;
 
