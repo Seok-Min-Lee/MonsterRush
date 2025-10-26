@@ -15,7 +15,7 @@ public class ItemContainer : MonoBehaviour
     {
         Item item = pool.Count > 0 ? 
                     pool.Dequeue() : 
-                    GameObject.Instantiate<Item>(prefab);
+                    GameObject.Instantiate<Item>(prefab, transform);
 
         item.Init(position);
     }

@@ -253,12 +253,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3ce9277bbf96940b05ac70af95aef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 25
-  power: 10
+  hp: 0
+  power: 0
+  speed: 0
   isAddict: 0
   addictDamage: 0
-  hpMax: 25
-  speed: 1
+  hpMax: 0
+  hpDefault: 60
+  powerDefault: 6
+  speedDefault: 1.6
+  hpLevel: 0
+  powerLevel: 0
+  speedLevel: 0
   canvasGO: {fileID: 8925817643584439200}
   guage: {fileID: 124102225427024688}
 --- !u!95 &659404998565299636

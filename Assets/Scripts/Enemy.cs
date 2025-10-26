@@ -5,22 +5,28 @@ public class Enemy : MonoBehaviour
 {
     [Header("Current Value")]
     [SerializeField] protected int hp = 1;
-    [SerializeField] protected int power;
-    [SerializeField] protected bool isAddict = false;
-    [SerializeField] protected int addictDamage = 0;
-
-    [Header("Init Value")]
     [SerializeField] private int hpMax = 1;
+    [SerializeField] protected int power;
+    [SerializeField] protected float speed;
+    [SerializeField] protected int addictDamage = 0;
+    [SerializeField] protected bool isAddict = false;
 
-    [Header("Constant Value")]
-    [SerializeField] private float speed = 1f;
+    [Header("Default Value")]
+    [SerializeField] private int hpDefault = 1;
+    [SerializeField] private int powerDefault = 1;
+    [SerializeField] private float speedDefault = 1f;
+
+    [Header("level Value")]
+    [SerializeField] private int hpLevel = 0;
+    [SerializeField] private int powerLevel = 0;
+    [SerializeField] private int speedLevel = 0;
 
     [Header("UI")]
     [SerializeField] GameObject canvasGO;
     [SerializeField] private Image guage;
 
     private Transform target;
-    private EnemyContainer container;
+    private EnemyPool pool;
     private Rigidbody2D rigidbody;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -58,8 +64,17 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public virtual void Spawn(Vector3 position, Quaternion rotation, EnemyContainer container)
+    public virtual void Spawn(EnemyPool pool, int hpLevel, int powerLevel, int speedLevel, Vector3 position, Quaternion rotation)
     {
+        this.pool = pool;
+        this.hpLevel = hpLevel;
+        this.powerLevel = powerLevel;
+        this.speedLevel = speedLevel;
+
+        hpMax = (int)(hpDefault * (1 + 0.1f * hpLevel));
+        power = (int)(powerDefault * (1 + 0.1f * powerLevel));
+        speed = speedDefault * (1 + 0.1f * speedLevel);
+
         hp = hpMax;
         guage.fillAmount = 1f;
         canvasGO.SetActive(false);
@@ -68,17 +83,16 @@ public class Enemy : MonoBehaviour
         transform.rotation = rotation;
 
         target = Player.Instance.transform;
-        this.container = container;
     }
     public virtual void Die()
     {
         OffAddict();
 
         gameObject.SetActive(false);
-        container.Charge(this);
+        pool.Charge(this);
 
         target = null;
-        container = null;
+        pool = null;
     }
     public virtual void OnDamage(int damage)
     {
@@ -100,7 +114,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            animator.SetTrigger("onDamage");
+            animator.SetTrigger("doHit");
 
             canvasGO.SetActive(true);
             guage.fillAmount = (float)hp / (float)hpMax;

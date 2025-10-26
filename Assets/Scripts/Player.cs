@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private StatSlot[] statSlots;
     private Dictionary<PlayerStat, StatSlot> statDictionary;
 
+    public int Level => statDictionary[PlayerStat.Level].value;
     public int Strength => statDictionary[PlayerStat.Strength].value;
     public int killCount => statDictionary[PlayerStat.Kill].value;
 
@@ -112,6 +113,7 @@ public class Player : MonoBehaviour
 
             //
             GameCtrl.Instance.OnLevelUp();
+            EnemyContainer.Instance.OnLevelUp();
         }
 
         statDictionary[PlayerStat.Exp].Init(exp);

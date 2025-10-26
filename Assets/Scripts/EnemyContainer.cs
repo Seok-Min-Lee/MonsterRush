@@ -1,78 +1,96 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyContainer : MonoBehaviour
 {
-    [SerializeField] private Enemy[] enemyPrefabs;
-    [SerializeField] private int spawnInterval;
-    [SerializeField] private float minSpawnDistance = 10f;
-    [SerializeField] private float maxSpawnDistance = 20f;
+    public static EnemyContainer Instance { get; private set; }
+    [SerializeField] private EnemyPool[] pools;
+    [SerializeField] private int stage = 0;
 
-    [SerializeField] private int poolSizeMin = 0;
-    [SerializeField] private int poolSizeMax = 30;
+    [SerializeField] private float spawnInterval;
+    [SerializeField] private float spawnDistanceMin;
+    [SerializeField] private float spawnDistanceMax;
+    [SerializeField] private int poolSizeMin;
+    [SerializeField] private int poolSizeMax;
 
-    private int count;
-
-    public Queue<Enemy> pool { get; private set; } = new Queue<Enemy>();
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Start()
     {
-        Init();
-    }
-
-    private float timer = 0f;
-    private void Update()
-    {
-        if (timer > spawnInterval)
+        for (int i = 0; i < pools.Length; i++)
         {
-            Spawn();
-            timer = 0f;
+            pools[i].Init(
+                container: transform,
+                spawnInterval: spawnInterval,
+                spawnDistanceMin: spawnDistanceMin,
+                spawnDistanceMax: spawnDistanceMax,
+                poolSizeMin: poolSizeMin,
+                poolSizeMax: poolSizeMax
+            );
         }
-
-        timer += Time.deltaTime;
-    }
-    public void Charge(Enemy enemy)
-    {
-        pool.Enqueue(enemy);
-        count--;
+        pools[0].gameObject.SetActive(true);
     }
 
-    private void Spawn()
+    public void OnLevelUp()
     {
-        if (count < 30)
+        int remain = Player.Instance.Level % 10;
+
+        switch (remain)
         {
-            // 
-            Vector2 direction = Random.insideUnitCircle.normalized;
-            float distance = Random.Range(minSpawnDistance, maxSpawnDistance);
+            case 0:
+                GradeUp();
+                break;
+            case 1:
+            case 4:
+            case 7:
+                PowerUp();
+                break;
+            case 2:
+            case 5:
+            case 8:
+                SpeedUp();
+                break;
+            case 3:
+            case 6:
+            case 9:
+                HpUp();
+                break;
+            default:
+                break;
+        }
+    }
+    private void GradeUp()
+    {
+        if (stage < pools.Length - 1)
+        {
+            pools[stage++].gameObject.SetActive(false);
+            pools[stage].gameObject.SetActive(true);
 
-            Vector2 position = (Vector2)Player.Instance.transform.position + direction * distance;
-
-            //
-            Enemy enemy;
-            if (pool.Count > 0)
+            spawnInterval *= 0.9f;
+            poolSizeMax = (int)(poolSizeMax * 1.1f);
+            for (int i = stage; i < pools.Length; i++)
             {
-                enemy = pool.Dequeue();
-                enemy.gameObject.SetActive(true);
+                pools[i].spawnInterval *= spawnInterval;
+                pools[i].poolSizeMax = poolSizeMax;
             }
-            else
-            {
-                enemy = Instantiate<Enemy>(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)], transform);
-            }
-
-            enemy.Spawn(position: position, rotation: Quaternion.identity, container: this);
-
-            count++;
         }
     }
-    private void Init()
+    private void SpeedUp()
     {
-        for (int i = 0; i < poolSizeMin; i++)
-        {
-            Enemy enemy = Instantiate(enemyPrefabs[0], transform).GetComponent<Enemy>();
-            enemy.gameObject.SetActive(false);
-            pool.Enqueue(enemy);
-        }
+        pools[stage].speedLevel++;
+        Debug.Log($"Enemy {stage} SpeedUp");
     }
-
+    private void HpUp()
+    {
+        pools[stage].hpLevel++;
+        Debug.Log($"Enemy {stage} HpUp");
+    }
+    private void PowerUp()
+    {
+        pools[stage].powerLevel++;
+        Debug.Log($"Enemy {stage} PowerUp");
+    }
     private void OnDrawGizmosSelected()
     {
         if (Player.Instance == null)
@@ -80,9 +98,9 @@ public class EnemyContainer : MonoBehaviour
             return;
         }
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(Player.Instance.transform.position, maxSpawnDistance);
-        
+        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMax);
+
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(Player.Instance.transform.position, minSpawnDistance);
+        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMin);
     }
 }
