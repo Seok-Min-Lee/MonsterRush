@@ -79,17 +79,14 @@ public class EnemyContainer : MonoBehaviour
     private void SpeedUp()
     {
         pools[stage].speedLevel++;
-        Debug.Log($"Enemy {stage} SpeedUp");
     }
     private void HpUp()
     {
         pools[stage].hpLevel++;
-        Debug.Log($"Enemy {stage} HpUp");
     }
     private void PowerUp()
     {
         pools[stage].powerLevel++;
-        Debug.Log($"Enemy {stage} PowerUp");
     }
     private void OnDrawGizmosSelected()
     {

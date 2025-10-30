@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     [SerializeField] private Transform[] weaponContainers;
-    [SerializeField] private CircleCollider2D magnetCollider;
+    [SerializeField] private Transform magnetArea;
 
     [SerializeField] private float speed = 0.025f;
 
@@ -19,16 +19,24 @@ public class Player : MonoBehaviour
     [SerializeField] private Image hpGuage;
     [SerializeField] private Image expGuage;
     [SerializeField] private StatSlot[] statSlots;
+    [SerializeField] private StateToggle magnetToggle;
+
     private Dictionary<PlayerStat, StatSlot> statDictionary;
 
     public int Level => statDictionary[PlayerStat.Level].value;
-    public int Strength => statDictionary[PlayerStat.Strength].value;
     public int killCount => statDictionary[PlayerStat.Kill].value;
+    public int Strength => statDictionary[PlayerStat.Strength].value;
+    public int weaponALevel => statDictionary[PlayerStat.WeaponA].value;
+    public int weaponBLevel => statDictionary[PlayerStat.WeaponB].value;
+    public int weaponCLevel => statDictionary[PlayerStat.WeaponC].value;
+    public int weaponDLevel => statDictionary[PlayerStat.WeaponD].value;
 
     public Vector3 moveVec { get; private set; }
     public Animator animator { get; private set; }
     public SpriteRenderer spriteRenderer { get; private set; }
 
+    private SpriteRenderer magnetRenderer;
+    private bool isMagnetVisible = false;
     private void Awake()
     {
         Instance = this;
@@ -38,6 +46,8 @@ public class Player : MonoBehaviour
         animator = character.GetComponent<Animator>();
         spriteRenderer = character.GetComponent<SpriteRenderer>();
 
+        magnetRenderer = magnetArea.GetComponent<SpriteRenderer>();
+        magnetRenderer.enabled = isMagnetVisible;
     }
     private void Start()
     {
@@ -64,25 +74,28 @@ public class Player : MonoBehaviour
         statDictionary[PlayerStat.Exp].Init(0);
         statDictionary[PlayerStat.ExpMax].Init(10);
 
+
+        weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenFirst();
+        statDictionary[PlayerStat.WeaponC].Increase();
         switch (StaticValues.playerCharacterNum)
         {
             case 0:
-                weaponContainers[0].GetComponent<WeaponContainerA>().Add();
+                weaponContainers[0].GetComponent<WeaponContainerA>().StrengthenFirst();
                 statDictionary[PlayerStat.WeaponA].Increase();
                 statDictionary[PlayerStat.Strength].Increase();
                 break;
             case 1:
-                weaponContainers[1].GetComponent<WeaponContainerB>().Add();
+                weaponContainers[1].GetComponent<WeaponContainerB>().StrengthenFirst();
                 statDictionary[PlayerStat.WeaponB].Increase();
                 statDictionary[PlayerStat.Speed].Increase();
                 break;
             case 2:
-                weaponContainers[2].GetComponent<WeaponContainerC>().Add();
+                weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenFirst();
                 statDictionary[PlayerStat.WeaponC].Increase();
                 statDictionary[PlayerStat.Magnet].Increase();
                 break;
             case 3:
-                weaponContainers[3].GetComponent<WeaponContainerD>().Add();
+                weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenFirst();
                 statDictionary[PlayerStat.WeaponD].Increase();
                 statDictionary[PlayerStat.Life].Increase();
                 break;
@@ -92,6 +105,8 @@ public class Player : MonoBehaviour
 
         hpGuage.fillAmount = 1f;
         expGuage.fillAmount = 0f;
+
+        magnetToggle.Init(isMagnetVisible);
     }
     private void FixedUpdate()
     {
@@ -101,7 +116,6 @@ public class Player : MonoBehaviour
         }
 #if !UNITY_EDITOR
         moveVec = new Vector3(joystick.Horizontal, joystick.Vertical, 0f) * speed;
-        Debug.Log(moveVec);
         transform.position += moveVec;
         spriteRenderer.flipX = moveVec.x < 0;
 
@@ -110,6 +124,12 @@ public class Player : MonoBehaviour
 #else
         transform.position += moveVec;
 #endif
+    }
+    public void OnClickMagnetVisibility()
+    {
+        isMagnetVisible = !isMagnetVisible;
+        magnetRenderer.enabled = isMagnetVisible;
+        magnetToggle.Init(isMagnetVisible);
     }
     public void KillEnemy()
     {
@@ -122,7 +142,7 @@ public class Player : MonoBehaviour
 
         exp += value;
 
-        if (exp > expMax)
+        if (exp >= expMax)
         {
             exp -= expMax;
             expMax = (int)(expMax * 1.1f);
@@ -153,34 +173,50 @@ public class Player : MonoBehaviour
         switch (rewardInfo.id)
         {
             case 0:
-                weaponContainers[rewardInfo.id].GetComponent<WeaponContainerA>().Add();
                 statDictionary[PlayerStat.WeaponA].Increase();
+                weaponContainers[0].GetComponent<WeaponContainerA>().StrengthenFirst();
                 break;
             case 1:
-                weaponContainers[rewardInfo.id].GetComponent<WeaponContainerB>().Add();
+                statDictionary[PlayerStat.WeaponA].Increase();
+                weaponContainers[0].GetComponent<WeaponContainerA>().StrengthenSecond();
+                break;
+            case 10:
                 statDictionary[PlayerStat.WeaponB].Increase();
+                weaponContainers[1].GetComponent<WeaponContainerB>().StrengthenFirst();
                 break;
-            case 2:
-                weaponContainers[rewardInfo.id].GetComponent<WeaponContainerC>().Add();
+            case 11:
+                statDictionary[PlayerStat.WeaponB].Increase();
+                weaponContainers[1].GetComponent<WeaponContainerB>().StrengthenSecond();
+                break;
+            case 20:
                 statDictionary[PlayerStat.WeaponC].Increase();
+                weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenFirst();
                 break;
-            case 3:
-                weaponContainers[rewardInfo.id].GetComponent<WeaponContainerD>().Add();
+            case 21:
+                statDictionary[PlayerStat.WeaponC].Increase();
+                weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenSecond();
+                break;
+            case 30:
                 statDictionary[PlayerStat.WeaponD].Increase();
+                weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenFirst();
                 break;
-            case 4:
-                magnetCollider.radius *= 1.1f;
+            case 31:
+                statDictionary[PlayerStat.WeaponD].Increase();
+                weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenSecond();
+                break;
+            case 90:
+                statDictionary[PlayerStat.Life].Increase();
+                break;
+            case 91:
+                magnetArea.localScale *= 1.1f;
                 statDictionary[PlayerStat.Magnet].Increase();
                 break;
-            case 5:
+            case 92:
                 speed *= 1.1f;
                 statDictionary[PlayerStat.Speed].Increase();
                 break;
-            case 6:
+            case 93:
                 statDictionary[PlayerStat.Strength].Increase();
-                break;
-            case 7:
-                statDictionary[PlayerStat.Life].Increase();
                 break;
         }
     }
@@ -231,25 +267,37 @@ public class Player : MonoBehaviour
     {
         public PlayerStat type;
         public TextMeshProUGUI TextUI;
+        public int maxValue = int.MaxValue;
         public int value { get; private set; }
 
         public void Init(int value)
         {
-            this.value = value;
+            this.value = Mathf.Min(value, maxValue);
 
-            if (TextUI != null) 
+            if (TextUI != null)
             {
-                TextUI.text = this.value.ToString();
+                TextUI.text = this.value == maxValue ? "MAX" : this.value.ToString();
             } 
         }
         public void Increase(int value = 1)
         {
-            this.value += value;
+            this.value = Mathf.Min(this.value + value, maxValue);
 
             if (TextUI != null)
             {
-                TextUI.text = this.value.ToString();
+                TextUI.text = this.value == maxValue ? "MAX" : this.value.ToString();
             }
+        }
+        public bool TryIncrease(int value = 1)
+        {
+            if (this.value < maxValue)
+            {
+                Increase(value);
+
+                return true;
+            }
+
+            return false;
         }
     }
     public enum PlayerStat 

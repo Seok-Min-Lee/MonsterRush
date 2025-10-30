@@ -15,6 +15,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float speed;
     [SerializeField] protected int addictDamage = 0;
     [SerializeField] protected bool isAddict = false;
+    [SerializeField] protected float bleedPower = 0f;
+    [SerializeField] protected bool isBleed = false;
+    [SerializeField] protected float slowPower = 0f;
+    [SerializeField] protected bool isSlow = false;
 
     [Header("Default Value")]
     [SerializeField] private int hpDefault = 1;
@@ -28,7 +32,10 @@ public class Enemy : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] GameObject canvasGO;
-    [SerializeField] private Image guage;
+    [SerializeField] private Image hpGuage;
+    [SerializeField] private Image addictSign;
+    [SerializeField] private Image bleedSign;
+    [SerializeField] private Image slowSign;
 
     private Transform target;
     private EnemyPool pool;
@@ -37,6 +44,7 @@ public class Enemy : MonoBehaviour
     private Animator animator;
 
     private float addictTimer = 0f;
+    private float bleedTimer = 0f;
     private float knockbackTimer = 0f;
 
     private bool isDead = false;
@@ -52,13 +60,23 @@ public class Enemy : MonoBehaviour
     {
         if (isAddict)
         {
-            if (addictTimer > 1f)
+            if (addictTimer > 0.2f)
             {
                 OnDamage(addictDamage);
                 addictTimer = 0f;
             }
 
             addictTimer += Time.deltaTime;
+        }
+        if (isBleed)
+        {
+            if (bleedTimer > 2f)
+            {
+                OffBleed();
+                bleedTimer = 0f;
+            }
+
+            bleedTimer += Time.deltaTime;
         }
     }
     private void FixedUpdate()
@@ -89,7 +107,11 @@ public class Enemy : MonoBehaviour
         speed = speedDefault * (1 + 0.1f * speedLevel);
 
         hp = hpMax;
-        guage.fillAmount = 1f;
+        hpGuage.fillAmount = 1f;
+
+        addictSign.gameObject.SetActive(false);
+        bleedSign.gameObject.SetActive(false);
+        slowSign.gameObject.SetActive(false);
         canvasGO.SetActive(false);
 
         transform.position = position;
@@ -102,6 +124,8 @@ public class Enemy : MonoBehaviour
         isDead = true;
 
         OffAddict();
+        OffBleed();
+        OffSlow();
 
         gameObject.SetActive(false);
         pool.Charge(this);
@@ -117,15 +141,14 @@ public class Enemy : MonoBehaviour
         }
 
         AudioManager.Instance.PlaySFX(SoundKey.EnemyHit);
-        hp -= damage;
-        Knockback(Vector3.zero);
+        hp -= (int)(damage * (1 + bleedPower));
 
         if (hp > 0)
         {
             animator.SetTrigger("doHit");
 
             canvasGO.SetActive(true);
-            guage.fillAmount = (float)hp / (float)hpMax;
+            hpGuage.fillAmount = (float)hp / (float)hpMax;
         }
         else
         {
@@ -147,12 +170,46 @@ public class Enemy : MonoBehaviour
         isAddict = true;
         addictDamage = value;
         addictTimer = 0f;
+
+        addictSign.gameObject.SetActive(true);
     }
     public virtual void OffAddict()
     {
         addictTimer = 0f;
         addictDamage = 0;
         isAddict = false;
+
+        addictSign.gameObject.SetActive(false);
+    }
+    public virtual void OnBleed(float value)
+    {
+        isBleed = true;
+        bleedTimer = 0f;
+        bleedPower = value;
+
+        bleedSign.gameObject.SetActive(true);
+    }
+    public virtual void OffBleed()
+    {
+        isBleed = false;
+        bleedPower = 0f;
+        bleedTimer = 0f;
+
+        bleedSign.gameObject.SetActive(false);
+    }
+    public virtual void OnSlow(float value)
+    {
+        slowPower = value;
+        isSlow = true;
+
+        slowSign.gameObject.SetActive(true);
+    }
+    public virtual void OffSlow()
+    {
+        slowPower = 0f;
+        isSlow = false;
+
+        slowSign.gameObject.SetActive(false);
     }
     protected virtual void Move()
     {
@@ -180,11 +237,11 @@ public class Enemy : MonoBehaviour
             }
 
             Vector2 dir = (target.position - transform.position).normalized;
-            transform.position += (Vector3)(dir * speed * Time.deltaTime);
+            transform.position += (Vector3)(dir * speed * (1 - slowPower) * Time.deltaTime);
             spriteRenderer.flipX = dir.x > 0;
         }
     }
-    protected virtual void Knockback(Vector3 direction)
+    public virtual void Knockback(Vector3 direction)
     {
         if (isKnockback)
         {

@@ -17,10 +17,16 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private RewardButton[] rewardButtons;
     [SerializeField] private RewardInfo[] rewardInfoes;
 
+    private Dictionary<int, RewardInfo> rewardInfoDictionary = new Dictionary<int, RewardInfo>();
     private float timer = 0f;
     private void Awake()
     {
         Instance = this;
+
+        foreach (RewardInfo info in rewardInfoes)
+        {
+            rewardInfoDictionary.Add(info.id, info);
+        }
     }
     private void Start()
     {
@@ -67,8 +73,37 @@ public class GameCtrl : MonoBehaviour
     public void OnLevelUp()
     {
         Time.timeScale = 0f;
-        
-        List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(rewardInfoes);
+
+        List<RewardInfo> samples = new List<RewardInfo>();
+        int levelA = Player.Instance.weaponALevel;
+        int levelB = Player.Instance.weaponBLevel;
+        int levelC = Player.Instance.weaponCLevel;
+        int levelD = Player.Instance.weaponDLevel;
+
+        if (levelA < 16)
+        {
+            samples.Add(levelA < 8 ? rewardInfoDictionary[0] : rewardInfoDictionary[1]);
+        }
+
+        if (levelB < 16)
+        {
+            samples.Add(levelB < 8 ? rewardInfoDictionary[10] : rewardInfoDictionary[11]);
+        }
+        if (levelC < 16)
+        {
+            samples.Add(levelC < 8 ? rewardInfoDictionary[20] : rewardInfoDictionary[21]);
+        }
+        if (levelD < 16)
+        {
+            samples.Add(levelD < 8 ? rewardInfoDictionary[30] : rewardInfoDictionary[31]);
+        }
+
+        samples.Add(rewardInfoDictionary[90]);
+        samples.Add(rewardInfoDictionary[91]);
+        samples.Add(rewardInfoDictionary[92]);
+        samples.Add(rewardInfoDictionary[93]);
+
+        List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(samples);
 
         for (int i = 0; i < rewardButtons.Length; i++)
         {

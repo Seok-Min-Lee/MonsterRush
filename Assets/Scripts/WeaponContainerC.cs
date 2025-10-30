@@ -13,7 +13,7 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
 
         weapons.Add(weapon);
     }
-    public override void Add()
+    public override void StrengthenFirst()
     {
         if (activeCount >= WEAPON_COUNT_MAX)
         {
@@ -32,5 +32,9 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
         }
 
         activeCount++;
+    }
+    public override void StrengthenSecond()
+    {
+        weapons[0].Strengthen();
     }
 }

@@ -10,10 +10,8 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     {
         base.Init();
     }
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
-
         if (Time.timeScale == 0f)
         {
             return;
@@ -21,9 +19,9 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
 
         transform.Rotate(Vector3.back * speed);
     }
-    public override void Add()
+    public override void StrengthenFirst()
     {
-        base.Add();
+        base.StrengthenFirst();
 
         List<WeaponA> actives = new List<WeaponA>();
         actives.AddRange(weapons.Where(x => x.gameObject.activeSelf));
@@ -38,6 +36,15 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
 
             float degrees = angle * Mathf.Rad2Deg;
             actives[i].transform.rotation = Quaternion.Euler(0, 0, degrees);
+        }
+    }
+    public override void StrengthenSecond()
+    {
+        base.StrengthenSecond();
+
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            weapons[i].Strengthen();
         }
     }
 }

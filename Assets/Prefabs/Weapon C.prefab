@@ -170,9 +170,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 223092a8e31742b4e88fcf9604ca4fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 10
+  power: 1
   maskTransform: {fileID: 2577058862261653645}
   textureRenderer: {fileID: 3453722472421469773}
+  slowPower: 0
 --- !u!1 &8140008957777158695
 GameObject:
   m_ObjectHideFlags: 0

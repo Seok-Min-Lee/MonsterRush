@@ -5,19 +5,21 @@ using UnityEngine;
 
 public class WeaponContainerB : WeaponContainer<WeaponB>
 {
+    [SerializeField] private StateToggle directionToggle;
+
     [SerializeField] private float radius = 1f;
-    [SerializeField] private Bullet bulletPrefab;
+    [SerializeField] private float bleedRatio = 0.1f;
 
-    private Queue<Bullet> bulletPool = new Queue<Bullet>();
+
+    private Queue<WeaponB> bulletPool = new Queue<WeaponB>();
     private float timer = 0f;
-    private void Awake()
+    private bool isReverse = false;
+    private void Start()
     {
-        base.Init();
+        directionToggle.Init(isReverse);
     }
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
-
         if (Time.timeScale == 0f)
         {
             return;
@@ -32,23 +34,25 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
 
         timer += Time.deltaTime;
     }
-    public override void Add()
+    public void OnClickDirection()
     {
-        base.Add();
-
-        List<WeaponB> actives = new List<WeaponB>();
-        actives.AddRange(weapons.Where(x => x.gameObject.activeSelf));
-
-        int activeCount = actives.Count;
-        for (int i = 0; i < activeCount; i++)
-        {
-            float angle = i * Mathf.PI * 2f / activeCount + 15; // 0 ~ 360도 균등 분할 (라디안)
-            Vector3 pos = Player.Instance.transform.position + new Vector3(Mathf.Sin(angle), Mathf.Cos(angle), 0) * radius;
-
-            actives[i].transform.position = pos;
-        }
+        isReverse = !isReverse;
+        directionToggle.Init(isReverse);
     }
+    public override void StrengthenFirst()
+    {
+        if (activeCount >= WEAPON_COUNT_MAX)
+        {
+            return;
+        }
+        activeCount++;
+    }
+    public override void StrengthenSecond()
+    {
+        base.StrengthenSecond();
 
+        bleedRatio += 0.05f;
+    }
     public void Launch()
     {
         if (activeCount == 0)
@@ -60,31 +64,27 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
 
         IEnumerator Cor()
         {
-            List<Weapon> actives = new List<Weapon>();
+            float delay = 1f / activeCount;
+            
             for (int i = 0; i < activeCount; i++)
             {
-                actives.Add(weapons[i]);
-            }
+                WeaponB bullet = bulletPool.Count > 0 ? 
+                                 bulletPool.Dequeue() : 
+                                 GameObject.Instantiate<WeaponB>(prefab);
 
-            float delay = 1f / actives.Count;
-            for (int i = 0; i < actives.Count; i++)
-            {
-                Bullet bullet;
-                if (bulletPool.Count > 0)
-                {
-                    bullet = bulletPool.Dequeue();
-                }
-                else
-                {
-                    bullet = GameObject.Instantiate<Bullet>(bulletPrefab);
-                    bullet.Init(this);
-                }
+                bullet.Init(
+                    container: this, 
+                    bleedRatio: bleedRatio, 
+                    flipX: isReverse
+                );
 
                 float radian = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
-                Vector2 direction = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
+                Vector2 direction = isReverse ?
+                    new Vector2(Mathf.Cos(radian), Mathf.Sin(radian)) * -1 :
+                    new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
 
                 bullet.Shot(
-                    position: actives[i].transform.position,
+                    position: Player.Instance.transform.position + (Vector3)Random.insideUnitCircle * 0.25f,
                     rotation: transform.rotation,
                     direction: direction
                 );
@@ -95,7 +95,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
             }
         }
     }
-    public void Reload(Bullet bullet)
+    public void Reload(WeaponB bullet)
     {
         bulletPool.Enqueue(bullet);
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WeaponD : Weapon
 {
-    [SerializeField] private GameObject flare;
+    [SerializeField] private WeaponDFlare flare;
 
     private Rigidbody2D rigidbody;
     private WeaponContainerD container;
@@ -28,9 +28,10 @@ public class WeaponD : Weapon
             Explosion();
         }
     }
-    public void Init(WeaponContainerD container)
+    public void Init(WeaponContainerD container, int knockbackPower)
     {
         this.container = container;
+        flare.Init(knockbackPower);
     }
     
     public void Shot(Vector3 position, Quaternion rotation, Vector3 direction)
@@ -50,7 +51,7 @@ public class WeaponD : Weapon
         rigidbody.angularVelocity = 0f;
         rigidbody.gravityScale = 0f;
 
-        flare.SetActive(true);
+        flare.gameObject.SetActive(true);
         StartCoroutine(Cor());
 
         IEnumerator Cor()
@@ -70,6 +71,10 @@ public class WeaponD : Weapon
         gameObject.SetActive(false);
         container.Reload(this);
 
-        flare.SetActive(false);
+        flare.gameObject.SetActive(false);
+    }
+    public override void Strengthen()
+    {
+        flare.Strengthen();
     }
 }

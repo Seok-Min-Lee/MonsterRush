@@ -9,15 +9,6 @@ public class WeaponContainer<T> : MonoBehaviour where T : Weapon
 
     protected List<T> weapons = new List<T>();
     protected int activeCount = 0;
-    protected virtual void Update()
-    {
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Add();
-        }
-#endif
-    }
     public virtual void Init()
     {
         for (int i = 0; i < WEAPON_COUNT_MAX; i++)
@@ -28,7 +19,7 @@ public class WeaponContainer<T> : MonoBehaviour where T : Weapon
             weapons.Add(weapon);
         }
     }
-    public virtual void Add()
+    public virtual void StrengthenFirst()
     {
         if (activeCount >= WEAPON_COUNT_MAX)
         {
@@ -36,6 +27,10 @@ public class WeaponContainer<T> : MonoBehaviour where T : Weapon
         }
 
         weapons[activeCount++].gameObject.SetActive(true);
+    }
+    public virtual void StrengthenSecond()
+    {
+        return;
     }
     public virtual void Rotate(float x, float y, float z)
     {
