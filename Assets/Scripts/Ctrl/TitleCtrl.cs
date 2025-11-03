@@ -3,12 +3,28 @@ using UnityEngine.UI;
 
 public class TitleCtrl : MonoBehaviour
 {
-    [SerializeField] GameObject homeWindow;
-    [SerializeField] GameObject characterWindow;
+    [SerializeField] private GameObject homeWindow;
+    [SerializeField] private GameObject characterWindow;
+    [SerializeField] private GameObject settingWindow;
+
+    [SerializeField] private Slider bgmSlider;
+    [SerializeField] private Slider sfxSlider;
 
     [SerializeField] private Image[] titleParts;
     private void Start()
     {
+        if (!AudioManager.Instance.isLoadComplete)
+        {
+            AudioManager.Instance.Load(() =>
+            {
+                float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
+                float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
+
+                AudioManager.Instance.Init(volumeBGM, volumeSFX);
+                AudioManager.Instance.PlayBGM(SoundKey.BGM);
+            });
+        }
+
         homeWindow.SetActive(true);
         characterWindow.SetActive(false);
     }
@@ -38,5 +54,42 @@ public class TitleCtrl : MonoBehaviour
         StaticValues.playerCharacterNum = num;
 
         UnityEngine.SceneManagement.SceneManager.LoadScene("02_Game");
+    }
+    public void OnClickSetting()
+    {
+        AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+        settingWindow.SetActive(true);
+        homeWindow.SetActive(false);
+
+        bgmSlider.value = PlayerPrefs.GetFloat("volumeBGM");
+        sfxSlider.value = PlayerPrefs.GetFloat("volumeSFX");
+    }
+    public void OnValueChangedVolumeBGM()
+    {
+        AudioManager.Instance.SetVolumeBGM(bgmSlider.value);
+    }
+    public void OnValueChangedVolumeSFX()
+    {
+        AudioManager.Instance.SetVolumeSFX(sfxSlider.value);
+    }
+    public void OnClickSaveSeting()
+    {
+        AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+        settingWindow.SetActive(false);
+        homeWindow.SetActive(true);
+
+        PlayerPrefs.SetFloat("volumeBGM", bgmSlider.value);
+        PlayerPrefs.SetFloat("volumeSFX", sfxSlider.value);
+    }
+    public void OnClickCancelSetting()
+    {
+        AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+        settingWindow.SetActive(false);
+        homeWindow.SetActive(true);
+
+        float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
+        float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
+
+        AudioManager.Instance.Init(volumeBGM, volumeSFX);
     }
 }

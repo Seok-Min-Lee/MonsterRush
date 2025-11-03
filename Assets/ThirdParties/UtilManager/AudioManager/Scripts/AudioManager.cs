@@ -61,11 +61,6 @@ public class AudioManager : MonoSingleton<AudioManager>
             callback?.Invoke();
         }
     }
-    public void Init(float volumeBGM, float volumeSFX)
-    {
-        sourceBGM.volume = volumeBGM;
-        sourceSFX.volume = volumeSFX;
-    }
     public void PlayBGM(SoundKey key)
     {
         if (!sourceBGM.isPlaying && 
@@ -85,5 +80,18 @@ public class AudioManager : MonoSingleton<AudioManager>
         {
             sourceSFX.PlayOneShot(sound.audioClip);
         }
+    }
+    public void Init(float volumeBGM, float volumeSFX)
+    {
+        SetVolumeBGM(volumeBGM);
+        SetVolumeSFX(volumeSFX);
+    }
+    public void SetVolumeBGM(float volume)
+    {
+        sourceBGM.volume = volume;
+    }
+    public void SetVolumeSFX(float volume)
+    {
+        sourceSFX.volume = volume;
     }
 }
