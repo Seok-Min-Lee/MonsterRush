@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -217,7 +218,8 @@ public class Player : MonoBehaviour
                 statDictionary[PlayerStat.Life].Increase();
                 break;
             case 91:
-                magnetArea.localScale *= 1.1f;
+                Vector3 scale = magnetArea.localScale * 1.1f;
+                magnetArea.DOScale(scale, 0.5f);
                 statDictionary[PlayerStat.Magnet].Increase();
                 break;
             case 92:

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class WeaponC : Weapon
@@ -13,15 +14,33 @@ public class WeaponC : Weapon
     {
         collider = GetComponent<CircleCollider2D>();
     }
+    private void Start()
+    {
+        Vector3 maskScale = Vector3.one * 2f;
+        float collierRadius = 1f;
+        Vector2 textureSize = Vector2.one * 2f;
+
+        maskTransform.localScale = Vector3.zero;
+        collider.radius = 0f;
+        textureRenderer.size = Vector2.zero;
+
+        maskTransform.DOScale(maskScale, 0.5f);
+        DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
+        DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
+    }
     private void FixedUpdate()
     {
         transform.Rotate(Vector3.forward, .5f);
     }
     public void Expand()
     {
-        collider.radius += 0.125f;
-        maskTransform.localScale += Vector3.one * 0.25f;
-        textureRenderer.size += Vector2.one * 0.25f;
+        Vector3 maskScale = maskTransform.localScale + Vector3.one * 0.25f;
+        float collierRadius = collider.radius + 0.125f;
+        Vector2 textureSize = textureRenderer.size + Vector2.one * 0.25f;
+
+        maskTransform.DOScale(maskScale, 0.5f);
+        DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
+        DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
     }
     public override void Strengthen()
     {
