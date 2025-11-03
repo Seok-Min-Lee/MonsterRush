@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
     public int Level => statDictionary[PlayerStat.Level].value;
     public int killCount => statDictionary[PlayerStat.Kill].value;
     public int Strength => statDictionary[PlayerStat.Strength].value;
+    public int Life => statDictionary[PlayerStat.Life].value;
+    public int Hp => statDictionary[PlayerStat.Hp].value;
+    public int HpMax => statDictionary[PlayerStat.HpMax].value;
     public int weaponALevel => statDictionary[PlayerStat.WeaponA].value;
     public int weaponBLevel => statDictionary[PlayerStat.WeaponB].value;
     public int weaponCLevel => statDictionary[PlayerStat.WeaponC].value;
@@ -118,6 +121,21 @@ public class Player : MonoBehaviour
 
         magnetToggle.Init(isMagnetVisible);
     }
+    private float healTimer = 0f;
+    private void Update()
+    {
+        if (Life == 0) return;
+
+        if (healTimer > 10f)
+        {
+            int value = Mathf.Max(Life, Hp + Life - HpMax);
+            statDictionary[PlayerStat.Hp].Increase(value);
+
+            healTimer = 0f;
+        }
+
+        healTimer += Time.deltaTime;
+    }
     private void FixedUpdate()
     {
         if (Time.timeScale == 0)
@@ -128,9 +146,6 @@ public class Player : MonoBehaviour
         moveVec = new Vector3(joystick.Horizontal, joystick.Vertical, 0f) * speed;
         transform.position += moveVec;
         spriteRenderer.flipX = moveVec.x < 0;
-
-        float angle = Mathf.Atan2(joystick.Vertical, joystick.Horizontal) * Mathf.Rad2Deg;
-        weaponContainers[1].rotation = Quaternion.Euler(0, 0, angle);
 #else
         transform.position += moveVec;
 #endif
@@ -251,6 +266,8 @@ public class Player : MonoBehaviour
         {
             GameCtrl.Instance.OnGameEnd();
         }
+
+        healTimer = 0f;
     }
     private void OnMove(InputValue value)
     {
