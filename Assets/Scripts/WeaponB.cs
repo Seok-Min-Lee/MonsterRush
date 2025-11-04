@@ -35,6 +35,7 @@ public class WeaponB : Weapon
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
+            enemy.Knockback(Vector3.zero);
 
             if (Random.Range(0f, 1f) < bleedRatio)
             {

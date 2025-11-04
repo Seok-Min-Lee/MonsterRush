@@ -243,12 +243,13 @@ public class Enemy : MonoBehaviour
     }
     public virtual void Knockback(Vector3 direction)
     {
-        if (isKnockback)
+        if (direction != Vector3.zero &&
+            rigidbody.linearVelocity == Vector2.zero)
         {
-            return;
+            rigidbody.AddForce(direction, ForceMode2D.Impulse);
+            knockbackTimer = 0f;
         }
 
-        rigidbody.AddForce(direction, ForceMode2D.Impulse);
         isKnockback = true;
     }
 }

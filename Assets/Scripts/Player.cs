@@ -90,6 +90,7 @@ public class Player : MonoBehaviour
         //    weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenFirst();
         //    statDictionary[PlayerStat.WeaponD].Increase();
         //}
+
         switch (StaticValues.playerCharacterNum)
         {
             case 0:
@@ -143,9 +144,12 @@ public class Player : MonoBehaviour
             return;
         }
 #if !UNITY_EDITOR
-        moveVec = new Vector3(joystick.Horizontal, joystick.Vertical, 0f) * speed;
+        moveVec = new Vector3(joystick.Horizontal, joystick.Vertical, 0f).normalized * speed;
         transform.position += moveVec;
         spriteRenderer.flipX = moveVec.x < 0;
+
+        float angle = Mathf.Atan2(joystick.Vertical, joystick.Horizontal) * Mathf.Rad2Deg;
+        weaponContainers[1].rotation = Quaternion.Euler(0, 0, angle);
 #else
         transform.position += moveVec;
 #endif
