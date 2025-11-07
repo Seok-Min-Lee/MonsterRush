@@ -39,6 +39,8 @@ public class AudioManager : MonoSingleton<AudioManager>
     [SerializeField] private AudioSource sourceBGM;
     [SerializeField] private AudioSource sourceSFX;
 
+    [SerializeField] private AudioSource[] SFXSources;
+
     public bool isLoadComplete { get; private set; }
 
     public Dictionary<SoundKey, Sound> soundDictionary = new Dictionary<SoundKey, Sound>();
@@ -78,7 +80,28 @@ public class AudioManager : MonoSingleton<AudioManager>
     {
         if (soundDictionary.TryGetValue(key, out Sound sound))
         {
-            sourceSFX.PlayOneShot(sound.audioClip);
+            AudioSource src = SFXSources[0];
+            int overlapCount = 0;
+
+            for (int i = 0; i < SFXSources.Length; i++)
+            {
+                if (!SFXSources[i].isPlaying)
+                {
+                    src = SFXSources[i];
+                }
+                else if (SFXSources[i].clip == sound.audioClip)
+                {
+                    overlapCount++;
+
+                    if (overlapCount > 1)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            src.clip = sound.audioClip;
+            src.Play();
         }
     }
     public void Init(float volumeBGM, float volumeSFX)
@@ -93,5 +116,9 @@ public class AudioManager : MonoSingleton<AudioManager>
     public void SetVolumeSFX(float volume)
     {
         sourceSFX.volume = volume;
+        for (int i = 0; i < SFXSources.Length; i++)
+        {
+            SFXSources[i].volume = volume;
+        }
     }
 }
