@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
         statDictionary[PlayerStat.HpMax].Init(100);
         statDictionary[PlayerStat.Exp].Init(0);
         statDictionary[PlayerStat.ExpMax].Init(10);
-        
+
         //statDictionary[PlayerStat.ExpMax].Init(99999);
         //for (int i = 0; i < 8; i++)
         //{

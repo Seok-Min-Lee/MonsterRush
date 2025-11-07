@@ -1,20 +1,23 @@
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class WeaponContainerA : WeaponContainer<WeaponA>
 {
-    [SerializeField] private float radius = 1f;
+    [SerializeField] private float radiusMin = 0.5f;
+    [SerializeField] private float radiusMax = 1f;
     [SerializeField] private float speed = 1f;
-    private bool isStop = false;
+    private bool isExpand = false;
     private void Awake()
     {
         base.Init();
-        stateToggle.Init(isStop);
+        stateToggle.Init(isExpand);
     }
     private void Update()
     {
-        if (isStop || Time.timeScale == 0f)
+        if (Time.timeScale == 0f)
         {
             return;
         }
@@ -23,27 +26,14 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     }
     public override void OnClickStateToggle()
     {
-        isStop = !isStop;
-        stateToggle.Init(isStop);
+        isExpand = !isExpand;
+        stateToggle.Init(isExpand);
+        RefreshTransform(0.5f);
     }
     public override void StrengthenFirst()
     {
         base.StrengthenFirst();
-
-        List<WeaponA> actives = new List<WeaponA>();
-        actives.AddRange(weapons.Where(x => x.gameObject.activeSelf));
-
-        int activeCount = actives.Count;
-        for (int i = 0; i < activeCount; i++)
-        {
-            float angle = i * Mathf.PI * 2f / activeCount; // 0 ~ 360도 균등 분할 (라디안)
-            Vector3 pos = Player.Instance.transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
-
-            actives[i].transform.position = pos;
-
-            float degrees = angle * Mathf.Rad2Deg;
-            actives[i].transform.rotation = Quaternion.Euler(0, 0, degrees);
-        }
+        RefreshTransform(0.5f);
     }
     public override void StrengthenSecond()
     {
@@ -52,6 +42,21 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
         for (int i = 0; i < weapons.Count; i++)
         {
             weapons[i].Strengthen();
+        }
+    }
+    private void RefreshTransform(float delay = 0f)
+    {
+        float radius = isExpand ? radiusMax : radiusMin;
+
+        for (int i = 0; i < activeCount; i++)
+        {
+            float angle = i * Mathf.PI * 2f / activeCount; // 0 ~ 360도 균등 분할 (라디안)
+
+            Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+            Vector3 rot = new Vector3(0, 0, angle * Mathf.Rad2Deg);
+
+            weapons[i].transform.DOLocalMove(pos, delay);
+            weapons[i].transform.DOLocalRotate(rot, delay);
         }
     }
 }
