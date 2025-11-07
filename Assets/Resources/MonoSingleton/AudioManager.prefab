@@ -198,8 +198,8 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 7b6c59a6c03cb4d469455dc8914c4076, type: 3}
   - key: 10
     audioClip: {fileID: 8300000, guid: d4d4e8fed3c92c845bfe26ed9879aac1, type: 3}
-  sourceBGM: {fileID: 0}
-  sourceSFX: {fileID: 0}
+  sourceBGM: {fileID: 8363792713083850854}
+  sourceSFX: {fileID: 4036198131204414912}
   SFXSources:
   - {fileID: 3679242010958050072}
   - {fileID: 1229857617403282287}
