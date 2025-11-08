@@ -166,6 +166,11 @@ public class Player : MonoBehaviour
     }
     public void OnClickMagnetVisibility()
     {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+        }
+
         isMagnetVisible = !isMagnetVisible;
         magnetRenderer.enabled = isMagnetVisible;
         magnetToggle.Init(isMagnetVisible);

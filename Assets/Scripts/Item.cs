@@ -9,6 +9,7 @@ public class Item : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private bool isMove;
     private Coroutine coroutine;
+    private float timer = 0f;
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -28,9 +29,15 @@ public class Item : MonoBehaviour
             }
             else
             {
-                Disappear();
+                Disappear(false);
             }
         }
+
+        if (timer > 60f)
+        {
+            Disappear(true);
+        }
+        timer += Time.deltaTime;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -46,6 +53,8 @@ public class Item : MonoBehaviour
         transform.position = position;
 
         gameObject.SetActive(true);
+        isMove = false;
+        timer = 0f;
     }
     private void OnDetected()
     {
@@ -58,6 +67,8 @@ public class Item : MonoBehaviour
 
         IEnumerator Cor()
         {
+            timer = 0f;
+
             float t = 0f;
 
             Vector3 target = transform.position + new Vector3(0f, .1f, 0f);
@@ -73,15 +84,23 @@ public class Item : MonoBehaviour
             isMove = true;
         }
     }
-    private void Disappear()
+    private void Disappear(bool isTimeout)
     {
-        StopCoroutine(coroutine);
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
 
-        Player.Instance.GainExp(itemInfo.value);
+        if (!isTimeout)
+        {
+            Player.Instance.GainExp(itemInfo.value);
+        }
+
         ItemContainer.Instance.Reload(this);
-
         gameObject.SetActive(false);
         isMove = false;
+        timer = 0f;
     }
 
     [System.Serializable]

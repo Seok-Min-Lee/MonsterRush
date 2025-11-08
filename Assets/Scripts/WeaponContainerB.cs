@@ -34,6 +34,8 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     }
     public override void OnClickStateToggle()
     {
+        base.OnClickStateToggle();
+
         isReverse = !isReverse;
         stateToggle.Init(isReverse);
     }

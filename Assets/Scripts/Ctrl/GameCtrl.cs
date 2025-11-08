@@ -12,6 +12,7 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeText;
 
     [SerializeField] private TextMeshProUGUI timeScoreText;
+    [SerializeField] private TextMeshProUGUI LevelScoreText;
     [SerializeField] private TextMeshProUGUI killScoreText;
 
     [SerializeField] private GameObject normalWindow;
@@ -178,8 +179,9 @@ public class GameCtrl : MonoBehaviour
 
             int minutes = (int)(timer / 60);
             int seconds = (int)(timer % 60);
-            timeScoreText.text = $"생존 시간\n{minutes:00}:{seconds:00}";
-            killScoreText.text = $"처치 수\n {Player.Instance.killCount.ToString("#,##0")}";
+            timeScoreText.text = $"{minutes:00}:{seconds:00}";
+            LevelScoreText.text = $"{Player.Instance.Level}";
+            killScoreText.text = $"{Player.Instance.killCount.ToString("#,##0")}";
 
             normalWindow.GetComponent<CanvasGroup>().DOFade(0f, 0.5f);
             Player.Instance.OnDeath();

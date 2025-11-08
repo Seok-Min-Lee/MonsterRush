@@ -10,6 +10,8 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
     }
     public override void OnClickStateToggle()
     {
+        base.OnClickStateToggle();
+
         isVisible = !isVisible;
         stateToggle.Init(!isVisible);
 

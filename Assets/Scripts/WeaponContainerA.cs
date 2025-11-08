@@ -26,6 +26,8 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     }
     public override void OnClickStateToggle()
     {
+        base.OnClickStateToggle();
+
         isExpand = !isExpand;
         stateToggle.Init(isExpand);
         RefreshTransform(0.5f);

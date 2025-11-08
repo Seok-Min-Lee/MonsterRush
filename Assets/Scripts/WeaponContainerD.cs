@@ -39,6 +39,8 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
     }
     public override void OnClickStateToggle()
     {
+        base.OnClickStateToggle();
+
         isSequence = !isSequence;
         stateToggle.Init(isSequence);
         timer = 0f;

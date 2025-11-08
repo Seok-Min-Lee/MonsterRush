@@ -12,7 +12,10 @@ public class WeaponContainer<T> : MonoBehaviour where T : Weapon
     protected int activeCount = 0;
     public virtual void OnClickStateToggle()
     {
-        return;
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+        }
     }
     public virtual void Init()
     {
