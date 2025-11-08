@@ -7,8 +7,10 @@ public class TitleCtrl : MonoBehaviour
     [SerializeField] private GameObject characterWindow;
     [SerializeField] private GameObject settingWindow;
 
+
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Toggle tutorialToggle;
 
     [SerializeField] private Image[] titleParts;
     private void Start()
@@ -63,6 +65,7 @@ public class TitleCtrl : MonoBehaviour
 
         bgmSlider.value = PlayerPrefs.GetFloat("volumeBGM");
         sfxSlider.value = PlayerPrefs.GetFloat("volumeSFX");
+        tutorialToggle.isOn = PlayerPrefs.GetInt("visibleTutorial") == 1;
     }
     public void OnValueChangedVolumeBGM()
     {
@@ -80,6 +83,7 @@ public class TitleCtrl : MonoBehaviour
 
         PlayerPrefs.SetFloat("volumeBGM", bgmSlider.value);
         PlayerPrefs.SetFloat("volumeSFX", sfxSlider.value);
+        PlayerPrefs.SetInt("visibleTutorial", tutorialToggle.isOn ? 1 : 0);
     }
     public void OnClickCancelSetting()
     {

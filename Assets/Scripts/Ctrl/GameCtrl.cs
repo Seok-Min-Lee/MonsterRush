@@ -16,6 +16,7 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private TextMeshProUGUI killScoreText;
 
     [SerializeField] private GameObject normalWindow;
+    [SerializeField] private GameObject tutorialWindow;
     [SerializeField] private GameObject pauseWindow;
     [SerializeField] private GameObject rewardWindow;
     [SerializeField] private GameObject scoreWindow;
@@ -23,6 +24,7 @@ public class GameCtrl : MonoBehaviour
 
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Toggle tutorialToggle;
 
     [SerializeField] private RewardButton[] rewardButtons;
     [SerializeField] private RewardInfo[] rewardInfoes;
@@ -57,6 +59,14 @@ public class GameCtrl : MonoBehaviour
         Application.targetFrameRate = 30;
         QualitySettings.vSyncCount = 0;
 #endif
+
+        int playCount = PlayerPrefs.GetInt("playCount");
+        if (playCount == 0 || PlayerPrefs.GetInt("visibleTutorial") == 1)
+        {
+            tutorialWindow.SetActive(true);
+            StaticValues.isTutorial = true;
+        }
+        PlayerPrefs.SetInt("playCount", playCount + 1);
     }
     private void Update()
     {
@@ -66,6 +76,11 @@ public class GameCtrl : MonoBehaviour
         int seconds = (int)(timer % 60);
 
         timeText.text = $"{minutes:00}:{seconds:00}";
+    }
+    public void OnClickStart()
+    {
+        tutorialWindow.SetActive(false);
+        StaticValues.isTutorial = false;
     }
     public void OnClickPause()
     {
@@ -93,6 +108,7 @@ public class GameCtrl : MonoBehaviour
 
         bgmSlider.value = PlayerPrefs.GetFloat("volumeBGM");
         sfxSlider.value = PlayerPrefs.GetFloat("volumeSFX");
+        tutorialToggle.isOn = PlayerPrefs.GetInt("visibleTutorial") == 1;
     }
     public void OnValueChangedVolumeBGM()
     {
@@ -110,6 +126,7 @@ public class GameCtrl : MonoBehaviour
 
         PlayerPrefs.SetFloat("volumeBGM", bgmSlider.value);
         PlayerPrefs.SetFloat("volumeSFX", sfxSlider.value);
+        PlayerPrefs.SetInt("visibleTutorial", tutorialToggle.isOn ? 1 : 0);
     }
     public void OnClickCancelSetting()
     {
