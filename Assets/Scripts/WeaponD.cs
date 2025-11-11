@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
@@ -27,43 +28,67 @@ public class WeaponD : Weapon
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Explode();
+            OnExplosion();
         }
     }
-    public void Init(WeaponContainerD container, int knockbackPower)
-    {
-        this.container = container;
-        flare.Init(knockbackPower);
-    }
     
-    public void Shot(Vector3 position, Quaternion rotation, Vector3 direction)
+    public void OnShot(WeaponContainerD container, int knockbackPower, Vector3 position, Quaternion rotation, Vector3 direction)
     {
         gameObject.SetActive(true);
 
+        this.container = container;
+        flare.Init(knockbackPower);
         transform.position = position;
         transform.rotation = rotation;
-        rigidbody.AddForce(direction * Random.Range(8f, 16f), ForceMode2D.Impulse);
-        rigidbody.AddTorque(Random.Range(-5f, 5f), ForceMode2D.Impulse);
+
+        Vector3 force = direction * Random.Range(8f, 16f);
+        float torque = Random.Range(-10f, 10f);
+
+        rigidbody.AddForce(force, ForceMode2D.Impulse);
+        rigidbody.AddTorque(torque, ForceMode2D.Impulse);
     }
-    public void Explode()
+    public void OnExplosion()
     {
-        AudioManager.Instance.PlaySFX(SoundKey.WeaponDExplosion);
-
-        rigidbody.linearVelocity = Vector2.zero;
-        rigidbody.angularVelocity = 0f;
-        rigidbody.gravityScale = 0f;
-
-        spriteRenderer.enabled = false;
-
-        flare.Explode();
-
         StartCoroutine(Cor());
 
         IEnumerator Cor()
         {
+            AudioManager.Instance.PlaySFX(SoundKey.WeaponDExplosion);
+
+            rigidbody.linearVelocity = Vector2.zero;
+            rigidbody.angularVelocity = 0f;
+            rigidbody.gravityScale = 0f;
+
+            spriteRenderer.enabled = false;
+
+            flare.OnExplosion();
+
             yield return new WaitForSeconds(.15f);
+
+            flare.OffExplosion();
             OnReload();
         }
+
+        // DoTween을 쓰면 OnReload에서 Rigidbody 초기화 안 되는 오류 발생
+        //Sequence seq = DOTween.Sequence();
+        //seq.AppendCallback(() =>
+        //{
+        //    AudioManager.Instance.PlaySFX(SoundKey.WeaponDExplosion);
+
+        //    rigidbody.linearVelocity = Vector2.zero;
+        //    rigidbody.angularVelocity = 0f;
+        //    rigidbody.gravityScale = 0f;
+
+        //    spriteRenderer.enabled = false;
+
+        //    flare.OnExplosion();
+        //});
+        //seq.AppendInterval(0.15f);
+        //seq.AppendCallback(() =>
+        //{
+        //    flare.OffExplosion();
+        //    OnReload();
+        //});
     }
     public void OnReload()
     {

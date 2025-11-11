@@ -11,6 +11,8 @@ public class WeaponDFlare : Weapon
     {
         particle = GetComponent<ParticleSystem>();
         collider = GetComponent<BoxCollider2D>();
+
+        collider.enabled = false;
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,26 +20,24 @@ public class WeaponDFlare : Weapon
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
-            enemy.Knockback((enemy.transform.position - transform.position).normalized * knockbackPower);
+
+            Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * knockbackPower;
+            enemy.OnKnockback(knockbackForce);
         }
     }
     public override void Strengthen()
     {
-        base.Strengthen();
-
         knockbackPower++;
     }
-    public void Explode()
+    public void OnExplosion()
     {
-        StartCoroutine(Cor());
-
-        IEnumerator Cor()
-        {
-            particle.Play();
-            collider.enabled = true;
-            yield return new WaitForSeconds(0.15f);
-            collider.enabled = false;
-        }
+        particle.Play();
+        collider.enabled = true;
+    }
+    public void OffExplosion()
+    {
+        collider.enabled = false;
+        particle.Stop();
     }
     public void Init(int knockbackPower)
     {

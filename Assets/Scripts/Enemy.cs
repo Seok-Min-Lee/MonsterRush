@@ -131,8 +131,8 @@ public class Enemy : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        // death 처리
-        seq.Append(DOVirtual.DelayedCall(0f, () =>
+        // death 처리 로직
+        seq.AppendCallback(() =>
         {
             particle.Play();
 
@@ -147,10 +147,13 @@ public class Enemy : MonoBehaviour
             collider.enabled = false;
             character.SetActive(false);
             canvasGO.SetActive(false);
-        }));
+        });
 
-        // 파티클 재생 후 비활성화
-        seq.Append(DOVirtual.DelayedCall(1f, () =>
+        // 파티클 재생 시간
+        seq.AppendInterval(1f);
+
+        // 비활성화
+        seq.AppendCallback(() =>
         {
             collider.enabled = true;
             gameObject.SetActive(false);
@@ -159,7 +162,7 @@ public class Enemy : MonoBehaviour
 
             pool.Charge(this);
             pool = null;
-        }));
+        });
     }
     public virtual void OnDamage(int damage)
     {
@@ -217,6 +220,11 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnSlow(float value)
     {
+        if (value == 0f)
+        {
+            return;
+        }
+
         slowPower = value;
         isSlow = true;
 
@@ -224,6 +232,11 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OffSlow()
     {
+        if (slowPower == 0f)
+        {
+            return;
+        }
+
         slowPower = 0f;
         isSlow = false;
 
@@ -259,7 +272,7 @@ public class Enemy : MonoBehaviour
             spriteRenderer.flipX = dir.x > 0;
         }
     }
-    public virtual void Knockback(Vector3 direction)
+    public virtual void OnKnockback(Vector3 direction)
     {
         if (!isDead &&
             direction != Vector3.zero &&

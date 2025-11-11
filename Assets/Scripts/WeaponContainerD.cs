@@ -69,6 +69,7 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
         {
             Launch();
         }
+
         AudioManager.Instance.PlaySFX(SoundKey.WeaponDLaunch);
     }
     public void LaunchSequence()
@@ -97,12 +98,14 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
                             bulletPool.Dequeue() :
                             GameObject.Instantiate<WeaponD>(prefab, transform);
 
-        bullet.Init(this, knockbackPower);
-
+        //
         float radian = Random.Range(60, 120) * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
 
-        bullet.Shot(
+        //
+        bullet.OnShot(
+            container: this,
+            knockbackPower: knockbackPower,
             position: transform.position,
             rotation: transform.rotation,
             direction: direction

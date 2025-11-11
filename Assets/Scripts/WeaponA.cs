@@ -8,7 +8,7 @@ public class WeaponA : Weapon
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
-            enemy.Knockback(Vector3.zero);
+            enemy.OnKnockback(Vector3.zero);
         }
     }
     public override void Strengthen()

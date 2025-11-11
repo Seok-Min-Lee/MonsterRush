@@ -35,7 +35,7 @@ public class WeaponB : Weapon
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
-            enemy.Knockback(Vector3.zero);
+            enemy.OnKnockback(Vector3.zero);
 
             if (Random.Range(0f, 1f) < bleedRatio)
             {
@@ -43,19 +43,16 @@ public class WeaponB : Weapon
             }
         }
     }
-    public void Init(WeaponContainerB container, float bleedRatio, bool flipX)
-    {
-        this.container = container;
-        this.bleedRatio = bleedRatio;
-        spriteRenderer.flipX = flipX;
-    }
-
-    public void Shot(Vector3 position, Quaternion rotation, Vector3 direction)
+    public void OnShot(WeaponContainerB container, float bleedRatio, bool flipX, Vector3 position, Quaternion rotation, Vector3 direction)
     {
         gameObject.SetActive(true);
 
+        this.container = container;
+        this.bleedRatio = bleedRatio;
+        spriteRenderer.flipX = flipX;
         transform.position = position;
         transform.rotation = rotation;
+
         rigidbody.AddForce(direction * speed, ForceMode2D.Impulse);
     }
     public void OnReload()

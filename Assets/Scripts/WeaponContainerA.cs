@@ -15,13 +15,8 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
         base.Init();
         stateToggle.Init(isExpand);
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        if (Time.timeScale == 0f)
-        {
-            return;
-        }
-
         transform.Rotate(Vector3.back * speed);
     }
     public override void OnClickStateToggle()
@@ -30,35 +25,34 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
 
         isExpand = !isExpand;
         stateToggle.Init(isExpand);
-        RefreshTransform(0.5f);
+        RefreshTransform();
     }
     public override void StrengthenFirst()
     {
         base.StrengthenFirst();
-        RefreshTransform(0.5f);
+        RefreshTransform();
     }
     public override void StrengthenSecond()
     {
-        base.StrengthenSecond();
-
         for (int i = 0; i < weapons.Count; i++)
         {
             weapons[i].Strengthen();
         }
     }
-    private void RefreshTransform(float delay = 0f)
+    private void RefreshTransform()
     {
+        // 자식들을 원 위에 동일한 간격으로 배치
         float radius = isExpand ? radiusMax : radiusMin;
 
         for (int i = 0; i < activeCount; i++)
         {
-            float angle = i * Mathf.PI * 2f / activeCount; // 0 ~ 360도 균등 분할 (라디안)
+            float angle = i * Mathf.PI * 2f / activeCount;
 
             Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
             Vector3 rot = new Vector3(0, 0, angle * Mathf.Rad2Deg);
 
-            weapons[i].transform.DOLocalMove(pos, delay);
-            weapons[i].transform.DOLocalRotate(rot, delay);
+            weapons[i].transform.DOLocalMove(pos, 0.5f);
+            weapons[i].transform.DOLocalRotate(rot, 0.5f);
         }
     }
 }

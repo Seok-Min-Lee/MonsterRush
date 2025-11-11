@@ -7,7 +7,6 @@ public class TitleCtrl : MonoBehaviour
     [SerializeField] private GameObject characterWindow;
     [SerializeField] private GameObject settingWindow;
 
-
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Toggle tutorialToggle;

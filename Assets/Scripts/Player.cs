@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     public int Heal => statDictionary[PlayerStat.Heal].value;
     public int Hp => statDictionary[PlayerStat.Hp].value;
     public int HpMax => statDictionary[PlayerStat.HpMax].value;
+    public int Exp => statDictionary[PlayerStat.Exp].value;
+    public int ExpMax => statDictionary[PlayerStat.ExpMax].value;
     public int weaponALevel => statDictionary[PlayerStat.WeaponA].value;
     public int weaponBLevel => statDictionary[PlayerStat.WeaponB].value;
     public int weaponCLevel => statDictionary[PlayerStat.WeaponC].value;
@@ -91,19 +93,6 @@ public class Player : MonoBehaviour
         statDictionary[PlayerStat.Exp].Init(0);
         statDictionary[PlayerStat.ExpMax].Init(10);
 
-        //statDictionary[PlayerStat.ExpMax].Init(99999);
-        //for (int i = 0; i < 8; i++)
-        //{
-        //    weaponContainers[0].GetComponent<WeaponContainerA>().StrengthenFirst();
-        //    statDictionary[PlayerStat.WeaponA].Increase();
-        //    weaponContainers[1].GetComponent<WeaponContainerB>().StrengthenFirst();
-        //    statDictionary[PlayerStat.WeaponB].Increase();
-        //    weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenFirst();
-        //    statDictionary[PlayerStat.WeaponC].Increase();
-        //    weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenFirst();
-        //    statDictionary[PlayerStat.WeaponD].Increase();
-        //}
-
         switch (StaticValues.playerCharacterNum)
         {
             case 0:
@@ -140,21 +129,27 @@ public class Player : MonoBehaviour
     {
         if (isDead || Heal == 0) return;
 
-        if (healTimer > 10f)
+        if (Hp < HpMax)
         {
-            healParticle.Play();
-            int value = Hp + Heal > HpMax ? HpMax - Hp : Heal;
-            statDictionary[PlayerStat.Hp].Increase(value);
-            hpGuage.fillAmount = (float)Hp / HpMax;
+            if (healTimer > 10f)
+            {
+                int value = Hp + Heal > HpMax ? HpMax - Hp : Heal;
+                healParticle.Play();
+                statDictionary[PlayerStat.Hp].Increase(value);
+                hpGuage.fillAmount = (float)Hp / HpMax;
 
-            healTimer = 0f;
+                healTimer = 0f;
+            }
+
+            healTimer += Time.deltaTime;
         }
-
-        healTimer += Time.deltaTime;
     }
     private void FixedUpdate()
     {
-        if (isDead) return;
+        if (isDead) 
+        {
+            return;
+        }
 #if !UNITY_EDITOR
         moveVec = new Vector3(joystick.Horizontal, joystick.Vertical, 0f).normalized * speed;
         transform.position += moveVec;
@@ -168,14 +163,15 @@ public class Player : MonoBehaviour
     }
     public void OnClickMagnetVisibility()
     {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        }
+        AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
 
         isMagnetVisible = !isMagnetVisible;
         magnetRenderer.enabled = isMagnetVisible;
         magnetToggle.Init(isMagnetVisible);
+    }
+    public void OnClickLevelUp()
+    {
+        IncreaseExp(ExpMax);
     }
     public void KillEnemy()
     {
@@ -183,8 +179,8 @@ public class Player : MonoBehaviour
     }
     public void IncreaseExp(int value)
     {
-        int exp = statDictionary[PlayerStat.Exp].value;
-        int expMax = statDictionary[PlayerStat.ExpMax].value;
+        int exp = Exp;
+        int expMax = ExpMax;
 
         exp += value;
 
@@ -269,8 +265,8 @@ public class Player : MonoBehaviour
     }
     public void OnDeath()
     {
-        // 葛记 傈 贸府
-        Tween preprocess = DOVirtual.DelayedCall(0f, () =>
+        // death 贸府 肺流
+        TweenCallback callback = () => 
         {
             isDead = true;
             collider.enabled = false;
@@ -284,10 +280,11 @@ public class Player : MonoBehaviour
             }
 
             canvasGO.SetActive(false);
-        });
+        };
 
+        // death 楷免
         Sequence seq = DOTween.Sequence();
-        seq.Append(preprocess);
+        seq.AppendCallback(callback);
         seq.Append(overlayCanvasCG.DOFade(0f, 0.5f));
         seq.AppendInterval(0.25f);
         seq.Append(characterArea.DORotate(new Vector3(0, 0, 90), 0.5f).SetEase(Ease.OutBack));
@@ -296,8 +293,11 @@ public class Player : MonoBehaviour
     }
     public void OnDamage(int damage)
     {
-        if (isDead) return;
-
+        if (isDead) 
+        {
+            return;
+        }
+        
         int hp = statDictionary[PlayerStat.Hp].value;
         int hpMax = statDictionary[PlayerStat.HpMax].value;
 

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,8 +50,6 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     }
     public override void StrengthenSecond()
     {
-        base.StrengthenSecond();
-
         bleedRatio += 0.05f;
     }
     public void Launch()
@@ -64,29 +63,28 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
 
         IEnumerator Cor()
         {
-            float delay = 1f / activeCount;
+            int count = activeCount;
+            float delay = 1f / count;
             
-            for (int i = 0; i < activeCount; i++)
+            for (int i = 0; i < count; i++)
             {
                 WeaponB bullet = bulletPool.Count > 0 ? 
                                  bulletPool.Dequeue() : 
                                  GameObject.Instantiate<WeaponB>(prefab);
 
-                bullet.Init(
-                    container: this, 
-                    bleedRatio: bleedRatio, 
-                    flipX: isReverse
-                );
-
+                //
                 float radian = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
-                Vector2 direction = isReverse ?
-                    new Vector2(Mathf.Cos(radian), Mathf.Sin(radian)) * -1 :
-                    new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
+                Vector2 direction = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
+                Vector3 position = Player.Instance.transform.position + (Vector3)Random.insideUnitCircle * 0.25f;
 
-                bullet.Shot(
-                    position: Player.Instance.transform.position + (Vector3)Random.insideUnitCircle * 0.25f,
+                //
+                bullet.OnShot(
+                    container: this,
+                    bleedRatio: bleedRatio,
+                    flipX: isReverse,
+                    position: position,
                     rotation: transform.rotation,
-                    direction: direction
+                    direction: isReverse ? direction * -1 : direction
                 );
 
                 AudioManager.Instance.PlaySFX(SoundKey.WeaponBLaunch);

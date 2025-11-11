@@ -15,7 +15,7 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
         isVisible = !isVisible;
         stateToggle.Init(!isVisible);
 
-        weapons[0].TextureRenderer.enabled = isVisible;
+        weapons[0].SwitchVisibility(isVisible);
     }
     public override void Init()
     {
@@ -36,7 +36,6 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
         if (activeCount == 0)
         {
             weapons[0].gameObject.SetActive(true);
-            weapons[0].TextureRenderer.enabled = isVisible;
         }
         else
         {

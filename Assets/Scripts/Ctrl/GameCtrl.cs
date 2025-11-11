@@ -227,7 +227,8 @@ public class GameCtrl : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        seq.Append(DOVirtual.DelayedCall(0f, () =>
+        // 엔딩 연출
+        seq.AppendCallback(() =>
         {
             AudioManager.Instance.PlaySFX(SoundKey.GameEnd);
 
@@ -239,14 +240,18 @@ public class GameCtrl : MonoBehaviour
 
             normalWindow.GetComponent<CanvasGroup>().DOFade(0f, 0.5f);
             Player.Instance.OnDeath();
-        }));
+        });
 
-        seq.Append(DOVirtual.DelayedCall(2.5f, () => 
+        // 딜레이
+        seq.AppendInterval(2.5f);
+
+        // 결과창 표시
+        seq.AppendCallback(() => 
         {
             scoreWindow.SetActive(true);
             CanvasGroup cg = scoreWindow.GetComponent<CanvasGroup>();
             cg.alpha = 0f;
             cg.DOFade(1f, 0.5f);
-        }));
+        });
     }
 }
