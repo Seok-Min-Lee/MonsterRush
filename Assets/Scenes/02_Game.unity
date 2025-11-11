@@ -2619,11 +2619,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3881087803549984436, guid: ec536a7718376554185e4a856d5ae230, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1080
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3881087803549984436, guid: ec536a7718376554185e4a856d5ae230, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 645
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3881087803549984436, guid: ec536a7718376554185e4a856d5ae230, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4572,7 +4572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5923538055464852374, guid: ec9795d06bb638942a462bb26f7318d9, type: 3}
       propertyPath: m_Name
-      value: Life
+      value: Heal
       objectReference: {fileID: 0}
     - target: {fileID: 7804859826510566423, guid: ec9795d06bb638942a462bb26f7318d9, type: 3}
       propertyPath: m_text

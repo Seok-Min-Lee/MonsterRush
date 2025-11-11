@@ -60,6 +60,7 @@ public class GameCtrl : MonoBehaviour
         QualitySettings.vSyncCount = 0;
 #endif
 
+        // 튜토리얼 UI 표시
         int playCount = PlayerPrefs.GetInt("playCount");
         if (playCount == 0 || PlayerPrefs.GetInt("visibleTutorial") == 1)
         {
@@ -149,23 +150,59 @@ public class GameCtrl : MonoBehaviour
         int levelC = Player.Instance.weaponCLevel;
         int levelD = Player.Instance.weaponDLevel;
 
-        if (levelA < 16)
+        if (levelA < 8)
         {
-            samples.Add(levelA < 8 ? rewardInfoDictionary[0] : rewardInfoDictionary[1]);
+            samples.Add(rewardInfoDictionary[0]);
+        }
+        else if (levelA < 16)
+        {
+            samples.Add(rewardInfoDictionary[1]);
         }
 
-        if (levelB < 16)
+        if (levelB < 8)
         {
-            samples.Add(levelB < 8 ? rewardInfoDictionary[10] : rewardInfoDictionary[11]);
+            samples.Add(rewardInfoDictionary[10]);
         }
-        if (levelC < 16)
+        else if (levelB < 16)
         {
-            samples.Add(levelC < 8 ? rewardInfoDictionary[20] : rewardInfoDictionary[21]);
+            samples.Add(rewardInfoDictionary[11]);
         }
-        if (levelD < 16)
+
+        if (levelC < 8)
         {
-            samples.Add(levelD < 8 ? rewardInfoDictionary[30] : rewardInfoDictionary[31]);
+            samples.Add(rewardInfoDictionary[20]);
         }
+        else if (levelC < 16)
+        {
+            samples.Add(rewardInfoDictionary[21]);
+        }
+
+        if (levelD < 8)
+        {
+            samples.Add(rewardInfoDictionary[30]);
+        }
+        else if (levelD < 16)
+        {
+            samples.Add(rewardInfoDictionary[31]);
+        }
+
+
+        //if (levelA < 16)
+        //{
+        //    samples.Add(levelA < 8 ? rewardInfoDictionary[0] : rewardInfoDictionary[1]);
+        //}
+        //if (levelB < 16)
+        //{
+        //    samples.Add(levelB < 8 ? rewardInfoDictionary[10] : rewardInfoDictionary[11]);
+        //}
+        //if (levelC < 16)
+        //{
+        //    samples.Add(levelC < 8 ? rewardInfoDictionary[20] : rewardInfoDictionary[21]);
+        //}
+        //if (levelD < 16)
+        //{
+        //    samples.Add(levelD < 8 ? rewardInfoDictionary[30] : rewardInfoDictionary[31]);
+        //}
 
         samples.Add(rewardInfoDictionary[90]);
         samples.Add(rewardInfoDictionary[91]);

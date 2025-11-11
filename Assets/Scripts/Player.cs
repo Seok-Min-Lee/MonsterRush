@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
     public int Level => statDictionary[PlayerStat.Level].value;
     public int killCount => statDictionary[PlayerStat.Kill].value;
     public int Strength => statDictionary[PlayerStat.Strength].value;
-    public int Life => statDictionary[PlayerStat.Life].value;
+    public int Heal => statDictionary[PlayerStat.Heal].value;
     public int Hp => statDictionary[PlayerStat.Hp].value;
     public int HpMax => statDictionary[PlayerStat.HpMax].value;
     public int weaponALevel => statDictionary[PlayerStat.WeaponA].value;
@@ -47,20 +47,22 @@ public class Player : MonoBehaviour
     private SpriteRenderer magnetRenderer;
 
     private bool isDead = false;
-    private bool isMagnetVisible = false;
+    private bool isMagnetVisible = true;
     private void Awake()
     {
         Instance = this;
 
-        // 캐릭터 선택
-        GameObject character = GameObject.Instantiate(Resources.Load<GameObject>("Players/Character_" + StaticValues.playerCharacterNum), characterArea);
+        collider = GetComponent<BoxCollider2D>();
+
+        // 캐릭터
+        GameObject characterPrefab = Resources.Load<GameObject>("Players/Character_" + StaticValues.playerCharacterNum);
+        GameObject character = GameObject.Instantiate(characterPrefab, characterArea);
         character.transform.position = Vector3.zero;
 
         animator = character.GetComponent<Animator>();
         characterRenderer = character.GetComponent<SpriteRenderer>();
 
-        collider = GetComponent<BoxCollider2D>();
-
+        // 자석
         magnetRenderer = magnetArea.GetComponent<SpriteRenderer>();
         magnetRenderer.enabled = isMagnetVisible;
     }
@@ -79,7 +81,7 @@ public class Player : MonoBehaviour
         statDictionary[PlayerStat.Magnet].Init(0);
         statDictionary[PlayerStat.Speed].Init(0);
         statDictionary[PlayerStat.Strength].Init(0);
-        statDictionary[PlayerStat.Life].Init(0);
+        statDictionary[PlayerStat.Heal].Init(0);
         statDictionary[PlayerStat.WeaponA].Init(0);
         statDictionary[PlayerStat.WeaponB].Init(0);
         statDictionary[PlayerStat.WeaponC].Init(0);
@@ -122,7 +124,7 @@ public class Player : MonoBehaviour
             case 3:
                 weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenFirst();
                 statDictionary[PlayerStat.WeaponD].Increase();
-                statDictionary[PlayerStat.Life].Increase();
+                statDictionary[PlayerStat.Heal].Increase();
                 break;
             default:
                 break;
@@ -136,12 +138,12 @@ public class Player : MonoBehaviour
     private float healTimer = 0f;
     private void Update()
     {
-        if (isDead || Life == 0) return;
+        if (isDead || Heal == 0) return;
 
         if (healTimer > 10f)
         {
             healParticle.Play();
-            int value = Hp + Life > HpMax ? HpMax - Hp : Life;
+            int value = Hp + Heal > HpMax ? HpMax - Hp : Heal;
             statDictionary[PlayerStat.Hp].Increase(value);
             hpGuage.fillAmount = (float)Hp / HpMax;
 
@@ -179,7 +181,7 @@ public class Player : MonoBehaviour
     {
         statDictionary[PlayerStat.Kill].Increase();
     }
-    public void GainExp(int value)
+    public void IncreaseExp(int value)
     {
         int exp = statDictionary[PlayerStat.Exp].value;
         int expMax = statDictionary[PlayerStat.ExpMax].value;
@@ -212,7 +214,7 @@ public class Player : MonoBehaviour
         statDictionary[PlayerStat.Exp].Init(exp);
         expGuage.fillAmount = exp / (float)expMax;
     }
-    public void GainReward(RewardInfo rewardInfo)
+    public void OnReward(RewardInfo rewardInfo)
     {
         switch (rewardInfo.id)
         {
@@ -249,7 +251,7 @@ public class Player : MonoBehaviour
                 weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenSecond();
                 break;
             case 90:
-                statDictionary[PlayerStat.Life].Increase();
+                statDictionary[PlayerStat.Heal].Increase();
                 break;
             case 91:
                 Vector3 scale = magnetArea.localScale * 1.1f;
@@ -267,6 +269,7 @@ public class Player : MonoBehaviour
     }
     public void OnDeath()
     {
+        // 모션 전 처리
         Tween preprocess = DOVirtual.DelayedCall(0f, () =>
         {
             isDead = true;
@@ -379,7 +382,7 @@ public class Player : MonoBehaviour
     { 
         Level, 
         Kill, 
-        Life, 
+        Heal, 
         Strength, 
         Speed, 
         Magnet, 

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,6 +74,7 @@ public class Enemy : MonoBehaviour
 
             addictTimer += Time.deltaTime;
         }
+
         if (isBleed)
         {
             if (bleedTimer > 2f)
@@ -94,19 +96,25 @@ public class Enemy : MonoBehaviour
         {
             AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
             Player.Instance.OnDamage(power);
-            Die();
+            OnDeath();
         }
     }
 
     public virtual void Spawn(EnemyPool pool, int hpLevel, int powerLevel, int speedLevel, Vector3 position, Quaternion rotation)
     {
+        //
         isDead = false;
+        target = Player.Instance.transform;
 
         this.pool = pool;
         this.hpLevel = hpLevel;
         this.powerLevel = powerLevel;
         this.speedLevel = speedLevel;
 
+        transform.position = position;
+        transform.rotation = rotation;
+
+        //
         hpMax = (int)(hpDefault * (1 + 0.1f * hpLevel));
         power = (int)(powerDefault * (1 + 0.1f * powerLevel));
         speed = speedDefault * (1 + 0.1f * speedLevel);
@@ -118,19 +126,15 @@ public class Enemy : MonoBehaviour
         bleedSign.gameObject.SetActive(false);
         slowSign.gameObject.SetActive(false);
         canvasGO.SetActive(false);
-
-        transform.position = position;
-        transform.rotation = rotation;
-
-        target = Player.Instance.transform;
     }
-    public virtual void Die()
+    public virtual void OnDeath()
     {
-        StartCoroutine(Cor());
+        Sequence seq = DOTween.Sequence();
 
-        IEnumerator Cor()
+        // death 처리
+        seq.Append(DOVirtual.DelayedCall(0f, () =>
         {
-            particle.Play(); 
+            particle.Play();
 
             isDead = true;
             target = null;
@@ -143,25 +147,23 @@ public class Enemy : MonoBehaviour
             collider.enabled = false;
             character.SetActive(false);
             canvasGO.SetActive(false);
+        }));
 
-            yield return new WaitForSeconds(1f);
-            
+        // 파티클 재생 후 비활성화
+        seq.Append(DOVirtual.DelayedCall(1f, () =>
+        {
             collider.enabled = true;
             gameObject.SetActive(false);
             character.SetActive(true);
             canvasGO.SetActive(true);
 
-
             pool.Charge(this);
             pool = null;
-        }
+        }));
     }
     public virtual void OnDamage(int damage)
     {
-        if (isDead) 
-        {
-            return;
-        }
+        if (isDead) return;
 
         AudioManager.Instance.PlaySFX(SoundKey.EnemyHit);
         hp -= (int)(damage * (1 + bleedPower));
@@ -175,17 +177,10 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Die();
+            OnDeath();
 
-            if (ItemContainer.Instance != null)
-            {
-                ItemContainer.Instance.Batch(itemIndex, transform.position);
-            }
-
-            if (Player.Instance != null)
-            {
-                Player.Instance.KillEnemy();
-            }
+            ItemContainer.Instance.Batch(itemIndex, transform.position);
+            Player.Instance.KillEnemy();
         }
     }
     public virtual void OnAddict(int value)
@@ -198,17 +193,17 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OffAddict()
     {
-        addictTimer = 0f;
-        addictDamage = 0;
         isAddict = false;
+        addictDamage = 0;
+        addictTimer = 0f;
 
         addictSign.gameObject.SetActive(false);
     }
     public virtual void OnBleed(float value)
     {
         isBleed = true;
-        bleedTimer = 0f;
         bleedPower = value;
+        bleedTimer = 0f;
 
         bleedSign.gameObject.SetActive(true);
     }
@@ -236,7 +231,7 @@ public class Enemy : MonoBehaviour
     }
     protected virtual void Move()
     {
-        if (target == null)
+        if (target == null) 
         {
             return;
         }

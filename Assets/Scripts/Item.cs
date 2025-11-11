@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,6 @@ public class Item : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private bool isMove;
-    private Coroutine coroutine;
     private float timer = 0f;
     private void Awake()
     {
@@ -24,19 +24,22 @@ public class Item : MonoBehaviour
             {
                 float distance = dir.magnitude;
 
+                // 플레이어에게 가까워질수록 더 빠르게 움직인다.
                 float speed = Mathf.Lerp(1f, 10f, 1 - (distance / 10f));
                 transform.position += (Vector3)(dir.normalized * speed * Time.deltaTime);
             }
             else
             {
-                Disappear(false);
+                Disappear();
             }
         }
 
+        // 일정 시간이 지나면 사라진다.
         if (timer > 60f)
         {
             Disappear(true);
         }
+
         timer += Time.deltaTime;
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -63,38 +66,17 @@ public class Item : MonoBehaviour
             return;
         }
 
-        coroutine = StartCoroutine(Cor());
-
-        IEnumerator Cor()
+        Vector3 targetPos = transform.position + new Vector3(0f, 0.1f, 0f);
+        transform.DOMove(targetPos, 0.2f).OnComplete(() => 
         {
-            timer = 0f;
-
-            float t = 0f;
-
-            Vector3 target = transform.position + new Vector3(0f, .1f, 0f);
-
-            while (t < 1f)
-            {
-                t += Time.deltaTime * 5;
-                transform.position = Vector3.Lerp(transform.position, target, t);
-
-                yield return null;
-            }
-
             isMove = true;
-        }
+        });
     }
-    private void Disappear(bool isTimeout)
+    private void Disappear(bool isTimeout = false)
     {
-        if (coroutine != null)
-        {
-            StopCoroutine(coroutine);
-            coroutine = null;
-        }
-
         if (!isTimeout)
         {
-            Player.Instance.GainExp(itemInfo.value);
+            Player.Instance.IncreaseExp(itemInfo.value);
         }
 
         ItemContainer.Instance.Reload(this);

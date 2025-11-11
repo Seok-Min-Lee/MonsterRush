@@ -26,7 +26,7 @@ public class RewardButton : MonoBehaviour
 
         if (Player.Instance != null)
         {
-            Player.Instance.GainReward(rewardInfo);
+            Player.Instance.OnReward(rewardInfo);
         }
     }
 }

@@ -947,7 +947,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5900282325267714456, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_text
-      value: "\uAC1C\uAD6C\uB9B0 \uB2CC\uC790"
+      value: "\uCE90\uB9AD\uD130 B"
       objectReference: {fileID: 0}
     - target: {fileID: 6009115278851448091, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3638,7 +3638,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5900282325267714456, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_text
-      value: "\uD551\uAC70 \uD504\uB9B0\uC138\uC2A4"
+      value: "\uCE90\uB9AD\uD130 C"
       objectReference: {fileID: 0}
     - target: {fileID: 6009115278851448091, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4187,7 +4187,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5900282325267714456, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_text
-      value: "\uAE30\uBCF8 \uCE90\uB9AD\uD130"
+      value: "\uCE90\uB9AD\uD130 A"
       objectReference: {fileID: 0}
     - target: {fileID: 6009115278851448091, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5566,7 +5566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5900282325267714456, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_text
-      value: "\uAC1C\uBC1C\uC790"
+      value: "\uCE90\uB9AD\uD130 D"
       objectReference: {fileID: 0}
     - target: {fileID: 6009115278851448091, guid: 7e66f9421354a1046825cd6c6b9ff223, type: 3}
       propertyPath: m_AnchorMax.y
