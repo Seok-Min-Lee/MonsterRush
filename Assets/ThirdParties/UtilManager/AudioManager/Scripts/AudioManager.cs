@@ -44,7 +44,14 @@ public class AudioManager : MonoSingleton<AudioManager>
     public bool isLoadComplete { get; private set; }
 
     public Dictionary<SoundKey, Sound> soundDictionary = new Dictionary<SoundKey, Sound>();
-
+    private void Awake()
+    {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
+    private void OnApplicationQuit()
+    {
+        Screen.sleepTimeout = SleepTimeout.SystemSetting;
+    }
     public void Load(Action callback = null)
     {
         StartCoroutine(Cor());

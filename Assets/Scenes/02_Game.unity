@@ -3730,7 +3730,7 @@ PrefabInstance:
     - target: {fileID: 7159958713227812320, guid: 1ee1c4145a7a1764cb0f2188f1de9872, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: bc84a1d881b760e4d868996861671fba, type: 3}
+      objectReference: {fileID: 21300000, guid: 015203e3e02fbe34b8656ebcc182067c, type: 3}
     - target: {fileID: 7952694104244603108, guid: 1ee1c4145a7a1764cb0f2188f1de9872, type: 3}
       propertyPath: m_Name
       value: Weapon B
