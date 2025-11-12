@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private VariableJoystick joystick;
     [SerializeField] private GameObject canvasGO;
     [SerializeField] private CanvasGroup overlayCanvasCG;
+    [SerializeField] private RectTransform stateToggleGroup;
     [SerializeField] private Image hpGuage;
     [SerializeField] private Image expGuage;
     [SerializeField] private StatSlot[] statSlots;
@@ -172,6 +173,23 @@ public class Player : MonoBehaviour
     public void OnClickLevelUp()
     {
         IncreaseExp(ExpMax);
+    }
+    public void OnChangeUI(bool isLeftHand)
+    {
+        if (isLeftHand)
+        {
+            stateToggleGroup.anchorMin = new Vector2(1, 0);
+            stateToggleGroup.anchorMax = new Vector2(1, 0);
+            stateToggleGroup.pivot = new Vector2(1, 0);
+            stateToggleGroup.anchoredPosition = new Vector2(-75, 260);
+        }
+        else
+        {
+            stateToggleGroup.anchorMin = new Vector2(0, 0);
+            stateToggleGroup.anchorMax = new Vector2(0, 0);
+            stateToggleGroup.pivot = new Vector2(0, 0);
+            stateToggleGroup.anchoredPosition = new Vector2(275, 0);
+        }
     }
     public void KillEnemy()
     {

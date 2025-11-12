@@ -9,6 +9,7 @@ public class TitleCtrl : MonoBehaviour
 
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Toggle leftHandToggle;
     [SerializeField] private Toggle tutorialToggle;
 
     [SerializeField] private Image[] titleParts;
@@ -65,6 +66,8 @@ public class TitleCtrl : MonoBehaviour
         bgmSlider.value = PlayerPrefs.GetFloat("volumeBGM");
         sfxSlider.value = PlayerPrefs.GetFloat("volumeSFX");
         tutorialToggle.isOn = PlayerPrefs.GetInt("visibleTutorial") == 1;
+        leftHandToggle.isOn = PlayerPrefs.GetInt("isLeftHand") == 1;
+
     }
     public void OnValueChangedVolumeBGM()
     {
@@ -83,6 +86,7 @@ public class TitleCtrl : MonoBehaviour
         PlayerPrefs.SetFloat("volumeBGM", bgmSlider.value);
         PlayerPrefs.SetFloat("volumeSFX", sfxSlider.value);
         PlayerPrefs.SetInt("visibleTutorial", tutorialToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("isLeftHand", leftHandToggle.isOn ? 1 : 0);
     }
     public void OnClickCancelSetting()
     {
