@@ -139,6 +139,18 @@ public class Player : MonoBehaviour
                 statDictionary[PlayerStat.Hp].Increase(value);
                 hpGuage.fillAmount = (float)Hp / HpMax;
 
+                // 회복량 UI
+                HitHealText hitText = UIContainer.Instance.Pop();
+                Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.3f, -0.2f));
+                Vector2 target = start + new Vector2(0, 0.2f);
+                hitText.Init(
+                    value: "+" + value,
+                    color: Color.green,
+                    position: start,
+                    target: target,
+                    parent: canvasGO.transform
+                );
+
                 healTimer = 0f;
             }
 
@@ -320,6 +332,18 @@ public class Player : MonoBehaviour
         int hpMax = statDictionary[PlayerStat.HpMax].value;
 
         hp -= damage;
+
+        // 데미지 UI
+        HitHealText hitText = UIContainer.Instance.Pop();
+        Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.3f, -0.2f));
+        Vector2 target = start + new Vector2(0, 0.2f);
+        hitText.Init(
+            value: "-" + damage,
+            color: Color.red,
+            position: start,
+            target: target,
+            parent: canvasGO.transform
+        );
 
         if (hp > 0)
         {

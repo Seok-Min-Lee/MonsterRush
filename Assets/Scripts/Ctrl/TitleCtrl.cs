@@ -67,7 +67,6 @@ public class TitleCtrl : MonoBehaviour
         sfxSlider.value = PlayerPrefs.GetFloat("volumeSFX");
         tutorialToggle.isOn = PlayerPrefs.GetInt("visibleTutorial") == 1;
         leftHandToggle.isOn = PlayerPrefs.GetInt("isLeftHand") == 1;
-
     }
     public void OnValueChangedVolumeBGM()
     {

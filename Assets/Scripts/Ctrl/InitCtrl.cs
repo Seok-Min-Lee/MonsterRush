@@ -8,7 +8,7 @@ public class InitCtrl : MonoBehaviour
         float volumeBGM = PlayerPrefs.GetFloat("volumeBGM", 0.75f);
         float volumeSFX = PlayerPrefs.GetFloat("volumeSFX", 0.75f);
         int playCount = PlayerPrefs.GetInt("playCount", 0);
-        int visibleTutorial = PlayerPrefs.GetInt("visibleTutorial", 1);
+        int visibleTutorial = PlayerPrefs.GetInt("visibleTutorial", 0);
         int isLeftHand = PlayerPrefs.GetInt("isLeftHand", 1);
 
         PlayerPrefs.SetFloat("volumeBGM", volumeBGM);

@@ -185,6 +185,18 @@ public class Enemy : MonoBehaviour
             ItemContainer.Instance.Batch(itemIndex, transform.position);
             Player.Instance.KillEnemy();
         }
+
+        // µ¥¹ÌÁö UI
+        HitHealText hitText = UIContainer.Instance.Pop();
+        Vector2 start = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.05f, 0.05f));
+        Vector2 target = start + new Vector2(0, 0.2f);
+        hitText.Init(
+            value: "-" + damage,
+            color: Color.red,
+            position: start,
+            target: target,
+            parent: canvasGO.transform
+        );
     }
     public virtual void OnAddict(int value)
     {
