@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Image expGuage;
     [SerializeField] private StatSlot[] statSlots;
     [SerializeField] private StateToggle magnetToggle;
+    [SerializeField] private Image healGuage;
 
     private Dictionary<PlayerStat, StatSlot> statDictionary;
 
@@ -153,6 +154,7 @@ public class Player : MonoBehaviour
 
                 healTimer = 0f;
             }
+            healGuage.fillAmount = healTimer / 10f;
 
             healTimer += Time.deltaTime;
         }
