@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92547769e870d6446933e27a6dff25a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 4
+  power: 3
   speed: 10
   bleedRatio: 0.1
   bleedPower: 0.5

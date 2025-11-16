@@ -13,6 +13,6 @@ public class WeaponA : Weapon
     }
     public override void Strengthen()
     {
-        power += 3;
+        power += 2;
     }
 }

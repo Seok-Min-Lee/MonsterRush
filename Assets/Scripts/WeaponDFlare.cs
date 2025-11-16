@@ -21,7 +21,7 @@ public class WeaponDFlare : Weapon
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
 
-            Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * knockbackPower;
+            Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * (knockbackPower * 0.5f);
             enemy.OnKnockback(knockbackForce);
         }
     }

@@ -189,8 +189,8 @@ public class Enemy : MonoBehaviour
         isAddict = true;
         addictDamage = 1;
         addictTimer = 0f;
-        addictInterval = 0.5f - value * 0.05f;
-
+        addictInterval = 0.33333f - value * 0.0291625f; // 0.33333 ~ 0.1
+        
         poisonParticle.Play();
     }
     public virtual void OffAddict()
