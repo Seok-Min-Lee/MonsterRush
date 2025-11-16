@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private GameObject character;
     [SerializeField] private ParticleSystem particle;
+    [SerializeField] private ParticleSystem poisonParticle;
+    [SerializeField] private Color slowColor;
 
     [SerializeField] [Range(0, 7)] private int itemIndex;
 
@@ -34,11 +36,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int speedLevel = 0;
 
     [Header("UI")]
-    [SerializeField] GameObject canvasGO;
+    [SerializeField] private GameObject canvasGO;
     [SerializeField] private Image hpGuage;
-    [SerializeField] private Image addictSign;
-    [SerializeField] private Image bleedSign;
-    [SerializeField] private Image slowSign;
+    [SerializeField] private Image bleedSticker;
 
     private Transform target;
     private EnemyPool pool;
@@ -122,9 +122,6 @@ public class Enemy : MonoBehaviour
         hp = hpMax;
         hpGuage.fillAmount = 1f;
 
-        addictSign.gameObject.SetActive(false);
-        bleedSign.gameObject.SetActive(false);
-        slowSign.gameObject.SetActive(false);
         canvasGO.SetActive(false);
     }
     public virtual void OnDeath()
@@ -185,18 +182,6 @@ public class Enemy : MonoBehaviour
             ItemContainer.Instance.Batch(itemIndex, transform.position);
             Player.Instance.KillEnemy();
         }
-
-        // µ¥¹ÌÁö UI
-        HitHealText hitText = UIContainer.Instance.Pop();
-        Vector2 start = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.05f, 0.05f));
-        Vector2 target = start + new Vector2(0, 0.2f);
-        hitText.Init(
-            value: "-" + damage,
-            color: Color.red,
-            position: start,
-            target: target,
-            parent: canvasGO.transform
-        );
     }
     public virtual void OnAddict(int value)
     {
@@ -204,7 +189,7 @@ public class Enemy : MonoBehaviour
         addictDamage = value;
         addictTimer = 0f;
 
-        addictSign.gameObject.SetActive(true);
+        poisonParticle.Play();
     }
     public virtual void OffAddict()
     {
@@ -212,7 +197,7 @@ public class Enemy : MonoBehaviour
         addictDamage = 0;
         addictTimer = 0f;
 
-        addictSign.gameObject.SetActive(false);
+        poisonParticle.Stop();
     }
     public virtual void OnBleed(float value)
     {
@@ -220,7 +205,7 @@ public class Enemy : MonoBehaviour
         bleedPower = value;
         bleedTimer = 0f;
 
-        bleedSign.gameObject.SetActive(true);
+        bleedSticker.gameObject.SetActive(true);
     }
     public virtual void OffBleed()
     {
@@ -228,7 +213,7 @@ public class Enemy : MonoBehaviour
         bleedPower = 0f;
         bleedTimer = 0f;
 
-        bleedSign.gameObject.SetActive(false);
+        bleedSticker.gameObject.SetActive(false);
     }
     public virtual void OnSlow(float value)
     {
@@ -240,7 +225,7 @@ public class Enemy : MonoBehaviour
         slowPower = value;
         isSlow = true;
 
-        slowSign.gameObject.SetActive(true);
+        spriteRenderer.color = slowColor;
     }
     public virtual void OffSlow()
     {
@@ -252,7 +237,7 @@ public class Enemy : MonoBehaviour
         slowPower = 0f;
         isSlow = false;
 
-        slowSign.gameObject.SetActive(false);
+        spriteRenderer.color = Color.white;
     }
     protected virtual void Move()
     {
