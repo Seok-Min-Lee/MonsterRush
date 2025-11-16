@@ -10,10 +10,7 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
     private Queue<WeaponD> bulletPool = new Queue<WeaponD>();
     private float timer = 0f;
     private bool isSequence = false;
-    private void Start()
-    {
-        stateToggle.Init(isSequence);
-    }
+
     private void Update()
     {
         if (Time.timeScale == 0f)
@@ -51,7 +48,12 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
         {
             return;
         }
-        activeCount++;
+
+        if (activeCount++ == 0)
+        {
+            stateToggle.Unlock();
+            stateToggle.Init(isSequence);
+        }
     }
     public override void StrengthenSecond()
     {

@@ -21,10 +21,6 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
         weapon.gameObject.SetActive(false);
 
         weapons.Add(weapon);
-
-        isPoison = true;
-        stateToggle.Init(isPoison);
-        weapons[0].Init(isPoison);
     }
     public override void StrengthenFirst()
     {
@@ -38,6 +34,10 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
         if (activeCount == 0)
         {
             weapons[0].gameObject.SetActive(true);
+
+            stateToggle.Unlock();
+            stateToggle.Init(isPoison);
+            weapons[0].Init(isPoison);
         }
         else
         {

@@ -13,7 +13,6 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     private void Awake()
     {
         base.Init();
-        stateToggle.Init(isExpand);
     }
     private void FixedUpdate()
     {
@@ -31,6 +30,12 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     {
         base.StrengthenFirst();
         RefreshTransform();
+
+        if (activeCount == 1)
+        {
+            stateToggle.Unlock();
+            stateToggle.Init(isExpand);
+        }
     }
     public override void StrengthenSecond()
     {

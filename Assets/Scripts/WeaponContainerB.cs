@@ -13,10 +13,6 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     private Queue<WeaponB> bulletPool = new Queue<WeaponB>();
     private float timer = 0f;
     private bool isRandom = false;
-    private void Start()
-    {
-        stateToggle.Init(isRandom);
-    }
     private void Update()
     {
         if (Time.timeScale == 0f)
@@ -53,7 +49,12 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
         {
             return;
         }
-        activeCount++;
+
+        if (activeCount++ == 0)
+        {
+            stateToggle.Unlock();
+            stateToggle.Init(isRandom);
+        }
     }
     public override void StrengthenSecond()
     {
