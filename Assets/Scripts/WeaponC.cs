@@ -5,7 +5,10 @@ public class WeaponC : Weapon
 {
     [SerializeField] private Transform maskTransform;
     [SerializeField] private SpriteRenderer textureRenderer;
-    [SerializeField] private float slowPower = 0f;
+    private Color poisonColor = new Color(0.7529f, 0, 1f, 1f);
+    private Color slowcolor = new Color(0f, 0.5f, 1f, 1f);
+
+    private bool isModePosion = true;
 
     private CircleCollider2D collider;
 
@@ -21,9 +24,9 @@ public class WeaponC : Weapon
         collider.radius = 0f;
 
         // Target Value
-        Vector3 maskScale = Vector3.one * 2f;
-        Vector2 textureSize = Vector2.one * 2f;
-        float collierRadius = 1f;
+        Vector3 maskScale = Vector3.one * 2.25f;
+        Vector2 textureSize = Vector2.one * 2.25f;
+        float collierRadius = 1.125f;
 
         // 모션 적용
         maskTransform.DOScale(maskScale, 0.5f);
@@ -34,9 +37,42 @@ public class WeaponC : Weapon
     {
         transform.Rotate(Vector3.forward, .5f);
     }
-    public void SwitchVisibility(bool value)
+    private Collider2D[] detectBuffer = new Collider2D[200];
+    public void SwitchMode(bool value)
     {
-        textureRenderer.enabled = value;
+        Init(value);
+
+        // 주변 적 탐색 후 효과 적용
+        ContactFilter2D contactFilter = new ContactFilter2D();
+        contactFilter.layerMask = LayerMask.GetMask("Enemy");
+
+        int detectCount = Physics2D.OverlapCircle(
+            point: Player.Instance.transform.position,
+            radius: collider.radius,
+            contactFilter: contactFilter,
+            results: detectBuffer
+        );
+
+        for (int i = 0; i < detectCount; i++)
+        {
+            Enemy enemy = detectBuffer[i].gameObject.GetComponent<Enemy>();
+
+            if (isModePosion)
+            {
+                enemy.OnAddict(power);
+                enemy.OffSlow();
+            }
+            else
+            {
+                enemy.OnSlow(power);
+                enemy.OffAddict();
+            }
+        }
+    }
+    public void Init(bool value)
+    {
+        isModePosion = value;
+        textureRenderer.color = isModePosion ? poisonColor : slowcolor;
     }
     public void Expand()
     {
@@ -52,15 +88,24 @@ public class WeaponC : Weapon
     }
     public override void Strengthen()
     {
-        slowPower += 0.05f;
+        power++;
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-            enemy.OnAddict(power);
-            enemy.OnSlow(slowPower);
+
+            if (isModePosion)
+            {
+                enemy.OnAddict(power);
+                enemy.OffSlow();
+            }
+            else
+            {
+                enemy.OnSlow(power);
+                enemy.OffAddict();
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -71,5 +116,14 @@ public class WeaponC : Weapon
             enemy.OffAddict();
             enemy.OffSlow();
         }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (Player.Instance == null)
+        {
+            return;
+        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(Player.Instance.transform.position, collider.radius);
     }
 }

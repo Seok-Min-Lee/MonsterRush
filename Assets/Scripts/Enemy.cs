@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int hpMax = 1;
     [SerializeField] protected int power;
     [SerializeField] protected float speed;
+    [SerializeField] protected float addictInterval = 0.5f;
     [SerializeField] protected int addictDamage = 0;
     [SerializeField] protected bool isAddict = false;
     [SerializeField] protected float bleedPower = 0f;
@@ -66,7 +67,7 @@ public class Enemy : MonoBehaviour
     {
         if (isAddict)
         {
-            if (addictTimer > 0.2f)
+            if (addictTimer > addictInterval)
             {
                 OnDamage(addictDamage);
                 addictTimer = 0f;
@@ -186,8 +187,9 @@ public class Enemy : MonoBehaviour
     public virtual void OnAddict(int value)
     {
         isAddict = true;
-        addictDamage = value;
+        addictDamage = 1;
         addictTimer = 0f;
+        addictInterval = 0.5f - value * 0.05f;
 
         poisonParticle.Play();
     }
@@ -195,7 +197,8 @@ public class Enemy : MonoBehaviour
     {
         isAddict = false;
         addictDamage = 0;
-        addictTimer = 0f;
+        addictTimer = 0f; 
+        addictInterval = 0.5f;
 
         poisonParticle.Stop();
     }
@@ -217,23 +220,13 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnSlow(float value)
     {
-        if (value == 0f)
-        {
-            return;
-        }
-
-        slowPower = value;
+        slowPower = 0.1f + value * 0.05f;
         isSlow = true;
 
         spriteRenderer.color = slowColor;
     }
     public virtual void OffSlow()
     {
-        if (slowPower == 0f)
-        {
-            return;
-        }
-
         slowPower = 0f;
         isSlow = false;
 

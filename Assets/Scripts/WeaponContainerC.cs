@@ -2,20 +2,18 @@ using UnityEngine;
 
 public class WeaponContainerC : WeaponContainer<WeaponC>
 {
-    private bool isVisible = true;
+    private bool isPoison = true;
     private void Awake()
     {
         this.Init();
-        stateToggle.Init(!isVisible);
     }
     public override void OnClickStateToggle()
     {
         base.OnClickStateToggle();
 
-        isVisible = !isVisible;
-        stateToggle.Init(!isVisible);
-
-        weapons[0].SwitchVisibility(isVisible);
+        isPoison = !isPoison;
+        stateToggle.Init(isPoison);
+        weapons[0].SwitchMode(isPoison);
     }
     public override void Init()
     {
@@ -23,6 +21,10 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
         weapon.gameObject.SetActive(false);
 
         weapons.Add(weapon);
+
+        isPoison = true;
+        stateToggle.Init(isPoison);
+        weapons[0].Init(isPoison);
     }
     public override void StrengthenFirst()
     {
