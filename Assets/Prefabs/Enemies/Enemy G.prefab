@@ -185,7 +185,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.5, y: 0.4}
   m_EdgeRadius: 0
 --- !u!50 &8466853575989718803
 Rigidbody2D:
@@ -235,6 +235,7 @@ MonoBehaviour:
   hpMax: 0
   power: 0
   speed: 0
+  addictInterval: 0.5
   addictDamage: 0
   isAddict: 0
   bleedPower: 0
