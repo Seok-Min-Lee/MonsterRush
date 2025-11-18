@@ -377,7 +377,7 @@ MonoBehaviour:
   - {fileID: -8190971150662442100, guid: 550949d173469e64b98691ac2b3d9388, type: 3}
   - {fileID: -5106672144173288571, guid: 550949d173469e64b98691ac2b3d9388, type: 3}
   slowColor: {r: 0.5019608, g: 0.5019608, b: 1, a: 1}
-  defaultColor: {r: 1, g: 1, b: 1, a: 0}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &7574380895740579757
 GameObject:
   m_ObjectHideFlags: 0
