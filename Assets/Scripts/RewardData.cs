@@ -4,10 +4,11 @@ using UnityEngine;
 [Serializable]
 public struct RewardInfo
 {
+    public enum Type { Weapon, Ability, Player, Buff, }
     public int groupId;
     public int index;
     public Sprite icon;
     public string head;
     public string desc;
-    public bool isSpecial;
+    public Type type;
 }

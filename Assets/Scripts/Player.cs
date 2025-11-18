@@ -248,7 +248,7 @@ public class Player : MonoBehaviour
         switch (rewardInfo.groupId)
         {
             case 1000:
-                if (!rewardInfo.isSpecial)
+                if (rewardInfo.type == RewardInfo.Type.Weapon)
                 {
                     statDictionary[PlayerStat.WeaponA].Increase();
                 }
@@ -259,7 +259,7 @@ public class Player : MonoBehaviour
                 weaponContainers[0].GetComponent<WeaponContainerA>().Strengthen(rewardInfo.index);
                 break;
             case 2000:
-                if (!rewardInfo.isSpecial)
+                if (rewardInfo.type == RewardInfo.Type.Weapon)
                 {
                     statDictionary[PlayerStat.WeaponB].Increase();
                 }
@@ -270,7 +270,7 @@ public class Player : MonoBehaviour
                 weaponContainers[1].GetComponent<WeaponContainerB>().Strengthen(rewardInfo.index);
                 break;
             case 3000:
-                if (!rewardInfo.isSpecial)
+                if (rewardInfo.type == RewardInfo.Type.Weapon)
                 {
                     statDictionary[PlayerStat.WeaponC].Increase();
                 }
@@ -281,7 +281,7 @@ public class Player : MonoBehaviour
                 weaponContainers[2].GetComponent<WeaponContainerC>().Strengthen(rewardInfo.index);
                 break;
             case 4000:
-                if (!rewardInfo.isSpecial)
+                if (rewardInfo.type == RewardInfo.Type.Weapon)
                 {
                     statDictionary[PlayerStat.WeaponD].Increase();
                 }

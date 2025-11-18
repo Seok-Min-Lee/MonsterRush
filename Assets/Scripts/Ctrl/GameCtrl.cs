@@ -31,23 +31,22 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private RewardButton[] rewardButtons;
     [SerializeField] private RewardInfo[] rewardInfoes;
 
-    private Dictionary<int, RewardInfo> rewardInfoDictionary = new Dictionary<int, RewardInfo>();
-    private Dictionary<int, RewardInfo> specialRewardDictionary = new Dictionary<int, RewardInfo>();
+    private Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>> rewardGroup = new Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>>();
     private float timer = 0f;
     private void Awake()
     {
         Instance = this;
 
-        foreach (RewardInfo info in rewardInfoes)
+        foreach (IGrouping<RewardInfo.Type, RewardInfo> group in rewardInfoes.GroupBy(x => x.type))
         {
-            if (info.isSpecial)
+            Dictionary<int, RewardInfo> dictionary = new Dictionary<int, RewardInfo>();
+
+            foreach (RewardInfo info in group)
             {
-                specialRewardDictionary.Add(info.groupId + info.index, info);
+                dictionary.Add(info.groupId + info.index, info);
             }
-            else
-            {
-                rewardInfoDictionary.Add(info.groupId + info.index, info);
-            }
+
+            rewardGroup.Add(group.Key, dictionary);
         }
     }
     private void Start()
@@ -176,29 +175,30 @@ public class GameCtrl : MonoBehaviour
         for (int i = 0; i < rows; i++)
         {
             int level = temp[i, 0];
+
             if (level < 1)
             {
-                samples.Add(rewardInfoDictionary[temp[i, 1]]);
+                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 1]]);
             }
             else if (level < 8)
             {
-                samples.Add(rewardInfoDictionary[temp[i, 2]]);
+                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 2]]);
             }
             else if (level < 16)
             {
-                samples.Add(rewardInfoDictionary[temp[i, 3]]);
+                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 3]]);
             }
 
-            if (level > 0 && specialRewardDictionary.ContainsKey(temp[i, 3]) && Random.Range(0, 10) == 0)
+            if (level > 0 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(temp[i, 4]) && Random.Range(0, 10) == 0)
             {
-                samples.Add(specialRewardDictionary[temp[i, 4]]);
+                samples.Add(rewardGroup[RewardInfo.Type.Ability][temp[i, 4]]);
             }
         }
 
-        samples.Add(rewardInfoDictionary[0]);
-        samples.Add(rewardInfoDictionary[1]);
-        samples.Add(rewardInfoDictionary[2]);
-        samples.Add(rewardInfoDictionary[3]);
+        samples.Add(rewardGroup[RewardInfo.Type.Player][0]);
+        samples.Add(rewardGroup[RewardInfo.Type.Player][1]);
+        samples.Add(rewardGroup[RewardInfo.Type.Player][2]);
+        samples.Add(rewardGroup[RewardInfo.Type.Player][3]);
 
         List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(samples);
 
@@ -212,10 +212,10 @@ public class GameCtrl : MonoBehaviour
     public void OnClickReward(RewardInfo rewardInfo)
     {
         rewardWindow.SetActive(false);
-
-        if (rewardInfo.isSpecial)
+        
+        if (rewardInfo.type == RewardInfo.Type.Ability)
         {
-            specialRewardDictionary.Remove(rewardInfo.groupId + rewardInfo.index);
+            rewardGroup[RewardInfo.Type.Ability].Remove(rewardInfo.groupId + rewardInfo.index);
         }
 
         Time.timeScale = 1f;
