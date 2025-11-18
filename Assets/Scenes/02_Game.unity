@@ -6261,11 +6261,11 @@ PrefabInstance:
     - target: {fileID: 333455530756081547, guid: 1ee1c4145a7a1764cb0f2188f1de9872, type: 3}
       propertyPath: onSprite
       value: 
-      objectReference: {fileID: 21300000, guid: 674d9e1e6cfaab742a0cf002d88e7200, type: 3}
+      objectReference: {fileID: 21300000, guid: d36412f293b529a4a8ad6601b9e249ee, type: 3}
     - target: {fileID: 333455530756081547, guid: 1ee1c4145a7a1764cb0f2188f1de9872, type: 3}
       propertyPath: offSprite
       value: 
-      objectReference: {fileID: 21300000, guid: a8a837902eb4b60419aa6f1717c31592, type: 3}
+      objectReference: {fileID: 21300000, guid: 42b61e87f319e7343b09b97df5abccec, type: 3}
     - target: {fileID: 333455530756081547, guid: 1ee1c4145a7a1764cb0f2188f1de9872, type: 3}
       propertyPath: isLockAtInit
       value: 1
@@ -9481,7 +9481,7 @@ MonoBehaviour:
   - {fileID: 972684546}
   - {fileID: 767476726}
   stage: 0
-  spawnInterval: 0.06667
+  spawnInterval: 0.6667
   spawnDistanceMin: 7
   spawnDistanceMax: 10
   poolSizeMin: 0

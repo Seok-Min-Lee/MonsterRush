@@ -9,26 +9,19 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
 
     private Queue<WeaponD> bulletPool = new Queue<WeaponD>();
     private float timer = 0f;
-    private bool isSequence = false;
+    private bool isUpper = false;
     private float explosionScale = 1f;
 
     private void Update()
     {
-        if (Time.timeScale == 0f)
+        if (Time.timeScale == 0f || activeCount == 0)
         {
             return;
         }
 
-        if (timer > 2f)
+        if (timer > 2.5f)
         {
-            if (isSequence)
-            {
-                LaunchSequence();
-            }
-            else
-            {
-                LaunchOnce();
-            }
+            LaunchSequence();
 
             timer = 0f;
         }
@@ -39,8 +32,8 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
     {
         base.OnClickStateToggle();
 
-        isSequence = !isSequence;
-        stateToggle.Init(isSequence);
+        isUpper = !isUpper;
+        stateToggle.Init(isUpper);
         timer = 0f;
     }
     public override void Strengthen(int key)
@@ -68,31 +61,12 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
         if (activeCount++ == 0)
         {
             stateToggle.Unlock();
-            stateToggle.Init(isSequence);
+            stateToggle.Init(isUpper);
         }
     }
 
-    public void LaunchOnce()
-    {
-        if (activeCount <= 0)
-        {
-            return;
-        }
-
-        for (int i = 0; i < activeCount; i++)
-        {
-            Launch();
-        }
-
-        AudioManager.Instance.PlaySFX(SoundKey.WeaponDLaunch);
-    }
     public void LaunchSequence()
     {
-        if (activeCount <= 0)
-        {
-            return;
-        }
-
         StartCoroutine(Cor());
 
         IEnumerator Cor()
@@ -109,21 +83,36 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
     private void Launch()
     {
         WeaponD bullet = bulletPool.Count > 0 ?
-                            bulletPool.Dequeue() :
-                            GameObject.Instantiate<WeaponD>(prefab, transform);
-
+                         bulletPool.Dequeue() :
+                         GameObject.Instantiate<WeaponD>(prefab, transform);
+        
         //
-        float radian = Random.Range(60, 120) * Mathf.Deg2Rad;
-        Vector2 direction = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
+        float radian, mass;
+        Vector3 position;
+        if (isUpper)
+        {
+            position = transform.position + Vector3.up * 0.25f;
+            mass = Random.Range(8f, 16f);
+            radian = Random.Range(60, 120) * Mathf.Deg2Rad;
+        }
+        else
+        {
+            position = transform.position + Vector3.down * 0.25f;
+            mass = Random.Range(6f, 8f);
+            radian = Random.Range(150, 390) * Mathf.Deg2Rad;
+        }
+
+        Vector2 force = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian)) * mass;
+        float torque = Random.Range(-10f, 10f);
 
         //
         bullet.OnShot(
             container: this,
             knockbackLevel: knockbackLevel,
             explosionScale: explosionScale,
-            position: transform.position,
-            rotation: transform.rotation,
-            direction: direction
+            position: position,
+            force: force,
+            torque: torque
         );
     }
     public void Reload(WeaponD bullet)

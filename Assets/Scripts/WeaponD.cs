@@ -31,7 +31,18 @@ public class WeaponD : Weapon
             OnExplosion();
         }
     }
-    
+    public void OnShot(WeaponContainerD container, int knockbackLevel, float explosionScale, Vector3 position, Vector3 force, float torque)
+    {
+        gameObject.SetActive(true);
+
+        this.container = container;
+        flare.Init(knockbackLevel);
+        transform.position = position;
+        flare.transform.localScale = Vector3.one * explosionScale;
+
+        rigidbody.AddForce(force, ForceMode2D.Impulse);
+        rigidbody.AddTorque(torque, ForceMode2D.Impulse);
+    }
     public void OnShot(WeaponContainerD container, int knockbackLevel, float explosionScale, Vector3 position, Quaternion rotation, Vector3 direction)
     {
         gameObject.SetActive(true);

@@ -66,8 +66,11 @@ public class Item : MonoBehaviour
         Vector3 targetPos = transform.position + new Vector3(0f, 0.1f, 0f);
         transform.DOMove(targetPos, 0.2f).OnComplete(() => 
         {
-            isMove = true;
-            cor = StartCoroutine(MoveCor());
+            if (gameObject.activeSelf)
+            {
+                isMove = true;
+                cor = StartCoroutine(MoveCor());
+            }
         });
     }
     private void OnAbsorbed()
