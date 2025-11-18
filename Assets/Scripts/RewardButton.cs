@@ -14,10 +14,8 @@ public class RewardButton : MonoBehaviour
         this.rewardInfo = rewardInfo;
 
         icon.sprite = rewardInfo.icon;
-        head.text = $"{rewardInfo.head}";
+        head.text = rewardInfo.head;
         desc.text = rewardInfo.desc;
-
-        head.color = rewardInfo.isSpecial ? Color.yellow : Color.white;
     }
     public void OnClick()
     {

@@ -48,10 +48,11 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     {
         switch (key)
         {
-            case 0: // 개수 증가
+            case 0: // 획득
+            case 1: // 개수 증가
                 StrengthenFirst();
                 break;
-            case 1: // 확률 증가
+            case 2: // 확률 증가
                 bleedRatio += 0.05f;
                 break;
             case 99: // 관통 활성화

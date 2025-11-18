@@ -40,10 +40,11 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
     {
         switch (key)
         {
-            case 0: // °³¼ö Áõ°¡
+            case 0: // È¹µæ
+            case 1: // °³¼ö Áõ°¡
                 StrengthenFirst();
                 break;
-            case 1: // ³Ë¹é °­È­
+            case 2: // ³Ë¹é °­È­
                 knockbackLevel++;
                 break;
             case 99: // Æø¹ß È®Àå

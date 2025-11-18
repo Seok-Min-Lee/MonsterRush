@@ -35,10 +35,11 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
     {
         switch (key)
         {
-            case 0: // 영역 확장
+            case 0: // 획득
+            case 1: // 영역 확장
                 StrengthenFirst();
                 break;
-            case 1: // 효과 강화
+            case 2: // 효과 강화
                 weapons[0].PowerUp();
                 break;
             case 99: // 동시 적용

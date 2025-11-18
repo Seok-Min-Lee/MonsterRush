@@ -166,28 +166,32 @@ public class GameCtrl : MonoBehaviour
 
         int[,] temp = new int[,]
         {
-            { Player.Instance.weaponALevel, 1000, 1001, 1099 },
-            { Player.Instance.weaponBLevel, 2000, 2001, 2099 },
-            { Player.Instance.weaponCLevel, 3000, 3001, 3099 },
-            { Player.Instance.weaponDLevel, 4000, 4001, 4099 },
+            { Player.Instance.weaponALevel, 1000, 1001, 1002, 1099 },
+            { Player.Instance.weaponBLevel, 2000, 2001, 2002, 2099 },
+            { Player.Instance.weaponCLevel, 3000, 3001, 3002, 3099 },
+            { Player.Instance.weaponDLevel, 4000, 4001, 4002, 4099 },
         };
         int rows = temp.GetLength(0);
 
         for (int i = 0; i < rows; i++)
         {
             int level = temp[i, 0];
-            if (level < 8)
+            if (level < 1)
             {
                 samples.Add(rewardInfoDictionary[temp[i, 1]]);
             }
-            else if (level < 16)
+            else if (level < 8)
             {
                 samples.Add(rewardInfoDictionary[temp[i, 2]]);
+            }
+            else if (level < 16)
+            {
+                samples.Add(rewardInfoDictionary[temp[i, 3]]);
             }
 
             if (level > 0 && specialRewardDictionary.ContainsKey(temp[i, 3]) && Random.Range(0, 10) == 0)
             {
-                samples.Add(specialRewardDictionary[temp[i, 3]]);
+                samples.Add(specialRewardDictionary[temp[i, 4]]);
             }
         }
 

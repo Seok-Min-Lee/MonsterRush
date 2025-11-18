@@ -30,10 +30,11 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     {
         switch (key)
         {
-            case 0: // 개수 증가
+            case 0: // 획득
+            case 1: // 개수 증가
                 StrengthenFirst();
                 break;
-            case 1: // 피해량 증가
+            case 2: // 피해량 증가
                 for (int i = 0; i < weapons.Count; i++)
                 {
                     weapons[i].PowerUp();
