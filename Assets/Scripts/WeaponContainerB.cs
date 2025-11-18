@@ -13,6 +13,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     private Queue<WeaponB> bulletPool = new Queue<WeaponB>();
     private float timer = 0f;
     private bool isRandom = false;
+    [SerializeField] private bool isPenetrate = false;
     private void Update()
     {
         if (Time.timeScale == 0f)
@@ -43,7 +44,22 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
         isRandom = !isRandom;
         stateToggle.Init(isRandom);
     }
-    public override void StrengthenFirst()
+    public override void Strengthen(int key)
+    {
+        switch (key)
+        {
+            case 0: // 개수 증가
+                StrengthenFirst();
+                break;
+            case 1: // 확률 증가
+                bleedRatio += 0.05f;
+                break;
+            case 99: // 관통 활성화
+                isPenetrate = true;
+                break;
+        }
+    }
+    private void StrengthenFirst()
     {
         if (activeCount >= WEAPON_COUNT_MAX)
         {
@@ -54,51 +70,6 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
         {
             stateToggle.Unlock();
             stateToggle.Init(isRandom);
-        }
-    }
-    public override void StrengthenSecond()
-    {
-        bleedRatio += 0.05f;
-    }
-    public void LaunchForward()
-    {
-        if (activeCount == 0)
-        {
-            return;
-        }
-
-        StartCoroutine(Cor());
-
-        IEnumerator Cor()
-        {
-            int count = activeCount;
-            float delay = 1f / count;
-            
-            for (int i = 0; i < count; i++)
-            {
-                WeaponB bullet = bulletPool.Count > 0 ? 
-                                 bulletPool.Dequeue() : 
-                                 GameObject.Instantiate<WeaponB>(prefab);
-
-                //
-                float radian = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
-                Vector2 direction = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
-                Vector3 position = Player.Instance.transform.position + (Vector3)Random.insideUnitCircle * 0.25f;
-
-                //
-                bullet.OnShot(
-                    container: this,
-                    bleedRatio: bleedRatio,
-                    flipX: isRandom,
-                    position: position,
-                    rotation: transform.rotation,
-                    direction: isRandom ? direction * -1 : direction
-                );
-
-                AudioManager.Instance.PlaySFX(SoundKey.WeaponBLaunch);
-
-                yield return new WaitForSeconds(delay);
-            }
         }
     }
     private Collider2D[] detectBuffer = new Collider2D[32];
@@ -192,7 +163,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
         bullet.OnShot(
             container: this,
             bleedRatio: bleedRatio,
-            flipX: false,
+            isPenetrate: isPenetrate,
             position: position,
             rotation: Quaternion.Euler(0, 0, angle),
             direction: direction

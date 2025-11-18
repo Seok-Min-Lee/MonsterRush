@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class WeaponC : Weapon
 {
+    public enum State { Poison, Slow, Both }
     [SerializeField] private Transform maskTransform;
     [SerializeField] private SpriteRenderer textureRenderer;
     private Color poisonColor = new Color(0.7529f, 0, 1f, 1f);
-    private Color slowcolor = new Color(0f, 0.5f, 1f, 1f);
+    private Color slowcolor = new Color(0f, 0.7529f, 1f, 1f);
+    private Color bothColor = new Color(0.37645f, 0.37645f, 1f, 1f);
 
-    private bool isModePosion = true;
+    private State state = State.Poison;
 
     private CircleCollider2D collider;
 
@@ -32,13 +34,16 @@ public class WeaponC : Weapon
         maskTransform.DOScale(maskScale, 0.5f);
         DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
         DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
+
+        state = State.Poison;
+        textureRenderer.color = poisonColor;
     }
     private void FixedUpdate()
     {
         transform.Rotate(Vector3.forward, .5f);
     }
     private Collider2D[] detectBuffer = new Collider2D[200];
-    public void SwitchMode(bool value)
+    public void SwitchMode(State value)
     {
         Init(value);
 
@@ -57,22 +62,39 @@ public class WeaponC : Weapon
         {
             Enemy enemy = detectBuffer[i].gameObject.GetComponent<Enemy>();
 
-            if (isModePosion)
+            switch (state)
             {
-                enemy.OnAddict(power);
-                enemy.OffSlow();
-            }
-            else
-            {
-                enemy.OnSlow(power);
-                enemy.OffAddict();
+                case State.Poison:
+                    enemy.OnAddict(power);
+                    enemy.OffSlow();
+                    break;
+                case State.Slow:
+                    enemy.OnSlow(power);
+                    enemy.OffAddict();
+                    break;
+                case State.Both:
+                    enemy.OnAddict(power);
+                    enemy.OnSlow(power);
+                    break;
             }
         }
     }
-    public void Init(bool value)
+    public void Init(State value)
     {
-        isModePosion = value;
-        textureRenderer.color = isModePosion ? poisonColor : slowcolor;
+        state = value;
+
+        switch (state)
+        {
+            case State.Poison:
+                textureRenderer.color = poisonColor;
+                break;
+            case State.Slow:
+                textureRenderer.color = slowcolor;
+                break;
+            case State.Both:
+                textureRenderer.color = bothColor;
+                break;
+        }
     }
     public void Expand()
     {
@@ -86,7 +108,7 @@ public class WeaponC : Weapon
         DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
         DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
     }
-    public override void Strengthen()
+    public void PowerUp()
     {
         power++;
     }
@@ -96,15 +118,20 @@ public class WeaponC : Weapon
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
 
-            if (isModePosion)
+            switch (state)
             {
-                enemy.OnAddict(power);
-                enemy.OffSlow();
-            }
-            else
-            {
-                enemy.OnSlow(power);
-                enemy.OffAddict();
+                case State.Poison:
+                    enemy.OnAddict(power);
+                    enemy.OffSlow();
+                    break;
+                case State.Slow:
+                    enemy.OnSlow(power);
+                    enemy.OffAddict();
+                    break;
+                case State.Both:
+                    enemy.OnAddict(power);
+                    enemy.OnSlow(power);
+                    break;
             }
         }
     }

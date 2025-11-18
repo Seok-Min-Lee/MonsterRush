@@ -27,6 +27,8 @@ public class Player : MonoBehaviour
     [SerializeField] private StatSlot[] statSlots;
     [SerializeField] private StateToggle magnetToggle;
     [SerializeField] private Image healGuage;
+    [SerializeField] private Transform buffIconStack;
+    [SerializeField] private GameObject[] buffIcons;
 
     private Dictionary<PlayerStat, StatSlot> statDictionary;
 
@@ -98,22 +100,22 @@ public class Player : MonoBehaviour
         switch (StaticValues.playerCharacterNum)
         {
             case 0:
-                weaponContainers[0].GetComponent<WeaponContainerA>().StrengthenFirst();
+                weaponContainers[0].GetComponent<WeaponContainerA>().Strengthen(0);
                 statDictionary[PlayerStat.WeaponA].Increase();
                 statDictionary[PlayerStat.Strength].Increase();
                 break;
             case 1:
-                weaponContainers[1].GetComponent<WeaponContainerB>().StrengthenFirst();
+                weaponContainers[1].GetComponent<WeaponContainerB>().Strengthen(0);
                 statDictionary[PlayerStat.WeaponB].Increase();
                 statDictionary[PlayerStat.Speed].Increase();
                 break;
             case 2:
-                weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenFirst();
+                weaponContainers[2].GetComponent<WeaponContainerC>().Strengthen(0);
                 statDictionary[PlayerStat.WeaponC].Increase();
                 statDictionary[PlayerStat.Magnet].Increase();
                 break;
             case 3:
-                weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenFirst();
+                weaponContainers[3].GetComponent<WeaponContainerD>().Strengthen(0);
                 statDictionary[PlayerStat.WeaponD].Increase();
                 statDictionary[PlayerStat.Heal].Increase();
                 break;
@@ -244,54 +246,71 @@ public class Player : MonoBehaviour
     }
     public void OnReward(RewardInfo rewardInfo)
     {
-        switch (rewardInfo.id)
+        switch (rewardInfo.groupId)
         {
+            case 1000:
+                if (!rewardInfo.isSpecial)
+                {
+                    statDictionary[PlayerStat.WeaponA].Increase();
+                }
+                else
+                {
+                    GameObject.Instantiate(buffIcons[0], buffIconStack);
+                }
+                weaponContainers[0].GetComponent<WeaponContainerA>().Strengthen(rewardInfo.index);
+                break;
+            case 2000:
+                if (!rewardInfo.isSpecial)
+                {
+                    statDictionary[PlayerStat.WeaponB].Increase();
+                }
+                else
+                {
+                    GameObject.Instantiate(buffIcons[1], buffIconStack);
+                }
+                weaponContainers[1].GetComponent<WeaponContainerB>().Strengthen(rewardInfo.index);
+                break;
+            case 3000:
+                if (!rewardInfo.isSpecial)
+                {
+                    statDictionary[PlayerStat.WeaponC].Increase();
+                }
+                else
+                {
+                    GameObject.Instantiate(buffIcons[2], buffIconStack);
+                }
+                weaponContainers[2].GetComponent<WeaponContainerC>().Strengthen(rewardInfo.index);
+                break;
+            case 4000:
+                if (!rewardInfo.isSpecial)
+                {
+                    statDictionary[PlayerStat.WeaponD].Increase();
+                }
+                else
+                {
+                    GameObject.Instantiate(buffIcons[3], buffIconStack);
+                }
+                weaponContainers[3].GetComponent<WeaponContainerD>().Strengthen(rewardInfo.index);
+                break;
             case 0:
-                statDictionary[PlayerStat.WeaponA].Increase();
-                weaponContainers[0].GetComponent<WeaponContainerA>().StrengthenFirst();
-                break;
-            case 1:
-                statDictionary[PlayerStat.WeaponA].Increase();
-                weaponContainers[0].GetComponent<WeaponContainerA>().StrengthenSecond();
-                break;
-            case 10:
-                statDictionary[PlayerStat.WeaponB].Increase();
-                weaponContainers[1].GetComponent<WeaponContainerB>().StrengthenFirst();
-                break;
-            case 11:
-                statDictionary[PlayerStat.WeaponB].Increase();
-                weaponContainers[1].GetComponent<WeaponContainerB>().StrengthenSecond();
-                break;
-            case 20:
-                statDictionary[PlayerStat.WeaponC].Increase();
-                weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenFirst();
-                break;
-            case 21:
-                statDictionary[PlayerStat.WeaponC].Increase();
-                weaponContainers[2].GetComponent<WeaponContainerC>().StrengthenSecond();
-                break;
-            case 30:
-                statDictionary[PlayerStat.WeaponD].Increase();
-                weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenFirst();
-                break;
-            case 31:
-                statDictionary[PlayerStat.WeaponD].Increase();
-                weaponContainers[3].GetComponent<WeaponContainerD>().StrengthenSecond();
-                break;
-            case 90:
-                statDictionary[PlayerStat.Heal].Increase();
-                break;
-            case 91:
-                Vector3 scale = magnetArea.localScale * 1.1f;
-                magnetArea.DOScale(scale, 0.5f);
-                statDictionary[PlayerStat.Magnet].Increase();
-                break;
-            case 92:
-                speed *= 1.1f;
-                statDictionary[PlayerStat.Speed].Increase();
-                break;
-            case 93:
-                statDictionary[PlayerStat.Strength].Increase();
+                switch (rewardInfo.index)
+                {
+                    case 0:
+                        statDictionary[PlayerStat.Heal].Increase();
+                        break;
+                    case 1:
+                        Vector3 scale = magnetArea.localScale * 1.1f;
+                        magnetArea.DOScale(scale, 0.5f);
+                        statDictionary[PlayerStat.Magnet].Increase();
+                        break;
+                    case 2:
+                        speed *= 1.1f;
+                        statDictionary[PlayerStat.Speed].Increase();
+                        break;
+                    case 3:
+                        statDictionary[PlayerStat.Strength].Increase();
+                        break;
+                }
                 break;
         }
     }

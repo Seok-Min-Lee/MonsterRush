@@ -8,7 +8,6 @@ public class StateToggle : MonoBehaviour
     [SerializeField] private Sprite offSprite;
     [SerializeField] private Sprite lockSprite;
     [SerializeField] private bool isLock;
-
     private void Start()
     {
         if (isLock)
@@ -25,6 +24,13 @@ public class StateToggle : MonoBehaviour
         }
 
         stateImage.sprite = value ? onSprite : offSprite;
+    }
+    public void Lock()
+    {
+        stateImage.sprite = lockSprite;
+
+        GetComponent<Button>().interactable = false;
+        isLock = true;
     }
     public void Unlock()
     {

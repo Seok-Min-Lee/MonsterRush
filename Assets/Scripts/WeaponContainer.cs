@@ -24,16 +24,7 @@ public class WeaponContainer<T> : MonoBehaviour where T : Weapon
             weapons.Add(weapon);
         }
     }
-    public virtual void StrengthenFirst()
-    {
-        if (activeCount >= WEAPON_COUNT_MAX)
-        {
-            return;
-        }
-
-        weapons[activeCount++].gameObject.SetActive(true);
-    }
-    public virtual void StrengthenSecond()
+    public virtual void Strengthen(int key)
     {
         return;
     }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WeaponContainerC : WeaponContainer<WeaponC>
 {
-    private bool isPoison = true;
+    private WeaponC.State state = WeaponC.State.Poison;
     private void Awake()
     {
         this.Init();
@@ -11,9 +11,18 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
     {
         base.OnClickStateToggle();
 
-        isPoison = !isPoison;
-        stateToggle.Init(isPoison);
-        weapons[0].SwitchMode(isPoison);
+        if (state == WeaponC.State.Poison)
+        {
+            state = WeaponC.State.Slow;
+            stateToggle.Init(false);
+        }
+        else
+        {
+            state = WeaponC.State.Poison;
+            stateToggle.Init(true);
+        }
+
+        weapons[0].SwitchMode(state);
     }
     public override void Init()
     {
@@ -22,7 +31,23 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
 
         weapons.Add(weapon);
     }
-    public override void StrengthenFirst()
+    public override void Strengthen(int key)
+    {
+        switch (key)
+        {
+            case 0: // 영역 확장
+                StrengthenFirst();
+                break;
+            case 1: // 효과 강화
+                weapons[0].PowerUp();
+                break;
+            case 99:
+                weapons[0].SwitchMode(WeaponC.State.Both);
+                stateToggle.Lock();
+                break;
+        }
+    }
+    private void StrengthenFirst()
     {
         if (activeCount >= WEAPON_COUNT_MAX)
         {
@@ -31,23 +56,17 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
 
         AudioManager.Instance.PlaySFX(SoundKey.PlayerGetWeaponC);
 
-        if (activeCount == 0)
+        if (activeCount++ == 0)
         {
             weapons[0].gameObject.SetActive(true);
 
             stateToggle.Unlock();
-            stateToggle.Init(isPoison);
-            weapons[0].Init(isPoison);
+            stateToggle.Init(state == WeaponC.State.Poison);
+            weapons[0].Init(state);
         }
         else
         {
             weapons[0].Expand();
         }
-
-        activeCount++;
-    }
-    public override void StrengthenSecond()
-    {
-        weapons[0].Strengthen();
     }
 }

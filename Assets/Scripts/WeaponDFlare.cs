@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WeaponDFlare : Weapon
 {
-    [SerializeField] private int knockbackPower = 1;
+    [SerializeField] private int knockbackLevel = 1;
 
     private ParticleSystem particle;
     private BoxCollider2D collider;
@@ -21,13 +21,9 @@ public class WeaponDFlare : Weapon
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
 
-            Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * (knockbackPower * 0.5f);
+            Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * (knockbackLevel * 0.5f);
             enemy.OnKnockback(knockbackForce);
         }
-    }
-    public override void Strengthen()
-    {
-        knockbackPower++;
     }
     public void OnExplosion()
     {
@@ -39,8 +35,8 @@ public class WeaponDFlare : Weapon
         collider.enabled = false;
         particle.Stop();
     }
-    public void Init(int knockbackPower)
+    public void Init(int knockbackLevel)
     {
-        this.knockbackPower = knockbackPower;
+        this.knockbackLevel = knockbackLevel;
     }
 }

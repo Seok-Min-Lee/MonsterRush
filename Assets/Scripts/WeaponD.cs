@@ -32,14 +32,15 @@ public class WeaponD : Weapon
         }
     }
     
-    public void OnShot(WeaponContainerD container, int knockbackPower, Vector3 position, Quaternion rotation, Vector3 direction)
+    public void OnShot(WeaponContainerD container, int knockbackLevel, int explosionScale, Vector3 position, Quaternion rotation, Vector3 direction)
     {
         gameObject.SetActive(true);
 
         this.container = container;
-        flare.Init(knockbackPower);
+        flare.Init(knockbackLevel);
         transform.position = position;
         transform.rotation = rotation;
+        flare.transform.localScale = Vector3.one * explosionScale;
 
         Vector3 force = direction * Random.Range(8f, 16f);
         float torque = Random.Range(-10f, 10f);
@@ -102,9 +103,5 @@ public class WeaponD : Weapon
 
         gameObject.SetActive(false);
         container.Reload(this);
-    }
-    public override void Strengthen()
-    {
-        flare.Strengthen();
     }
 }

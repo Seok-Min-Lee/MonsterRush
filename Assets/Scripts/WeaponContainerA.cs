@@ -26,23 +26,42 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
         stateToggle.Init(isExpand);
         RefreshTransform();
     }
-    public override void StrengthenFirst()
+    public override void Strengthen(int key)
     {
-        base.StrengthenFirst();
-        RefreshTransform();
+        switch (key)
+        {
+            case 0: // 개수 증가
+                StrengthenFirst();
+                break;
+            case 1: // 피해량 증가
+                for (int i = 0; i < weapons.Count; i++)
+                {
+                    weapons[i].PowerUp();
+                }
+                break;
+            case 99: // 넉백 활성화
+                for (int i = 0; i < weapons.Count; i++)
+                {
+                    weapons[i].ActivateKnockback();
+                }
+                break;
+        }
+    }
+    private void StrengthenFirst()
+    {
+        if (activeCount >= WEAPON_COUNT_MAX)
+        {
+            return;
+        }
 
-        if (activeCount == 1)
+        if (activeCount == 0)
         {
             stateToggle.Unlock();
             stateToggle.Init(isExpand);
         }
-    }
-    public override void StrengthenSecond()
-    {
-        for (int i = 0; i < weapons.Count; i++)
-        {
-            weapons[i].Strengthen();
-        }
+
+        weapons[activeCount++].gameObject.SetActive(true);
+        RefreshTransform();
     }
     private void RefreshTransform()
     {

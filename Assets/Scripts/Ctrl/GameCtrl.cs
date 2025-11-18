@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +32,7 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private RewardInfo[] rewardInfoes;
 
     private Dictionary<int, RewardInfo> rewardInfoDictionary = new Dictionary<int, RewardInfo>();
+    private Dictionary<int, RewardInfo> specialRewardDictionary = new Dictionary<int, RewardInfo>();
     private float timer = 0f;
     private void Awake()
     {
@@ -38,7 +40,14 @@ public class GameCtrl : MonoBehaviour
 
         foreach (RewardInfo info in rewardInfoes)
         {
-            rewardInfoDictionary.Add(info.id, info);
+            if (info.isSpecial)
+            {
+                specialRewardDictionary.Add(info.groupId + info.index, info);
+            }
+            else
+            {
+                rewardInfoDictionary.Add(info.groupId + info.index, info);
+            }
         }
     }
     private void Start()
@@ -154,69 +163,38 @@ public class GameCtrl : MonoBehaviour
         Time.timeScale = 0f;
 
         List<RewardInfo> samples = new List<RewardInfo>();
-        int levelA = Player.Instance.weaponALevel;
-        int levelB = Player.Instance.weaponBLevel;
-        int levelC = Player.Instance.weaponCLevel;
-        int levelD = Player.Instance.weaponDLevel;
 
-        if (levelA < 8)
+        int[,] temp = new int[,]
         {
-            samples.Add(rewardInfoDictionary[0]);
-        }
-        else if (levelA < 16)
-        {
-            samples.Add(rewardInfoDictionary[1]);
-        }
+            { Player.Instance.weaponALevel, 1000, 1001, 1099 },
+            { Player.Instance.weaponBLevel, 2000, 2001, 2099 },
+            { Player.Instance.weaponCLevel, 3000, 3001, 3099 },
+            { Player.Instance.weaponDLevel, 4000, 4001, 4099 },
+        };
+        int rows = temp.GetLength(0);
 
-        if (levelB < 8)
+        for (int i = 0; i < rows; i++)
         {
-            samples.Add(rewardInfoDictionary[10]);
-        }
-        else if (levelB < 16)
-        {
-            samples.Add(rewardInfoDictionary[11]);
-        }
+            int level = temp[i, 0];
+            if (level < 8)
+            {
+                samples.Add(rewardInfoDictionary[temp[i, 1]]);
+            }
+            else if (level < 16)
+            {
+                samples.Add(rewardInfoDictionary[temp[i, 2]]);
+            }
 
-        if (levelC < 8)
-        {
-            samples.Add(rewardInfoDictionary[20]);
-        }
-        else if (levelC < 16)
-        {
-            samples.Add(rewardInfoDictionary[21]);
+            if (level > 0 && specialRewardDictionary.ContainsKey(temp[i, 3]) && Random.Range(0, 10) == 0)
+            {
+                samples.Add(specialRewardDictionary[temp[i, 3]]);
+            }
         }
 
-        if (levelD < 8)
-        {
-            samples.Add(rewardInfoDictionary[30]);
-        }
-        else if (levelD < 16)
-        {
-            samples.Add(rewardInfoDictionary[31]);
-        }
-
-
-        //if (levelA < 16)
-        //{
-        //    samples.Add(levelA < 8 ? rewardInfoDictionary[0] : rewardInfoDictionary[1]);
-        //}
-        //if (levelB < 16)
-        //{
-        //    samples.Add(levelB < 8 ? rewardInfoDictionary[10] : rewardInfoDictionary[11]);
-        //}
-        //if (levelC < 16)
-        //{
-        //    samples.Add(levelC < 8 ? rewardInfoDictionary[20] : rewardInfoDictionary[21]);
-        //}
-        //if (levelD < 16)
-        //{
-        //    samples.Add(levelD < 8 ? rewardInfoDictionary[30] : rewardInfoDictionary[31]);
-        //}
-
-        samples.Add(rewardInfoDictionary[90]);
-        samples.Add(rewardInfoDictionary[91]);
-        samples.Add(rewardInfoDictionary[92]);
-        samples.Add(rewardInfoDictionary[93]);
+        samples.Add(rewardInfoDictionary[0]);
+        samples.Add(rewardInfoDictionary[1]);
+        samples.Add(rewardInfoDictionary[2]);
+        samples.Add(rewardInfoDictionary[3]);
 
         List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(samples);
 
@@ -227,9 +205,15 @@ public class GameCtrl : MonoBehaviour
 
         rewardWindow.SetActive(true);
     }
-    public void OnClickReward()
+    public void OnClickReward(RewardInfo rewardInfo)
     {
         rewardWindow.SetActive(false);
+
+        if (rewardInfo.isSpecial)
+        {
+            specialRewardDictionary.Remove(rewardInfo.groupId + rewardInfo.index);
+        }
+
         Time.timeScale = 1f;
     }
     public void OnGameEnd()

@@ -11,8 +11,4 @@ public class Weapon : MonoBehaviour
             collision.gameObject.GetComponent<Enemy>().OnDamage(power + Player.Instance.Strength);
         }
     }
-    public virtual void Strengthen()
-    {
-        return;
-    }
 }
