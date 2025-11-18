@@ -6,10 +6,9 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private GameObject character;
-    [SerializeField] private ParticleSystem particle;
+    [SerializeField] private EnemyCharacter character;
+    [SerializeField] private ParticleSystem deathParticle;
     [SerializeField] private ParticleSystem poisonParticle;
-    [SerializeField] private Color slowColor;
 
     [SerializeField] [Range(0, 7)] private int itemIndex;
 
@@ -41,13 +40,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Image hpGuage;
     [SerializeField] private Image bleedSticker;
 
-    private Transform target;
     private EnemyPool pool;
 
     private BoxCollider2D collider;
     private Rigidbody2D rigidbody;
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
 
     private float addictTimer = 0f;
     private float bleedTimer = 0f;
@@ -59,12 +55,10 @@ public class Enemy : MonoBehaviour
     {
         collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
-
-        spriteRenderer = character.GetComponent<SpriteRenderer>();
-        animator = character.GetComponent<Animator>();
     }
-    private void Update()
+    public void UpdateTick(float time)
     {
+        // addict
         if (isAddict)
         {
             if (addictTimer > addictInterval)
@@ -73,9 +67,10 @@ public class Enemy : MonoBehaviour
                 addictTimer = 0f;
             }
 
-            addictTimer += Time.deltaTime;
+            addictTimer += time;
         }
 
+        // bleed
         if (isBleed)
         {
             if (bleedTimer > 2f)
@@ -84,12 +79,39 @@ public class Enemy : MonoBehaviour
                 bleedTimer = 0f;
             }
 
-            bleedTimer += Time.deltaTime;
+            bleedTimer += time;
         }
-    }
-    private void FixedUpdate()
-    {
-        Move();
+
+        // animation
+        character.UpdateTick(time);
+
+        // move
+        if (Player.Instance != null && !isDead)
+        {
+            if (isKnockback)
+            {
+                knockbackTimer += Time.deltaTime;
+
+                if (knockbackTimer > .2f)
+                {
+                    knockbackTimer = 0f;
+                    isKnockback = false;
+                    rigidbody.linearVelocity = Vector2.zero;
+                }
+            }
+            else
+            {
+                if (rigidbody.linearVelocity != Vector2.zero)
+                {
+                    rigidbody.linearVelocity = Vector2.zero;
+                }
+
+                Vector2 dir = (Player.Instance.transform.position - transform.position);
+                transform.position += (Vector3)(dir.normalized * speed * (1 - slowPower) * Time.deltaTime);
+                collider.enabled = !Player.Instance.IsDead && dir.sqrMagnitude < 25;
+                character.FlipX(dir.x > 0);
+            }
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -105,7 +127,6 @@ public class Enemy : MonoBehaviour
     {
         //
         isDead = false;
-        target = Player.Instance.transform;
 
         this.pool = pool;
         this.hpLevel = hpLevel;
@@ -132,10 +153,9 @@ public class Enemy : MonoBehaviour
         // death 처리 로직
         seq.AppendCallback(() =>
         {
-            particle.Play();
+            deathParticle.Play();
 
             isDead = true;
-            target = null;
 
             OffAddict();
             OffBleed();
@@ -143,7 +163,7 @@ public class Enemy : MonoBehaviour
 
             rigidbody.linearVelocity = Vector2.zero;
             collider.enabled = false;
-            character.SetActive(false);
+            character.gameObject.SetActive(false);
             canvasGO.SetActive(false);
         });
 
@@ -155,7 +175,7 @@ public class Enemy : MonoBehaviour
         {
             collider.enabled = true;
             gameObject.SetActive(false);
-            character.SetActive(true);
+            character.gameObject.SetActive(true);
             canvasGO.SetActive(true);
 
             pool.Charge(this);
@@ -171,7 +191,7 @@ public class Enemy : MonoBehaviour
 
         if (hp > 0)
         {
-            animator.SetTrigger("doHit");
+            character.PlayAnimation(EnemyCharacter.AniType.Hit);
 
             canvasGO.SetActive(true);
             hpGuage.fillAmount = (float)hp / (float)hpMax;
@@ -223,44 +243,14 @@ public class Enemy : MonoBehaviour
         slowPower = 0.1f + value * 0.05f;
         isSlow = true;
 
-        spriteRenderer.color = slowColor;
+        character.ChangeColor(EnemyCharacter.ColorType.Slow);
     }
     public virtual void OffSlow()
     {
         slowPower = 0f;
         isSlow = false;
 
-        spriteRenderer.color = Color.white;
-    }
-    protected virtual void Move()
-    {
-        if (target == null) 
-        {
-            return;
-        }
-
-        if (isKnockback)
-        {
-            knockbackTimer += Time.deltaTime;
-
-            if (knockbackTimer > .2f)
-            {
-                knockbackTimer = 0f;
-                isKnockback = false;
-                rigidbody.linearVelocity = Vector2.zero;
-            }
-        }
-        else
-        {
-            if (rigidbody.linearVelocity != Vector2.zero)
-            {
-                rigidbody.linearVelocity = Vector2.zero;
-            }
-
-            Vector2 dir = (target.position - transform.position).normalized;
-            transform.position += (Vector3)(dir * speed * (1 - slowPower) * Time.deltaTime);
-            spriteRenderer.flipX = dir.x > 0;
-        }
+        character.ChangeColor(EnemyCharacter.ColorType.Default);
     }
     public virtual void OnKnockback(Vector3 direction)
     {
@@ -274,4 +264,5 @@ public class Enemy : MonoBehaviour
 
         isKnockback = true;
     }
+
 }

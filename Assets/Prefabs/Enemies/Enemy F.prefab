@@ -199,10 +199,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3ce9277bbf96940b05ac70af95aef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 5643968787802248165}
-  particle: {fileID: 1577460880472395329}
+  character: {fileID: 7791231014807061747}
+  deathParticle: {fileID: 1577460880472395329}
   poisonParticle: {fileID: 5586411831342951923}
-  slowColor: {r: 0.5019608, g: 0.5019608, b: 1, a: 1}
   itemIndex: 5
   hp: 0
   hpMax: 0
@@ -487,7 +486,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1506384711558962406}
   - component: {fileID: 5903813472894574976}
-  - component: {fileID: 2902567403495983778}
+  - component: {fileID: 7791231014807061747}
   m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
@@ -568,28 +567,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2902567403495983778
-Animator:
-  serializedVersion: 7
+--- !u!114 &7791231014807061747
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5643968787802248165}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 26895279bbcb552419e6242950452837, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e957c4278b0a7b541ab2bfff8b844ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCharacter
+  moves:
+  - {fileID: 6858001784930192701, guid: 5f6e4279b73f74146bcf36013201d778, type: 3}
+  - {fileID: -144779502802482253, guid: 5f6e4279b73f74146bcf36013201d778, type: 3}
+  - {fileID: -4586267875643385387, guid: 5f6e4279b73f74146bcf36013201d778, type: 3}
+  - {fileID: 3195440121365438547, guid: 5f6e4279b73f74146bcf36013201d778, type: 3}
+  - {fileID: 5954703513139029531, guid: 5f6e4279b73f74146bcf36013201d778, type: 3}
+  - {fileID: 3645781599010443287, guid: 5f6e4279b73f74146bcf36013201d778, type: 3}
+  hits:
+  - {fileID: -5629135272633566843, guid: 0d45a0d8b949d0a4e9eafdc24f22ef64, type: 3}
+  - {fileID: -2715152553310997712, guid: 0d45a0d8b949d0a4e9eafdc24f22ef64, type: 3}
+  - {fileID: -4919157991825847783, guid: 0d45a0d8b949d0a4e9eafdc24f22ef64, type: 3}
+  - {fileID: 5977564812290476861, guid: 0d45a0d8b949d0a4e9eafdc24f22ef64, type: 3}
+  - {fileID: 2439156637083800784, guid: 0d45a0d8b949d0a4e9eafdc24f22ef64, type: 3}
+  slowColor: {r: 0.5019608, g: 0.5019608, b: 1, a: 1}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &2201079742854610089
 PrefabInstance:
   m_ObjectHideFlags: 0

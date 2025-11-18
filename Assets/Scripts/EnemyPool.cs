@@ -5,6 +5,7 @@ public class EnemyPool : MonoBehaviour
 {
     [SerializeField] private Enemy prefab;
 
+    public bool isSpawn = false;
     public int speedLevel;
     public int hpLevel;
     public int powerLevel;
@@ -30,13 +31,24 @@ public class EnemyPool : MonoBehaviour
             return;
         }
 
-        if (timer > spawnInterval)
+        if (isSpawn)
         {
-            Spawn();
-            timer = 0f;
+            if (timer > spawnInterval)
+            {
+                Spawn();
+                timer = 0f;
+            }
+
+            timer += Time.deltaTime;
         }
 
-        timer += Time.deltaTime;
+        if (actives.Count > 0)
+        {
+            for (int i = 0; i < actives.Count; i++)
+            {
+                actives[i].UpdateTick(Time.deltaTime);
+            }
+        }
     }
     public void Charge(Enemy enemy)
     {

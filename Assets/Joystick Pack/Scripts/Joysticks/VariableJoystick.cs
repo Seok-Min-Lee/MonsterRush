@@ -39,7 +39,8 @@ public class VariableJoystick : Joystick
             background.gameObject.SetActive(true);
         }
         base.OnPointerDown(eventData);
-        Player.Instance.animator.SetBool("isMove", true);
+        //Player.Instance.animator.SetBool("isMove", true);
+        Player.Instance.character.PlayAnimation(PlayerCharacter.AniType.Move);
     }
 
     public override void OnPointerUp(PointerEventData eventData)
@@ -48,7 +49,8 @@ public class VariableJoystick : Joystick
             background.gameObject.SetActive(false);
 
         base.OnPointerUp(eventData);
-        Player.Instance.animator.SetBool("isMove", false);
+        //Player.Instance.animator.SetBool("isMove", false);
+        Player.Instance.character.PlayAnimation(PlayerCharacter.AniType.Idle);
     }
 
     protected override void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)

@@ -123,10 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3ce9277bbf96940b05ac70af95aef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 1753619855037842270}
-  particle: {fileID: 2000290984955245950}
+  character: {fileID: 7076112830927084642}
+  deathParticle: {fileID: 2000290984955245950}
   poisonParticle: {fileID: 5308121702152434227}
-  slowColor: {r: 0.5019608, g: 0.5019608, b: 1, a: 1}
   itemIndex: 1
   hp: 0
   hpMax: 0
@@ -158,7 +157,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6763173242523179033}
   - component: {fileID: 340012708992027913}
-  - component: {fileID: 3415083522665996905}
+  - component: {fileID: 7076112830927084642}
   m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
@@ -239,28 +238,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &3415083522665996905
-Animator:
-  serializedVersion: 7
+--- !u!114 &7076112830927084642
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1753619855037842270}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 55bd8561b2606b840af0bb555820cbdc, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e957c4278b0a7b541ab2bfff8b844ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCharacter
+  moves:
+  - {fileID: 6570920502705930198, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: 3944408015643112240, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: 3853816143673293235, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: -3032164649882222076, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: 3545866933577851776, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: 3029354677832749505, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: 2030330461010847512, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: 8186078023339056789, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  - {fileID: 5717007125227293428, guid: 9f8778d0d44049a459735824f24042e0, type: 3}
+  hits:
+  - {fileID: 6868122594974341346, guid: a84745caca919394ea0a3541417402d8, type: 3}
+  - {fileID: 7167584040609486739, guid: a84745caca919394ea0a3541417402d8, type: 3}
+  - {fileID: -1675461080110260169, guid: a84745caca919394ea0a3541417402d8, type: 3}
+  - {fileID: 8480664182131228983, guid: a84745caca919394ea0a3541417402d8, type: 3}
+  - {fileID: -953560442851353963, guid: a84745caca919394ea0a3541417402d8, type: 3}
+  slowColor: {r: 0.5019608, g: 0.5019608, b: 1, a: 1}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &5440356722295872804
 GameObject:
   m_ObjectHideFlags: 0

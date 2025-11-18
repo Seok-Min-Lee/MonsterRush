@@ -9,38 +9,30 @@ public class Item : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private bool isMove;
-    private float timer = 0f;
+    private Coroutine cor;
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-    private void Update()
+    IEnumerator MoveCor()
     {
-        if (isMove)
+        while (true)
         {
             Vector2 dir = Player.Instance.transform.position - transform.position;
-
-            if (dir.sqrMagnitude > 0.1f)
+            if (dir.sqrMagnitude < 0.1f)
             {
-                float distance = dir.magnitude;
+                break;
+            }
 
-                // 플레이어에게 가까워질수록 더 빠르게 움직인다.
-                float speed = Mathf.Lerp(1f, 10f, 1 - (distance / 10f));
-                transform.position += (Vector3)(dir.normalized * speed * Time.deltaTime);
-            }
-            else
-            {
-                Disappear();
-            }
+            float distance = dir.magnitude;
+            // 플레이어에게 가까워질수록 더 빠르게 움직인다.
+            float speed = Mathf.Lerp(1f, 10f, 1 - (distance / 10f));
+            transform.position += (Vector3)(dir.normalized * speed * Time.deltaTime);
+
+            yield return null;
         }
 
-        // 일정 시간이 지나면 사라진다.
-        if (timer > 60f)
-        {
-            Disappear(true);
-        }
-
-        timer += Time.deltaTime;
+        OnAbsorbed();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -57,7 +49,12 @@ public class Item : MonoBehaviour
 
         gameObject.SetActive(true);
         isMove = false;
-        timer = 0f;
+
+        if (cor != null)
+        {
+            StopCoroutine(cor);
+            cor = null;
+        }
     }
     private void OnDetected()
     {
@@ -70,19 +67,15 @@ public class Item : MonoBehaviour
         transform.DOMove(targetPos, 0.2f).OnComplete(() => 
         {
             isMove = true;
+            cor = StartCoroutine(MoveCor());
         });
     }
-    private void Disappear(bool isTimeout = false)
+    private void OnAbsorbed()
     {
-        if (!isTimeout)
-        {
-            Player.Instance.IncreaseExp(itemInfo.value);
-        }
-
+        Player.Instance.IncreaseExp(itemInfo.value);
         ItemContainer.Instance.Reload(this);
         gameObject.SetActive(false);
         isMove = false;
-        timer = 0f;
     }
 
     [System.Serializable]

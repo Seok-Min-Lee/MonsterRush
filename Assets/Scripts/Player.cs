@@ -44,12 +44,12 @@ public class Player : MonoBehaviour
     public int weaponBLevel => statDictionary[PlayerStat.WeaponB].value;
     public int weaponCLevel => statDictionary[PlayerStat.WeaponC].value;
     public int weaponDLevel => statDictionary[PlayerStat.WeaponD].value;
+    public bool IsDead => isDead;
 
     public Vector3 moveVec { get; private set; }
-    public Animator animator { get; private set; }
+    public PlayerCharacter character { get; private set; }
 
     private BoxCollider2D collider;
-    private SpriteRenderer characterRenderer;
     private SpriteRenderer magnetRenderer;
 
     private bool isDead = false;
@@ -61,12 +61,9 @@ public class Player : MonoBehaviour
         collider = GetComponent<BoxCollider2D>();
 
         // 캐릭터
-        GameObject characterPrefab = Resources.Load<GameObject>("Players/Character_" + StaticValues.playerCharacterNum);
-        GameObject character = GameObject.Instantiate(characterPrefab, characterArea);
-        character.transform.position = Vector3.zero;
-
-        animator = character.GetComponent<Animator>();
-        characterRenderer = character.GetComponent<SpriteRenderer>();
+        PlayerCharacter prefab = Resources.Load<PlayerCharacter>("Players/Character_" + StaticValues.playerCharacterNum);
+        character = GameObject.Instantiate<PlayerCharacter>(prefab, characterArea);
+        character.Init(Vector3.zero);
 
         // 자석
         magnetRenderer = magnetArea.GetComponent<SpriteRenderer>();
@@ -131,6 +128,8 @@ public class Player : MonoBehaviour
     private float healTimer = 0f;
     private void Update()
     {
+        character.UpdateTick(Time.deltaTime);
+
         if (isDead || Heal == 0) return;
 
         if (Hp < HpMax)
@@ -371,7 +370,7 @@ public class Player : MonoBehaviour
             canvasGO.SetActive(true);
             hpGuage.fillAmount = (float)hp / hpMax;
 
-            animator.SetTrigger("doHit");
+            character.PlayAnimation(PlayerCharacter.AniType.Hit);
 
             statDictionary[PlayerStat.Hp].Init(hp);
         }
@@ -389,17 +388,17 @@ public class Player : MonoBehaviour
         if (v.sqrMagnitude > 0.001f)
         {
             moveVec = new Vector3(v.x, v.y, 0f) * speed;
-            animator.SetBool("isMove", true);
+            character.PlayAnimation(PlayerCharacter.AniType.Move);
 
             float angle = Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
             weaponContainers[1].rotation = Quaternion.Euler(0, 0, angle);
 
-            characterRenderer.flipX = moveVec.x < 0;
+            character.FlipX(moveVec.x < 0);
         }
         else
         {
             moveVec = Vector3.zero;
-            animator.SetBool("isMove", false);
+            character.PlayAnimation(PlayerCharacter.AniType.Idle);
         }
     }
 

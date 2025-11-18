@@ -32,7 +32,8 @@ public class EnemyContainer : MonoBehaviour
                 poolSizeMax: poolSizeMax
             );
         }
-        pools[0].gameObject.SetActive(true);
+        //pools[0].gameObject.SetActive(true);
+        pools[0].isSpawn = true;
     }
 
     public void OnLevelUp()
@@ -76,8 +77,10 @@ public class EnemyContainer : MonoBehaviour
     {
         if (stage < pools.Length - 1)
         {
-            pools[stage++].gameObject.SetActive(false);
-            pools[stage].gameObject.SetActive(true);
+            pools[stage++].isSpawn = false;
+            pools[stage].isSpawn = true;
+            //pools[stage++].gameObject.SetActive(false);
+            //pools[stage].gameObject.SetActive(true);
 
             spawnInterval *= 0.9f;
             poolSizeMax = (int)(poolSizeMax * 1.1f);
