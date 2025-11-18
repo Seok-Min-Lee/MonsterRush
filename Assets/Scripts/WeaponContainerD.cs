@@ -10,7 +10,7 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
     private Queue<WeaponD> bulletPool = new Queue<WeaponD>();
     private float timer = 0f;
     private bool isSequence = false;
-    private int explosionScale = 1;
+    private float explosionScale = 1f;
 
     private void Update()
     {
@@ -53,8 +53,8 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
             case 1: // ³Ë¹é °­È­
                 knockbackLevel++;
                 break;
-            case 99:
-                explosionScale = 2;
+            case 99: // Æø¹ß È®Àå
+                explosionScale = 1.75f;
                 break;
         }
     }

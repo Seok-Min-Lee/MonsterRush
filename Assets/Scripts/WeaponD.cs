@@ -32,7 +32,7 @@ public class WeaponD : Weapon
         }
     }
     
-    public void OnShot(WeaponContainerD container, int knockbackLevel, int explosionScale, Vector3 position, Quaternion rotation, Vector3 direction)
+    public void OnShot(WeaponContainerD container, int knockbackLevel, float explosionScale, Vector3 position, Quaternion rotation, Vector3 direction)
     {
         gameObject.SetActive(true);
 

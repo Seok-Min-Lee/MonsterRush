@@ -41,7 +41,7 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
             case 1: // 효과 강화
                 weapons[0].PowerUp();
                 break;
-            case 99:
+            case 99: // 동시 적용
                 weapons[0].SwitchMode(WeaponC.State.Both);
                 stateToggle.Lock();
                 break;

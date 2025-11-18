@@ -207,9 +207,9 @@ public class Enemy : MonoBehaviour
     public virtual void OnAddict(int value)
     {
         isAddict = true;
-        addictDamage = 1;
+        addictDamage = value < 4 ? 1 : 2;
         addictTimer = 0f;
-        addictInterval = 0.33333f - value * 0.0291625f; // 0.33333 ~ 0.1
+        addictInterval = 0.5f - value * 0.0375f; // 0.5 ~ 0.2
         
         poisonParticle.Play();
     }
@@ -240,7 +240,7 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnSlow(float value)
     {
-        slowPower = 0.1f + value * 0.05f;
+        slowPower = 0.3f + value * 0.025f;
         isSlow = true;
 
         character.ChangeColor(EnemyCharacter.ColorType.Slow);
