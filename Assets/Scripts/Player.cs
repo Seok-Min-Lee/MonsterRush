@@ -298,12 +298,12 @@ public class Player : MonoBehaviour
                         statDictionary[PlayerStat.Heal].Increase();
                         break;
                     case 1:
-                        Vector3 scale = magnetArea.localScale * 1.1f;
+                        Vector3 scale = magnetArea.localScale + Vector3.one * 0.2f;
                         magnetArea.DOScale(scale, 0.5f);
                         statDictionary[PlayerStat.Magnet].Increase();
                         break;
                     case 2:
-                        speed *= 1.1f;
+                        speed += 0.0025f;
                         statDictionary[PlayerStat.Speed].Increase();
                         break;
                     case 3:
