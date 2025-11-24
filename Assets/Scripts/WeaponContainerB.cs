@@ -156,7 +156,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     {
         WeaponB bullet = bulletPool.Count > 0 ?
                          bulletPool.Dequeue() :
-                         GameObject.Instantiate<WeaponB>(prefab, transform);
+                         GameObject.Instantiate<WeaponB>(prefab);
 
         //
         Vector3 position = Player.Instance.transform.position + (Vector3)Random.insideUnitCircle * 0.25f;

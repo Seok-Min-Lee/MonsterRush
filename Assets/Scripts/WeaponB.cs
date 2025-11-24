@@ -72,6 +72,9 @@ public class WeaponB : Weapon
     }
     public void OnReload()
     {
+        rigidbody.linearVelocity = Vector2.zero;
+        rigidbody.angularVelocity = 0f;
+
         gameObject.SetActive(false);
         container.Reload(this);
     }
