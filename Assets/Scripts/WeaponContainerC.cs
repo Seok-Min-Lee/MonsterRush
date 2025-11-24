@@ -3,6 +3,10 @@ using UnityEngine;
 public class WeaponContainerC : WeaponContainer<WeaponC>
 {
     private WeaponC.State state = WeaponC.State.Poison;
+
+    [Header("Debug")]
+    [SerializeField] private int areaLevel = 0;
+    [SerializeField] private int effectLevel = 0;
     private void Awake()
     {
         this.Init();
@@ -40,7 +44,7 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
                 StrengthenFirst();
                 break;
             case 2: // 효과 강화
-                weapons[0].PowerUp();
+                weapons[0].PowerUp(++effectLevel);
                 break;
             case 99: // 동시 적용
                 weapons[0].SwitchMode(WeaponC.State.Both);
@@ -50,24 +54,34 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
     }
     private void StrengthenFirst()
     {
-        if (activeCount >= WEAPON_COUNT_MAX)
+        if (areaLevel >= WEAPON_COUNT_MAX)
         {
             return;
         }
 
         AudioManager.Instance.PlaySFX(SoundKey.PlayerGetWeaponC);
 
-        if (activeCount++ == 0)
+        //if (areaLevel++ == 0)
+        //{
+        //    weapons[0].gameObject.SetActive(true);
+
+        //    stateToggle.Unlock();
+        //    stateToggle.Init(state == WeaponC.State.Poison);
+        //    weapons[0].Refresh(state);
+        //}
+        //else
+        //{
+        //    weapons[0].Expand(areaLevel);
+        //}
+        if (areaLevel++ == 0)
         {
             weapons[0].gameObject.SetActive(true);
 
             stateToggle.Unlock();
             stateToggle.Init(state == WeaponC.State.Poison);
-            weapons[0].Init(state);
         }
-        else
-        {
-            weapons[0].Expand();
-        }
+
+        weapons[0].Refresh(state);
+        weapons[0].Expand(areaLevel);
     }
 }

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class WeaponB : Weapon
 {
+    [SerializeField] private SpriteRenderer renderer;
+    [SerializeField] private Sprite[] sprites;
+
+    [Header("Debug")]
     [SerializeField] private int speed;
     [SerializeField] private float bleedRatio = 0.1f;
     [SerializeField] private float bleedPower = 0.5f;
@@ -11,6 +15,9 @@ public class WeaponB : Weapon
 
     private Rigidbody2D rigidbody;
     private WeaponContainerB container;
+
+    private int bleedLevel = 0;
+
     private float timer = 0f;
     private void Awake()
     {
@@ -43,13 +50,17 @@ public class WeaponB : Weapon
             }
         }
     }
-    public void OnShot(WeaponContainerB container, float bleedRatio, bool isPenetrate, Vector3 position, Quaternion rotation, Vector3 direction)
+    public void OnShot(WeaponContainerB container, int bleedLevel, bool isPenetrate, Vector3 position, Quaternion rotation, Vector3 direction)
     {
         gameObject.SetActive(true);
 
         this.container = container;
-        this.bleedRatio = bleedRatio;
+        this.bleedLevel = bleedLevel;
         this.isPenetrate = isPenetrate;
+
+        bleedRatio = 0.1f + 0.05f * bleedLevel;
+        renderer.sprite = isPenetrate ? sprites[1] : sprites[0];
+
         transform.position = position;
         transform.rotation = rotation;
 

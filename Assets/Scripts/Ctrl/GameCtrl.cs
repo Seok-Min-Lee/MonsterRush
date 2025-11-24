@@ -43,7 +43,7 @@ public class GameCtrl : MonoBehaviour
 
             foreach (RewardInfo info in group)
             {
-                dictionary.Add(info.groupId + info.index, info);
+                dictionary.Add(info.UniqueKey, info);
             }
 
             rewardGroup.Add(group.Key, dictionary);
@@ -216,7 +216,7 @@ public class GameCtrl : MonoBehaviour
         
         if (rewardInfo.type == RewardInfo.Type.Ability)
         {
-            rewardGroup[RewardInfo.Type.Ability].Remove(rewardInfo.groupId + rewardInfo.index);
+            rewardGroup[RewardInfo.Type.Ability].Remove(rewardInfo.UniqueKey);
         }
 
         Time.timeScale = 1f;

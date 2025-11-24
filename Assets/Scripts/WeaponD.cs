@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class WeaponD : Weapon
 {
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private WeaponDFlare flare;
 
+    [Header("Debug")]
+    [SerializeField] private int knockbackLevel = 0;
+
     private Rigidbody2D rigidbody;
-    private SpriteRenderer spriteRenderer;
     private WeaponContainerD container;
     private float timer = 0f;
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     private void Update()
     {
@@ -36,25 +38,10 @@ public class WeaponD : Weapon
         gameObject.SetActive(true);
 
         this.container = container;
+        this.knockbackLevel = knockbackLevel;
         flare.Init(knockbackLevel);
         transform.position = position;
         flare.transform.localScale = Vector3.one * explosionScale;
-
-        rigidbody.AddForce(force, ForceMode2D.Impulse);
-        rigidbody.AddTorque(torque, ForceMode2D.Impulse);
-    }
-    public void OnShot(WeaponContainerD container, int knockbackLevel, float explosionScale, Vector3 position, Quaternion rotation, Vector3 direction)
-    {
-        gameObject.SetActive(true);
-
-        this.container = container;
-        flare.Init(knockbackLevel);
-        transform.position = position;
-        transform.rotation = rotation;
-        flare.transform.localScale = Vector3.one * explosionScale;
-
-        Vector3 force = direction * Random.Range(8f, 16f);
-        float torque = Random.Range(-10f, 10f);
 
         rigidbody.AddForce(force, ForceMode2D.Impulse);
         rigidbody.AddTorque(torque, ForceMode2D.Impulse);

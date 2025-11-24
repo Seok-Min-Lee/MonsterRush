@@ -4,11 +4,17 @@ using UnityEngine;
 public class WeaponC : Weapon
 {
     public enum State { Poison, Slow, Both }
+
     [SerializeField] private Transform maskTransform;
     [SerializeField] private SpriteRenderer textureRenderer;
-    private Color poisonColor = new Color(0.7529f, 0, 1f, 1f);
-    private Color slowcolor = new Color(0f, 0.7529f, 1f, 1f);
-    private Color bothColor = new Color(0.37645f, 0.37645f, 1f, 1f);
+
+    [Header("Debug")]
+    [SerializeField] private int areaLevel = 1;
+    [SerializeField] private int effectLevel;
+
+    private Color PoisonColor => new Color(0.7529f, 0, 1f, 0.5f + effectLevel * 0.0625f);
+    private Color SlowColor => new Color(0f, 0.7529f, 1f, 0.5f + effectLevel * 0.0625f);
+    private Color BothColor => new Color(0.37645f, 0.37645f, 1f, 0.5f + effectLevel * 0.0625f);
 
     private State state = State.Poison;
 
@@ -25,18 +31,18 @@ public class WeaponC : Weapon
         textureRenderer.size = Vector2.zero;
         collider.radius = 0f;
 
-        // Target Value
-        Vector3 maskScale = Vector3.one * 2.25f;
-        Vector2 textureSize = Vector2.one * 2.25f;
-        float collierRadius = 1.125f;
+        //// Target Value
+        //Vector3 maskScale = Vector3.one * 2.25f;
+        //Vector2 textureSize = Vector2.one * 2.25f;
+        //float collierRadius = 1.125f;
 
-        // 모션 적용
-        maskTransform.DOScale(maskScale, 0.5f);
-        DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
-        DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
+        //// 모션 적용
+        //maskTransform.DOScale(maskScale, 0.5f);
+        //DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
+        //DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
 
-        state = State.Poison;
-        textureRenderer.color = poisonColor;
+        //state = State.Poison;
+        //textureRenderer.color = PoisonColor;
     }
     private void FixedUpdate()
     {
@@ -45,7 +51,7 @@ public class WeaponC : Weapon
     private Collider2D[] detectBuffer = new Collider2D[200];
     public void SwitchMode(State value)
     {
-        Init(value);
+        Refresh(value);
 
         // 주변 적 탐색 후 효과 적용
         ContactFilter2D contactFilter = new ContactFilter2D();
@@ -79,38 +85,45 @@ public class WeaponC : Weapon
             }
         }
     }
-    public void Init(State value)
+    public void Refresh(State value)
     {
         state = value;
 
+        Color color = Color.white;
         switch (state)
         {
             case State.Poison:
-                textureRenderer.color = poisonColor;
+                color = PoisonColor;
                 break;
             case State.Slow:
-                textureRenderer.color = slowcolor;
+                color = SlowColor;
                 break;
             case State.Both:
-                textureRenderer.color = bothColor;
+                color = BothColor;
                 break;
         }
+
+        textureRenderer.DOColor(color, 0.5f);
     }
-    public void Expand()
+    public void Expand(int level)
     {
+        areaLevel = level;
+
         // Target Value
-        Vector3 maskScale = maskTransform.localScale + Vector3.one * 0.25f;
-        Vector2 textureSize = textureRenderer.size + Vector2.one * 0.25f;
-        float collierRadius = collider.radius + 0.125f;
+        Vector3 maskScale = Vector3.one * (2f + level * 0.25f);
+        Vector2 textureSize = Vector2.one * (2f + level * 0.25f);
+        float collierRadius = 1f + (level * 0.125f);
 
         // 모션 적용
         maskTransform.DOScale(maskScale, 0.5f);
         DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
         DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
     }
-    public void PowerUp()
+    public void PowerUp(int level)
     {
-        power++;
+        power = 1 * level;
+        effectLevel = level;
+        Refresh(state);
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {

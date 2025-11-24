@@ -9,6 +9,11 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     [SerializeField] private float radiusMin = 0.5f;
     [SerializeField] private float radiusMax = 1f;
     [SerializeField] private float speed = 1f;
+
+    [Header("Debug")]
+    [SerializeField] private int powerLevel = 0;
+    [SerializeField] private bool isKnockback = false;
+    
     private bool isExpand = false;
     private void Awake()
     {
@@ -16,6 +21,11 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     }
     private void FixedUpdate()
     {
+        for (int i = 0; i < activeCount; i++)
+        {
+            weapons[i].UpdateTick();
+        }
+
         transform.Rotate(Vector3.back * speed);
     }
     public override void OnClickStateToggle()
@@ -35,12 +45,14 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
                 StrengthenFirst();
                 break;
             case 2: // 피해량 증가
+                powerLevel++;
                 for (int i = 0; i < weapons.Count; i++)
                 {
-                    weapons[i].PowerUp();
+                    weapons[i].PowerUp(powerLevel);
                 }
                 break;
             case 99: // 넉백 활성화
+                isKnockback = true;
                 for (int i = 0; i < weapons.Count; i++)
                 {
                     weapons[i].ActivateKnockback();

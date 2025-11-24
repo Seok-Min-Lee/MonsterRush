@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class WeaponContainerD : WeaponContainer<WeaponD>
 {
-    [SerializeField] private int knockbackLevel = 1;
+    [Header("Debug")]
+    [SerializeField] private int knockbackLevel = 0;
+    [SerializeField] private bool isScaleUp = false;
 
     private Queue<WeaponD> bulletPool = new Queue<WeaponD>();
     private float timer = 0f;
@@ -48,7 +50,7 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
                 knockbackLevel++;
                 break;
             case 99: // Æø¹ß È®Àå
-                explosionScale = 1.75f;
+                isScaleUp = true;
                 break;
         }
     }
@@ -110,7 +112,7 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
         bullet.OnShot(
             container: this,
             knockbackLevel: knockbackLevel,
-            explosionScale: explosionScale,
+            explosionScale: isScaleUp ? 1.75f : 1f,
             position: position,
             force: force,
             torque: torque

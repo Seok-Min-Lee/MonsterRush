@@ -11,4 +11,6 @@ public struct RewardInfo
     public string head;
     public string desc;
     public Type type;
+
+    public int UniqueKey => groupId + index;
 }

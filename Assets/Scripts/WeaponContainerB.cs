@@ -7,13 +7,17 @@ using UnityEngine;
 public class WeaponContainerB : WeaponContainer<WeaponB>
 {
     [SerializeField] private float radius = 1f;
-    [SerializeField] private float bleedRatio = 0.1f;
     [SerializeField] private float detectRaidus = 5f;
+
+    [Header("Debug")]
+    [SerializeField] private bool isPenetrate = false;
+    [SerializeField] private int bleedLevel = 0;
+
+    private bool isRandomTarget = false;
 
     private Queue<WeaponB> bulletPool = new Queue<WeaponB>();
     private float timer = 0f;
-    private bool isRandom = false;
-    [SerializeField] private bool isPenetrate = false;
+
     private void Update()
     {
         if (Time.timeScale == 0f)
@@ -23,7 +27,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
 
         if (timer > 1f)
         {
-            if (isRandom)
+            if (isRandomTarget)
             {
                 LaunchRandom();
             }
@@ -41,8 +45,8 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     {
         base.OnClickStateToggle();
 
-        isRandom = !isRandom;
-        stateToggle.Init(isRandom);
+        isRandomTarget = !isRandomTarget;
+        stateToggle.Init(isRandomTarget);
     }
     public override void Strengthen(int key)
     {
@@ -53,7 +57,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
                 StrengthenFirst();
                 break;
             case 2: // 확률 증가
-                bleedRatio += 0.05f;
+                bleedLevel++;
                 break;
             case 99: // 관통 활성화
                 isPenetrate = true;
@@ -70,7 +74,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
         if (activeCount++ == 0)
         {
             stateToggle.Unlock();
-            stateToggle.Init(isRandom);
+            stateToggle.Init(isRandomTarget);
         }
     }
     private Collider2D[] detectBuffer = new Collider2D[32];
@@ -152,7 +156,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     {
         WeaponB bullet = bulletPool.Count > 0 ?
                          bulletPool.Dequeue() :
-                         GameObject.Instantiate<WeaponB>(prefab);
+                         GameObject.Instantiate<WeaponB>(prefab, transform);
 
         //
         Vector3 position = Player.Instance.transform.position + (Vector3)Random.insideUnitCircle * 0.25f;
@@ -163,7 +167,7 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
         //
         bullet.OnShot(
             container: this,
-            bleedRatio: bleedRatio,
+            bleedLevel: bleedLevel,
             isPenetrate: isPenetrate,
             position: position,
             rotation: Quaternion.Euler(0, 0, angle),

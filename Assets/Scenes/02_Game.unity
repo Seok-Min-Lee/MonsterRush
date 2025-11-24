@@ -927,6 +927,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: -7014794405667175891, guid: e67aa137798cd204ea3116dee7a7bb61, type: 3}
   stateToggle: {fileID: 847367731}
+  areaLevel: 0
+  effectLevel: 0
 --- !u!1 &147594989
 GameObject:
   m_ObjectHideFlags: 0
@@ -1555,6 +1557,8 @@ MonoBehaviour:
   radiusMin: 0.5
   radiusMax: 2
   speed: 2
+  powerLevel: 0
+  isKnockback: 0
 --- !u!1001 &258022387
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7511,9 +7515,9 @@ MonoBehaviour:
   prefab: {fileID: 2818138152051590392, guid: 5ba87572bfd394a4d94dba1e6306c06a, type: 3}
   stateToggle: {fileID: 1041378663}
   radius: 0.5
-  bleedRatio: 0.1
   detectRaidus: 5
   isPenetrate: 0
+  bleedLevel: 0
 --- !u!1 &1262095959
 GameObject:
   m_ObjectHideFlags: 0
@@ -7560,7 +7564,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: -2729381700743918988, guid: 7f9353f8a21e9d64f83132b4b09e8455, type: 3}
   stateToggle: {fileID: 2074761790}
-  knockbackLevel: 1
+  knockbackLevel: 0
+  isScaleUp: 0
 --- !u!1 &1366652122
 GameObject:
   m_ObjectHideFlags: 0
@@ -7715,7 +7720,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1368663545
 RectTransform:
   m_ObjectHideFlags: 0
