@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class WeaponA : Weapon
@@ -31,11 +32,10 @@ public class WeaponA : Weapon
     public void PowerUp(int level)
     {
         powerLevel = level;
-
-        renderer.color = new Color(1f, 1f - powerLevel * 0.0625f, 1f - powerLevel * 0.0625f, 1f);
     }
     public void ActivateKnockback()
     {
         isKnockback = true;
+        renderer.DOColor(new Color(1f, 0.5f, 0.5f, 1f), 0.5f);
     }
 }

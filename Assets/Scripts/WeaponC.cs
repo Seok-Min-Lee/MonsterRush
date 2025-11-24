@@ -11,12 +11,12 @@ public class WeaponC : Weapon
     [Header("Debug")]
     [SerializeField] private int areaLevel = 1;
     [SerializeField] private int effectLevel;
+    [SerializeField] private State state = State.Poison;
 
     private Color PoisonColor => new Color(0.7529f, 0, 1f, 0.5f + effectLevel * 0.0625f);
     private Color SlowColor => new Color(0f, 0.7529f, 1f, 0.5f + effectLevel * 0.0625f);
     private Color BothColor => new Color(0.37645f, 0.37645f, 1f, 0.5f + effectLevel * 0.0625f);
 
-    private State state = State.Poison;
 
     private CircleCollider2D collider;
 

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class WeaponD : Weapon
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer renderer;
+    [SerializeField] private Sprite[] sprites;
     [SerializeField] private WeaponDFlare flare;
 
     [Header("Debug")]
     [SerializeField] private int knockbackLevel = 0;
+    [SerializeField] private bool isScaleUp = false;
 
     private Rigidbody2D rigidbody;
     private WeaponContainerD container;
@@ -33,15 +35,16 @@ public class WeaponD : Weapon
             OnExplosion();
         }
     }
-    public void OnShot(WeaponContainerD container, int knockbackLevel, float explosionScale, Vector3 position, Vector3 force, float torque)
+    public void OnShot(WeaponContainerD container, bool isScaleUp, int knockbackLevel, Vector3 position, Vector3 force, float torque)
     {
         gameObject.SetActive(true);
 
         this.container = container;
+        this.isScaleUp = isScaleUp;
         this.knockbackLevel = knockbackLevel;
-        flare.Init(knockbackLevel);
         transform.position = position;
-        flare.transform.localScale = Vector3.one * explosionScale;
+        renderer.sprite = isScaleUp ? sprites[1] : sprites[0];
+        flare.Init(isScaleUp, knockbackLevel);
 
         rigidbody.AddForce(force, ForceMode2D.Impulse);
         rigidbody.AddTorque(torque, ForceMode2D.Impulse);
@@ -58,7 +61,7 @@ public class WeaponD : Weapon
             rigidbody.angularVelocity = 0f;
             rigidbody.gravityScale = 0f;
 
-            spriteRenderer.enabled = false;
+            renderer.enabled = false;
 
             flare.OnExplosion();
 
@@ -97,7 +100,7 @@ public class WeaponD : Weapon
         rigidbody.angularVelocity = 0f;
         rigidbody.gravityScale = 5f;
 
-        spriteRenderer.enabled = true;
+        renderer.enabled = true;
 
         gameObject.SetActive(false);
         container.Reload(this);

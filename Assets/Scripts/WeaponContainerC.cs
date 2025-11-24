@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class WeaponContainerC : WeaponContainer<WeaponC>
 {
-    private WeaponC.State state = WeaponC.State.Poison;
 
     [Header("Debug")]
+    [SerializeField] private WeaponC.State state = WeaponC.State.Poison;
     [SerializeField] private int areaLevel = 0;
     [SerializeField] private int effectLevel = 0;
     private void Awake()
@@ -47,7 +47,8 @@ public class WeaponContainerC : WeaponContainer<WeaponC>
                 weapons[0].PowerUp(++effectLevel);
                 break;
             case 99: // 동시 적용
-                weapons[0].SwitchMode(WeaponC.State.Both);
+                state = WeaponC.State.Both;
+                weapons[0].SwitchMode(state);
                 stateToggle.Lock();
                 break;
         }

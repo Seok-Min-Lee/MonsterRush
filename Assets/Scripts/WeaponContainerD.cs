@@ -111,8 +111,8 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
         //
         bullet.OnShot(
             container: this,
+            isScaleUp: isScaleUp,
             knockbackLevel: knockbackLevel,
-            explosionScale: isScaleUp ? 1.75f : 1f,
             position: position,
             force: force,
             torque: torque

@@ -5,6 +5,7 @@ public class WeaponDFlare : Weapon
 {
     [Header("Debug")] 
     [SerializeField] private int knockbackLevel = 0;
+    [SerializeField] private bool isScaleUp = false;
 
     private ParticleSystem particle;
     private BoxCollider2D collider;
@@ -36,8 +37,9 @@ public class WeaponDFlare : Weapon
         collider.enabled = false;
         particle.Stop();
     }
-    public void Init(int knockbackLevel)
+    public void Init(bool isScaleUp,  int knockbackLevel)
     {
+        transform.localScale = Vector3.one * (isScaleUp ? 1.75f : 1f);
         this.knockbackLevel = knockbackLevel;
     }
 }
