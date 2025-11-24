@@ -9,7 +9,7 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
 
     private Queue<WeaponD> bulletPool = new Queue<WeaponD>();
     private float timer = 0f;
-    private bool isUpper = false;
+    private bool isUpper = true;
     private float explosionScale = 1f;
 
     private void Update()

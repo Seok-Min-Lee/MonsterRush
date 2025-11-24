@@ -12,7 +12,6 @@ public class TitleCtrl : MonoBehaviour
     [SerializeField] private Toggle leftHandToggle;
     [SerializeField] private Toggle tutorialToggle;
 
-    [SerializeField] private Image[] titleParts;
     private void Start()
     {
         if (!AudioManager.Instance.isLoadComplete)

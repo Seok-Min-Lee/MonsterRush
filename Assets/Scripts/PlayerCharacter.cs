@@ -36,7 +36,7 @@ public class PlayerCharacter : MonoBehaviour
                 }
                 else
                 {
-                    aniType = AniType.Idle;
+                    aniType = lastType;
                     index = 0;
                 }
             }
@@ -48,14 +48,17 @@ public class PlayerCharacter : MonoBehaviour
             timer = 0f;
         }
     }
+
+    private AniType lastType;
     public void PlayAnimation(AniType type)
     {
-        if (this.aniType == type)
+        if (aniType == type || aniType == AniType.Hit)
         {
             return;
         }
 
-        this.aniType = type;
+        lastType = aniType;
+        aniType = type;
         index = 0;
         timer = type != AniType.Hit ? 0f : FRAME_INTERVAL;
     }

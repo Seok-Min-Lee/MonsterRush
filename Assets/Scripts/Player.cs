@@ -20,7 +20,6 @@ public class Player : MonoBehaviour
     [Header("UI")]
     [SerializeField] private VariableJoystick joystick;
     [SerializeField] private GameObject canvasGO;
-    [SerializeField] private CanvasGroup overlayCanvasCG;
     [SerializeField] private RectTransform stateToggleGroup;
     [SerializeField] private Image hpGuage;
     [SerializeField] private Image expGuage;
@@ -169,7 +168,7 @@ public class Player : MonoBehaviour
 #if !UNITY_EDITOR
         moveVec = new Vector3(joystick.Horizontal, joystick.Vertical, 0f).normalized * speed;
         transform.position += moveVec;
-        characterRenderer.flipX = moveVec.x < 0;
+        character.FlipX(moveVec.x < 0);
 
         float angle = Mathf.Atan2(joystick.Vertical, joystick.Horizontal) * Mathf.Rad2Deg;
         weaponContainers[1].rotation = Quaternion.Euler(0, 0, angle);
@@ -203,7 +202,7 @@ public class Player : MonoBehaviour
             stateToggleGroup.anchorMin = new Vector2(0, 0);
             stateToggleGroup.anchorMax = new Vector2(0, 0);
             stateToggleGroup.pivot = new Vector2(0, 0);
-            stateToggleGroup.anchoredPosition = new Vector2(275, 0);
+            stateToggleGroup.anchoredPosition = new Vector2(275, -40);
         }
     }
     public void KillEnemy()
@@ -335,8 +334,7 @@ public class Player : MonoBehaviour
         // death ¿¬Ãâ
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(callback);
-        seq.Append(overlayCanvasCG.DOFade(0f, 0.5f));
-        seq.AppendInterval(0.25f);
+        seq.AppendInterval(0.75f);
         seq.Append(characterArea.DORotate(new Vector3(0, 0, 90), 0.5f).SetEase(Ease.OutBack));
         seq.AppendInterval(0.25f);
         seq.Append(characterArea.DOScaleX(0f, 0.5f));

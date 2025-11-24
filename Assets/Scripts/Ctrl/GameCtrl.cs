@@ -17,11 +17,11 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private TextMeshProUGUI killScoreText;
 
     [SerializeField] private GameObject normalWindow;
-    [SerializeField] private GameObject tutorialWindow;
     [SerializeField] private GameObject pauseWindow;
     [SerializeField] private GameObject rewardWindow;
     [SerializeField] private GameObject scoreWindow;
     [SerializeField] private GameObject settingWindow;
+    [SerializeField] private TutorialWindow tutorialWindow;
 
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
@@ -70,31 +70,29 @@ public class GameCtrl : MonoBehaviour
 #endif
 
         // 튜토리얼 UI 표시
-        int playCount = PlayerPrefs.GetInt("playCount");
-        if (playCount == 0 || PlayerPrefs.GetInt("visibleTutorial") == 1)
-        {
-            tutorialWindow.SetActive(true);
-            StaticValues.isTutorial = true;
-        }
-        PlayerPrefs.SetInt("playCount", playCount + 1);
+        bool isVisibleTutorial = PlayerPrefs.GetInt("visibleTutorial") == 1;
+
+        StaticValues.isTutorial = isVisibleTutorial;
+        tutorialWindow.Init(isVisibleTutorial);
 
         //
         bool isLeftHand = PlayerPrefs.GetInt("isLeftHand") == 1;
         Player.Instance.OnChangeUI(isLeftHand);
+        tutorialWindow.OnChangeUI(isLeftHand);
     }
     private void Update()
     {
+        if (StaticValues.isTutorial)
+        {
+            return;
+        }
+
         timer += Time.deltaTime;
 
         int minutes = (int)(timer / 60);
         int seconds = (int)(timer % 60);
 
         timeText.text = $"{minutes:00}:{seconds:00}";
-    }
-    public void OnClickStart()
-    {
-        tutorialWindow.SetActive(false);
-        StaticValues.isTutorial = false;
     }
     public void OnClickPause()
     {
@@ -144,7 +142,10 @@ public class GameCtrl : MonoBehaviour
         PlayerPrefs.SetInt("visibleTutorial", tutorialToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("isLeftHand", leftHandToggle.isOn ? 1 : 0);
 
+        tutorialWindow.OnChangeTutorial(tutorialToggle.isOn);
+
         Player.Instance.OnChangeUI(leftHandToggle.isOn);
+        tutorialWindow.OnChangeUI(leftHandToggle.isOn);
     }
     public void OnClickCancelSetting()
     {
@@ -219,6 +220,8 @@ public class GameCtrl : MonoBehaviour
         }
 
         Time.timeScale = 1f;
+
+        tutorialWindow.OnReward(rewardInfo);
     }
     public void OnGameEnd()
     {
@@ -235,7 +238,14 @@ public class GameCtrl : MonoBehaviour
             LevelScoreText.text = $"{Player.Instance.Level}";
             killScoreText.text = $"{Player.Instance.killCount.ToString("#,##0")}";
 
-            normalWindow.GetComponent<CanvasGroup>().DOFade(0f, 0.5f);
+            CanvasGroup normalCG = normalWindow.GetComponent<CanvasGroup>();
+            normalCG.blocksRaycasts = false;
+            normalCG.DOFade(0f, 0.5f);
+
+            //CanvasGroup playerCG = playerWindow.GetComponent<CanvasGroup>();
+            //playerCG.blocksRaycasts = false;
+            //playerCG.DOFade(0f, 0.5f);
+
             Player.Instance.OnDeath();
         });
 

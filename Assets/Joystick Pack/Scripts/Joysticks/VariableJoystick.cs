@@ -39,7 +39,7 @@ public class VariableJoystick : Joystick
             background.gameObject.SetActive(true);
         }
         base.OnPointerDown(eventData);
-        //Player.Instance.animator.SetBool("isMove", true);
+
         Player.Instance.character.PlayAnimation(PlayerCharacter.AniType.Move);
     }
 
@@ -49,7 +49,7 @@ public class VariableJoystick : Joystick
             background.gameObject.SetActive(false);
 
         base.OnPointerUp(eventData);
-        //Player.Instance.animator.SetBool("isMove", false);
+
         Player.Instance.character.PlayAnimation(PlayerCharacter.AniType.Idle);
     }
 
