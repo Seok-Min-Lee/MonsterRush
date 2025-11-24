@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
     {
         character.UpdateTick(Time.deltaTime);
 
-        if (isDead || Heal == 0) return;
+        if (isDead || Heal == 0 || StaticValues.isWait) return;
 
         if (Hp < HpMax)
         {
@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (isDead) 
+        if (isDead || StaticValues.isWait) 
         {
             return;
         }
@@ -234,9 +234,16 @@ public class Player : MonoBehaviour
             ExecuteEvents.Execute<IEndDragHandler>(joystick.gameObject, pointerData, ExecuteEvents.endDragHandler);
 
             //
-            GameCtrl.Instance.OnLevelUp();
-            EnemyContainer.Instance.OnLevelUp();
-            AudioManager.Instance.PlaySFX(SoundKey.PlayerLevelUp);
+            if (Level == 80)
+            {
+                GameCtrl.Instance.OnGameEnd(GameResult.Clear);
+            }
+            else
+            {
+                GameCtrl.Instance.OnLevelUp();
+                EnemyContainer.Instance.OnLevelUp();
+                AudioManager.Instance.PlaySFX(SoundKey.PlayerLevelUp);
+            }
         }
 
         statDictionary[PlayerStat.Exp].Init(exp);
@@ -374,7 +381,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            GameCtrl.Instance.OnGameEnd();
+            OnDeath();
+            GameCtrl.Instance.OnGameEnd(Level < 80 ? GameResult.Defeat : GameResult.Challenge);
         }
 
         healTimer = 0f;

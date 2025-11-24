@@ -11,7 +11,7 @@ public enum SoundKey
 {
     BGM,
     EnemyHit,
-    GameEnd,
+    GameEndDefeat,
     GameTouch,
     PlayerGetItem,
     PlayerGetWeaponC,
@@ -19,7 +19,9 @@ public enum SoundKey
     PlayerLevelUp,
     WeaponBLaunch,
     WeaponDExplosion,
-    WeaponDLaunch
+    WeaponDLaunch,
+    GameEndClear,
+    GameEndChallenge,
 }
 [System.Serializable]
 public struct Sound
@@ -100,7 +102,7 @@ public class AudioManager : MonoSingleton<AudioManager>
                 {
                     overlapCount++;
 
-                    if (overlapCount > 1)
+                    if (overlapCount > 2)
                     {
                         return;
                     }

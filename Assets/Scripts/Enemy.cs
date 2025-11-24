@@ -42,8 +42,8 @@ public class Enemy : MonoBehaviour
 
     private EnemyPool pool;
 
-    private BoxCollider2D collider;
-    private Rigidbody2D rigidbody;
+    public BoxCollider2D collider { get; private set; }
+    public Rigidbody2D rigidbody { get; private set; }
 
     private float addictTimer = 0f;
     private float bleedTimer = 0f;
@@ -108,14 +108,14 @@ public class Enemy : MonoBehaviour
 
                 Vector2 dir = (Player.Instance.transform.position - transform.position);
                 transform.position += (Vector3)(dir.normalized * speed * (1 - slowPower) * Time.deltaTime);
-                collider.enabled = !Player.Instance.IsDead && dir.sqrMagnitude < 25;
+                collider.enabled = !Player.Instance.IsDead && dir.sqrMagnitude < 25 && !isForceStop;
                 character.FlipX(dir.x > 0);
             }
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isDead && collision.gameObject.CompareTag("Player"))
+        if (!isDead && !StaticValues.isWait && collision.gameObject.CompareTag("Player"))
         {
             AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
             Player.Instance.OnDamage(power);
@@ -146,8 +146,27 @@ public class Enemy : MonoBehaviour
 
         canvasGO.SetActive(false);
     }
+    // 임시 플래그 처리 - 추후 리팩토링
+    private bool isForceStop = false;
+    public virtual void Stop()
+    {
+        collider.enabled = false;
+        rigidbody.linearVelocity = Vector2.zero;
+        rigidbody.angularVelocity = 0f;
+
+        knockbackTimer = 0f;
+        isKnockback = false;
+
+        isForceStop = true;
+        DOVirtual.DelayedCall(5f, () => { isForceStop = false; });
+    }
     public virtual void OnDeath()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         Sequence seq = DOTween.Sequence();
 
         // death 처리 로직

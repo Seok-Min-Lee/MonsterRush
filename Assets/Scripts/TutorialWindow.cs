@@ -125,7 +125,7 @@ public class TutorialWindow : MonoBehaviour
     public void OnClickStart()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        StaticValues.isTutorial = false;
+        GameCtrl.Instance.OnGameStart();
 
         parts[stage].SetSiblingIndex(indexOrigins[stage]);
         guides[stage].SetActive(false);

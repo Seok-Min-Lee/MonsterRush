@@ -16,11 +16,13 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     private bool isRandomTarget = false;
 
     private Queue<WeaponB> bulletPool = new Queue<WeaponB>();
+    private List<WeaponB> actives = new List<WeaponB>();
+
     private float timer = 0f;
 
     private void Update()
     {
-        if (Time.timeScale == 0f)
+        if (Time.timeScale == 0f || StaticValues.isWait || activeCount == 0)
         {
             return;
         }
@@ -80,11 +82,6 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     private Collider2D[] detectBuffer = new Collider2D[32];
     public void LaunchAuto()
     {
-        if (activeCount == 0)
-        {
-            return;
-        }
-
         StartCoroutine(Cor());
 
         IEnumerator Cor()
@@ -128,11 +125,6 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
     }
     public void LaunchRandom()
     {
-        if (activeCount == 0)
-        {
-            return;
-        }
-
         StartCoroutine(Cor());
 
         IEnumerator Cor()
@@ -173,11 +165,13 @@ public class WeaponContainerB : WeaponContainer<WeaponB>
             rotation: Quaternion.Euler(0, 0, angle),
             direction: direction
         );
+        actives.Add(bullet);
 
         AudioManager.Instance.PlaySFX(SoundKey.WeaponBLaunch);
     }
     public void Reload(WeaponB bullet)
     {
+        actives.Remove(bullet);
         bulletPool.Enqueue(bullet);
     }
     private void OnDrawGizmosSelected()

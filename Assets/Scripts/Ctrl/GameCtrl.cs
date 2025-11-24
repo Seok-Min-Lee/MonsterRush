@@ -12,14 +12,14 @@ public class GameCtrl : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI timeText;
 
-    [SerializeField] private TextMeshProUGUI timeScoreText;
-    [SerializeField] private TextMeshProUGUI LevelScoreText;
-    [SerializeField] private TextMeshProUGUI killScoreText;
+    //[SerializeField] private TextMeshProUGUI timeScoreText;
+    //[SerializeField] private TextMeshProUGUI LevelScoreText;
+    //[SerializeField] private TextMeshProUGUI killScoreText;
 
-    [SerializeField] private GameObject normalWindow;
+    [SerializeField] private NormalWindow normalWindow;
     [SerializeField] private GameObject pauseWindow;
     [SerializeField] private GameObject rewardWindow;
-    [SerializeField] private GameObject scoreWindow;
+    [SerializeField] private EndingWindow endingWindow;
     [SerializeField] private GameObject settingWindow;
     [SerializeField] private TutorialWindow tutorialWindow;
 
@@ -71,9 +71,13 @@ public class GameCtrl : MonoBehaviour
 
         // 튜토리얼 UI 표시
         bool isVisibleTutorial = PlayerPrefs.GetInt("visibleTutorial") == 1;
-
-        StaticValues.isTutorial = isVisibleTutorial;
+        StaticValues.isWait = isVisibleTutorial;
         tutorialWindow.Init(isVisibleTutorial);
+
+        if (!StaticValues.isWait)
+        {
+            OnGameStart();
+        }
 
         //
         bool isLeftHand = PlayerPrefs.GetInt("isLeftHand") == 1;
@@ -82,7 +86,7 @@ public class GameCtrl : MonoBehaviour
     }
     private void Update()
     {
-        if (StaticValues.isTutorial)
+        if (StaticValues.isWait)
         {
             return;
         }
@@ -158,6 +162,17 @@ public class GameCtrl : MonoBehaviour
 
         AudioManager.Instance.Init(volumeBGM, volumeSFX);
     }
+    public void OnGameStart()
+    {
+        StaticValues.isWait = false;
+        normalWindow.Alert("목표: Lv 80 도달!");
+    }
+    public void OnGameChallenge()
+    {
+        StaticValues.isWait = false;
+        normalWindow.Show();
+        DOVirtual.DelayedCall(1f, () => { normalWindow.Alert("목표: 오래 살아남기!"); });
+    }
     public void OnLevelUp()
     {
         Time.timeScale = 0f;
@@ -223,42 +238,113 @@ public class GameCtrl : MonoBehaviour
 
         tutorialWindow.OnReward(rewardInfo);
     }
-    public void OnGameEnd()
+    public void OnGameEnd(GameResult result)
+    {
+        switch (result)
+        {
+            case GameResult.Clear:
+                OnGameEndClear();
+                break;
+            case GameResult.Defeat:
+                OnGameEndDefeat();
+                break;
+            case GameResult.Challenge:
+                OnGameEndChallenge();
+                break;
+        }
+    }
+    private void OnGameEndClear()
+    {
+        List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
+        Vector3 playerPosition = Player.Instance.transform.position;
+
+        Sequence seq = DOTween.Sequence();
+
+        // 엔딩 연출
+        seq.AppendCallback(() =>
+        {
+            StaticValues.isWait = true;
+            AudioManager.Instance.PlaySFX(SoundKey.GameEndClear);
+
+            normalWindow.Alert("목표 달성! (Lv 80 도달)");
+        });
+
+        // 딜레이
+        seq.AppendInterval(2f);
+
+        seq.AppendCallback(() =>
+        {
+            normalWindow.Hide();
+            endingWindow.Init(GameResult.Clear, timer);
+        });
+
+        // 몬스터 제거
+        foreach (Enemy enemy in enemies.OrderBy(e => (e.transform.position - playerPosition).sqrMagnitude))
+        {
+            enemy.Stop();
+
+            seq.AppendCallback(() => 
+            {
+                enemy.OnDeath();
+            });
+
+            seq.AppendInterval(Time.deltaTime);
+        }
+
+        // 딜레이
+        seq.AppendInterval(1f);
+
+        // 결과창 표시
+        seq.AppendCallback(() =>
+        {
+            endingWindow.gameObject.SetActive(true);
+            endingWindow.Show();
+        });
+    }
+    private void OnGameEndDefeat()
     {
         Sequence seq = DOTween.Sequence();
 
         // 엔딩 연출
         seq.AppendCallback(() =>
         {
-            AudioManager.Instance.PlaySFX(SoundKey.GameEnd);
+            AudioManager.Instance.PlaySFX(SoundKey.GameEndDefeat);
 
-            int minutes = (int)(timer / 60);
-            int seconds = (int)(timer % 60);
-            timeScoreText.text = $"{minutes:00}:{seconds:00}";
-            LevelScoreText.text = $"{Player.Instance.Level}";
-            killScoreText.text = $"{Player.Instance.killCount.ToString("#,##0")}";
-
-            CanvasGroup normalCG = normalWindow.GetComponent<CanvasGroup>();
-            normalCG.blocksRaycasts = false;
-            normalCG.DOFade(0f, 0.5f);
-
-            //CanvasGroup playerCG = playerWindow.GetComponent<CanvasGroup>();
-            //playerCG.blocksRaycasts = false;
-            //playerCG.DOFade(0f, 0.5f);
-
-            Player.Instance.OnDeath();
+            normalWindow.Hide();
+            endingWindow.Init(GameResult.Defeat, timer);
         });
 
         // 딜레이
         seq.AppendInterval(2.5f);
 
         // 결과창 표시
-        seq.AppendCallback(() => 
+        seq.AppendCallback(() =>
         {
-            scoreWindow.SetActive(true);
-            CanvasGroup cg = scoreWindow.GetComponent<CanvasGroup>();
-            cg.alpha = 0f;
-            cg.DOFade(1f, 0.5f);
+            endingWindow.gameObject.SetActive(true);
+            endingWindow.Show();
+        });
+    }
+    private void OnGameEndChallenge()
+    {
+        Sequence seq = DOTween.Sequence();
+
+        // 엔딩 연출
+        seq.AppendCallback(() =>
+        {
+            AudioManager.Instance.PlaySFX(SoundKey.GameEndChallenge);
+
+            normalWindow.Hide();
+            endingWindow.Init(GameResult.Challenge, timer);
+        });
+
+        // 딜레이
+        seq.AppendInterval(2.5f);
+
+        // 결과창 표시
+        seq.AppendCallback(() =>
+        {
+            endingWindow.gameObject.SetActive(true);
+            endingWindow.Show();
         });
     }
 }

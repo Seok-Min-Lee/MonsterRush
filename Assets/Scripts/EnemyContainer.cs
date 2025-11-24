@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyContainer : MonoBehaviour
@@ -5,7 +6,7 @@ public class EnemyContainer : MonoBehaviour
     public static EnemyContainer Instance { get; private set; }
 
     public EnemyPool currentPool => pools[stage];
-
+    
     [SerializeField] private EnemyPool[] pools;
     [SerializeField] private int stage = 0;
 
@@ -32,10 +33,20 @@ public class EnemyContainer : MonoBehaviour
                 poolSizeMax: poolSizeMax
             );
         }
-        //pools[0].gameObject.SetActive(true);
+
         pools[0].isSpawn = true;
     }
+    public List<Enemy> GetActiveEnemyAll()
+    {
+        List<Enemy> enemies = new List<Enemy>();
 
+        for (int i = 0; i < pools.Length; i++)
+        {
+            enemies.AddRange(pools[i].actives);
+        }
+
+        return enemies;
+    }
     public void OnLevelUp()
     {
         // 난이도 상승 구조
@@ -79,8 +90,6 @@ public class EnemyContainer : MonoBehaviour
         {
             pools[stage++].isSpawn = false;
             pools[stage].isSpawn = true;
-            //pools[stage++].gameObject.SetActive(false);
-            //pools[stage].gameObject.SetActive(true);
 
             spawnInterval *= 0.9f;
             poolSizeMax = (int)(poolSizeMax * 1.1f);

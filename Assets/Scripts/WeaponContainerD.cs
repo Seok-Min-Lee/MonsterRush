@@ -10,13 +10,14 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
     [SerializeField] private bool isScaleUp = false;
 
     private Queue<WeaponD> bulletPool = new Queue<WeaponD>();
+    private List<WeaponD> actives = new List<WeaponD>();
     private float timer = 0f;
     private bool isUpper = true;
     private float explosionScale = 1f;
 
     private void Update()
     {
-        if (Time.timeScale == 0f || activeCount == 0)
+        if (Time.timeScale == 0f || StaticValues.isWait || activeCount == 0)
         {
             return;
         }
@@ -77,7 +78,6 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
             for (int i = 0; i < activeCount; i++)
             {
                 Launch();
-                AudioManager.Instance.PlaySFX(SoundKey.WeaponDLaunch);
 
                 yield return new WaitForSeconds(0.25f);
             }
@@ -117,9 +117,14 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
             force: force,
             torque: torque
         );
+
+        actives.Add(bullet);
+
+        AudioManager.Instance.PlaySFX(SoundKey.WeaponDLaunch);
     }
     public void Reload(WeaponD bullet)
     {
+        actives.Remove(bullet);
         bulletPool.Enqueue(bullet);
     }
 }

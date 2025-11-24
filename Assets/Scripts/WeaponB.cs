@@ -25,7 +25,7 @@ public class WeaponB : Weapon
     }
     private void Update()
     {
-        if (timer > 0.5f)
+        if (timer > 1f)
         {
             OnReload();
         }

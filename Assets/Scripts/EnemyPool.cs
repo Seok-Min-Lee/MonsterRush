@@ -26,7 +26,7 @@ public class EnemyPool : MonoBehaviour
     private float timer = 0f;
     private void Update()
     {
-        if (StaticValues.isTutorial)
+        if (StaticValues.isWait)
         {
             return;
         }

@@ -21,6 +21,11 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     }
     private void FixedUpdate()
     {
+        if (StaticValues.isWait)
+        {
+            return;
+        }
+
         for (int i = 0; i < activeCount; i++)
         {
             weapons[i].UpdateTick();
