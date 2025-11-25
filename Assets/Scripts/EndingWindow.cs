@@ -36,7 +36,7 @@ public class EndingWindow : MonoBehaviour
         killScoreText.text = $"{Player.Instance.killCount.ToString("#,##0")}";
 
         head.text = result != GameResult.Defeat ? "½Â¸®!!" : "ÆÐ¹è..";
-        head.color = result != GameResult.Defeat ? Color.green : new Color(0.5f, 0.5f, 0.5f, 1f);
+        head.color = result != GameResult.Defeat ? Color.green : new Color(0.125f, 0.125f, 0.125f, 1f);
         continueButton.SetActive(result == GameResult.Clear);
 
         canvasGroup.alpha = 0f;

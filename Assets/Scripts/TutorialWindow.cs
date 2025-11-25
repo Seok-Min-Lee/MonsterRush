@@ -11,6 +11,7 @@ public class TutorialWindow : MonoBehaviour
 
     [SerializeField] private Transform[] parts;
     [SerializeField] private GameObject[] guides;
+    [SerializeField] private Pagination[] paginations;
     [SerializeField] private PopupGuide[] popups;
     [SerializeField] private GameObject previousButton;
     [SerializeField] private GameObject nextButton;
@@ -58,6 +59,11 @@ public class TutorialWindow : MonoBehaviour
             previousButton.SetActive(false);
             nextButton.SetActive(true);
             startButton.SetActive(false);
+
+            for (int i = 0; i < paginations.Length; i++)
+            {
+                paginations[i].SetValue(i == stage);
+            }
         }
 
         this.isUsing = isUsing;
@@ -103,6 +109,11 @@ public class TutorialWindow : MonoBehaviour
         parts[stage].SetSiblingIndex(siblingIndex);
         guides[stage].SetActive(true);
 
+        for (int i = 0; i < paginations.Length; i++)
+        {
+            paginations[i].SetValue(i == stage);
+        }
+
         previousButton.SetActive(true);
         nextButton.SetActive(stage < parts.Length - 1);
         startButton.SetActive(stage == parts.Length - 1);
@@ -118,6 +129,11 @@ public class TutorialWindow : MonoBehaviour
         parts[stage].SetSiblingIndex(siblingIndex);
         guides[stage].SetActive(true);
 
+        for (int i = 0; i < paginations.Length; i++)
+        {
+            paginations[i].SetValue(i == stage);
+        }
+
         previousButton.SetActive(stage > 0);
         nextButton.SetActive(true);
         startButton.SetActive(false);
@@ -126,15 +142,24 @@ public class TutorialWindow : MonoBehaviour
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
         GameCtrl.Instance.OnGameStart();
+    }
+    public void OnGameStart()
+    {
+        if (isUsing)
+        {
+            parts[stage].SetSiblingIndex(indexOrigins[stage]);
+            guides[stage].SetActive(false);
 
-        parts[stage].SetSiblingIndex(indexOrigins[stage]);
-        guides[stage].SetActive(false);
+            background.gameObject.SetActive(false);
+            tutorial.gameObject.SetActive(false);
 
-        background.gameObject.SetActive(false);
-        tutorial.gameObject.SetActive(false);
-
-        popupQueue.Enqueue(popups[StaticValues.playerCharacterNum]);
-        coroutine = StartCoroutine(RewardGuideCor());
+            popupQueue.Enqueue(popups[StaticValues.playerCharacterNum]);
+            coroutine = StartCoroutine(RewardGuideCor());
+        }
+        else
+        {
+            usedPopupCount++;
+        }
     }
     public void OnChangeUI(bool isLeftHand)
     {
@@ -197,6 +222,12 @@ public class TutorialWindow : MonoBehaviour
     }
     private IEnumerator RewardGuideCor()
     {
+        List<int> all = new List<int>();
+        for (int i = 0; i < popups.Length; i++)
+        {
+            all.Add(i);
+        }
+
         while (true)
         {
             if (usedPopupCount == popups.Length)
@@ -207,10 +238,24 @@ public class TutorialWindow : MonoBehaviour
             if (popupQueue.Count > 0)
             {
                 PopupGuide popupGuide = popupQueue.Dequeue();
-                int position = popups.Where(x => x.gameObject.activeSelf).Count();
+
+                List<int> samples = new List<int>();
+                samples.AddRange(all);
+
+                foreach (PopupGuide guide in popups.Where(x => x.gameObject.activeSelf))
+                {
+                    samples.Remove(guide.positionId);
+                }
+
+                int position = samples.Min();
 
                 popupGuide.Show(position);
+                
                 usedPopupCount++;
+                if (usedPopupCount == popups.Length)
+                {
+                    PlayerPrefs.SetInt("visibleTutorial", 0);
+                }
             }
 
             yield return new WaitForSeconds(0.1f);

@@ -12,10 +12,6 @@ public class GameCtrl : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI timeText;
 
-    //[SerializeField] private TextMeshProUGUI timeScoreText;
-    //[SerializeField] private TextMeshProUGUI LevelScoreText;
-    //[SerializeField] private TextMeshProUGUI killScoreText;
-
     [SerializeField] private NormalWindow normalWindow;
     [SerializeField] private GameObject pauseWindow;
     [SerializeField] private GameObject rewardWindow;
@@ -108,7 +104,11 @@ public class GameCtrl : MonoBehaviour
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
         pauseWindow.SetActive(false);
-        Time.timeScale = 1f;
+
+        if (!rewardWindow.gameObject.activeSelf)
+        {
+            Time.timeScale = 1f;
+        }
     }
     public void OnClickHome()
     {
@@ -165,6 +165,7 @@ public class GameCtrl : MonoBehaviour
     public void OnGameStart()
     {
         StaticValues.isWait = false;
+        tutorialWindow.OnGameStart();
         normalWindow.Alert("목표: Lv 80 도달!");
     }
     public void OnGameChallenge()

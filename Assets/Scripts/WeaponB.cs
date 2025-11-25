@@ -46,7 +46,7 @@ public class WeaponB : Weapon
 
             if (!isPenetrate)
             {
-                OnReload();
+                timer = 1f;
             }
         }
     }

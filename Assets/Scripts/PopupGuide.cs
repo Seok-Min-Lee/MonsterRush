@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class PopupGuide : MonoBehaviour
 {
     [SerializeField] private GameObject closeButton;
+    public int positionId { get; private set; }
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -23,6 +24,8 @@ public class PopupGuide : MonoBehaviour
     Sequence seq;
     public void Show(int index)
     {
+        positionId = index;
+
         int offsetY = 200 * index;
         rectTransform.anchoredPosition = new Vector2(0, -50 + offsetY);
 
@@ -41,10 +44,10 @@ public class PopupGuide : MonoBehaviour
         });
 
         // 대기
-        seq.Append(rectTransform.DOAnchorPos(new Vector2(0, offsetY), 10f));
+        seq.Append(rectTransform.DOAnchorPos(new Vector2(0, offsetY), 5f));
 
         // 소멸 모션
-        seq.Append(canvasGroup.DOFade(0f, 1f));
+        seq.Append(canvasGroup.DOFade(0f, 0.5f));
         seq.AppendCallback(() => { gameObject.SetActive(false); });
     }
     public void OnClick()
