@@ -3,33 +3,50 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class WeaponContainerD : WeaponContainer<WeaponD>
+public class BombLauncher : WeaponLauncher<Bomb>
 {
-    [Header("Debug")]
-    [SerializeField] private int knockbackLevel = 0;
-    [SerializeField] private bool isScaleUp = false;
-
-    private Queue<WeaponD> bulletPool = new Queue<WeaponD>();
-    private List<WeaponD> actives = new List<WeaponD>();
-    private float timer = 0f;
+    public enum State { None, Fire, Reloading }
+    
+    private State state = State.None;
+    private bool isScaleUp = false;
     private bool isUpper = true;
-    private float explosionScale = 1f;
+    private int launchLevel = 0;
+    private int knockbackLevel = 0;
+
+    private float timer = 0f;
+    private int bulletCount = 0;
 
     private void Update()
     {
-        if (Time.timeScale == 0f || StaticValues.isWait || activeCount == 0)
+        if (Time.timeScale == 0f || StaticValues.isWait || launchLevel == 0)
         {
             return;
         }
 
-        if (timer > 2.5f)
-        {
-            LaunchSequence();
-
-            timer = 0f;
-        }
-
         timer += Time.deltaTime;
+
+        if (state == State.Fire)
+        {
+            if (bulletCount < launchLevel && timer > 0.25f)
+            {
+                Launch(Vector3.zero);
+
+                timer = 0f;
+
+                if (++bulletCount == launchLevel)
+                {
+                    bulletCount = 0;
+                    state = State.Reloading;
+                }
+            }
+        }
+        else if (state == State.Reloading)
+        {
+            if (timer > 2f)
+            {
+                state = State.Fire;
+            }
+        }
     }
     public override void OnClickStateToggle()
     {
@@ -55,40 +72,12 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
                 break;
         }
     }
-    private void StrengthenFirst()
+    public override void Launch(Vector3 target)
     {
-        if (activeCount >= WEAPON_COUNT_MAX)
-        {
-            return;
-        }
-
-        if (activeCount++ == 0)
-        {
-            stateToggle.Unlock();
-            stateToggle.Init(isUpper);
-        }
-    }
-
-    public void LaunchSequence()
-    {
-        StartCoroutine(Cor());
-
-        IEnumerator Cor()
-        {
-            for (int i = 0; i < activeCount; i++)
-            {
-                Launch();
-
-                yield return new WaitForSeconds(0.25f);
-            }
-        }
-    }
-    private void Launch()
-    {
-        WeaponD bullet = bulletPool.Count > 0 ?
+        Bomb bullet = bulletPool.Count > 0 ?
                          bulletPool.Dequeue() :
-                         GameObject.Instantiate<WeaponD>(prefab, transform);
-        
+                         GameObject.Instantiate<Bomb>(prefab, transform);
+
         //
         float radian, mass;
         Vector3 position;
@@ -122,9 +111,23 @@ public class WeaponContainerD : WeaponContainer<WeaponD>
 
         AudioManager.Instance.PlaySFX(SoundKey.WeaponDLaunch);
     }
-    public void Reload(WeaponD bullet)
+    private void StrengthenFirst()
     {
-        actives.Remove(bullet);
-        bulletPool.Enqueue(bullet);
+        if (launchLevel >= LEVEL_MAX)
+        {
+            return;
+        }
+
+        if (launchLevel == 0)
+        {
+            stateToggle.Unlock();
+            stateToggle.Init(isUpper);
+
+            state = State.Fire;
+            bulletCount = 0;
+        }
+
+        launchLevel++;
     }
+
 }

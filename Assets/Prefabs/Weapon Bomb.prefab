@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -3207468998391218654}
   - component: {fileID: -2729381700743918988}
   m_Layer: 9
-  m_Name: Weapon D
+  m_Name: Weapon Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

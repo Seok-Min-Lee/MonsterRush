@@ -1,17 +1,15 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class WeaponA : Weapon
+public class Saw : Weapon
 {
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private Sprite[] sprites;
 
+    private bool isKnockback = false;
+    private int powerLevel = 0;
+
     private int spriteIndex = 0;
-
-    private bool isKnockback;
-
-    [Header("Debug")]
-    [SerializeField] private int powerLevel = 0;
     public void UpdateTick()
     {
         renderer.sprite = sprites[spriteIndex++ % sprites.Length];

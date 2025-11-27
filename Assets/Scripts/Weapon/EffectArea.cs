@@ -1,17 +1,16 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class WeaponC : Weapon
+public class EffectArea : Weapon
 {
     public enum State { Poison, Slow, Both }
 
     [SerializeField] private Transform maskTransform;
     [SerializeField] private SpriteRenderer textureRenderer;
 
-    [Header("Debug")]
-    [SerializeField] private int areaLevel = 1;
-    [SerializeField] private int effectLevel;
-    [SerializeField] private State state = State.Poison;
+    private State state = State.Poison;
+    private int areaLevel = 0;
+    private int effectLevel = 0;
 
     private Color PoisonColor => new Color(0.7529f, 0, 1f, 0.5f + effectLevel * 0.0625f);
     private Color SlowColor => new Color(0f, 0.7529f, 1f, 0.5f + effectLevel * 0.0625f);
@@ -30,19 +29,6 @@ public class WeaponC : Weapon
         maskTransform.localScale = Vector3.zero;
         textureRenderer.size = Vector2.zero;
         collider.radius = 0f;
-
-        //// Target Value
-        //Vector3 maskScale = Vector3.one * 2.25f;
-        //Vector2 textureSize = Vector2.one * 2.25f;
-        //float collierRadius = 1.125f;
-
-        //// 모션 적용
-        //maskTransform.DOScale(maskScale, 0.5f);
-        //DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
-        //DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
-
-        //state = State.Poison;
-        //textureRenderer.color = PoisonColor;
     }
     private void FixedUpdate()
     {

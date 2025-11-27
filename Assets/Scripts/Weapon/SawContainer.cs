@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class WeaponContainerA : WeaponContainer<WeaponA>
+public class SawContainer : WeaponContainer<Saw>
 {
     [SerializeField] private float radiusMin = 0.5f;
     [SerializeField] private float radiusMax = 1f;
     [SerializeField] private float speed = 1f;
 
-    [Header("Debug")]
-    [SerializeField] private int powerLevel = 0;
-    [SerializeField] private bool isKnockback = false;
-    
     private bool isExpand = false;
+    private bool isKnockback = false;
+    private int quantityLevel = 0;
+    private int powerLevel = 0;
+
     private void Awake()
     {
         base.Init();
@@ -26,7 +26,7 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
             return;
         }
 
-        for (int i = 0; i < activeCount; i++)
+        for (int i = 0; i < quantityLevel; i++)
         {
             weapons[i].UpdateTick();
         }
@@ -39,7 +39,7 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
 
         isExpand = !isExpand;
         stateToggle.Init(isExpand);
-        RefreshTransform();
+        Relocation();
     }
     public override void Strengthen(int key)
     {
@@ -67,28 +67,28 @@ public class WeaponContainerA : WeaponContainer<WeaponA>
     }
     private void StrengthenFirst()
     {
-        if (activeCount >= WEAPON_COUNT_MAX)
+        if (quantityLevel >= LEVEL_MAX)
         {
             return;
         }
 
-        if (activeCount == 0)
+        if (quantityLevel == 0)
         {
             stateToggle.Unlock();
             stateToggle.Init(isExpand);
         }
 
-        weapons[activeCount++].gameObject.SetActive(true);
-        RefreshTransform();
+        weapons[quantityLevel++].gameObject.SetActive(true);
+        Relocation();
     }
-    private void RefreshTransform()
+    private void Relocation()
     {
         // 자식들을 원 위에 동일한 간격으로 배치
         float radius = isExpand ? radiusMax : radiusMin;
 
-        for (int i = 0; i < activeCount; i++)
+        for (int i = 0; i < quantityLevel; i++)
         {
-            float angle = i * Mathf.PI * 2f / activeCount;
+            float angle = i * Mathf.PI * 2f / quantityLevel;
 
             Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
             Vector3 rot = new Vector3(0, 0, angle * Mathf.Rad2Deg);

@@ -1,11 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class WeaponDFlare : Weapon
+public class BombFlare : Weapon
 {
-    [Header("Debug")] 
-    [SerializeField] private int knockbackLevel = 0;
-    [SerializeField] private bool isScaleUp = false;
+    private bool isScaleUp = false;
+    private int knockbackLevel = 0;
 
     private ParticleSystem particle;
     private BoxCollider2D collider;

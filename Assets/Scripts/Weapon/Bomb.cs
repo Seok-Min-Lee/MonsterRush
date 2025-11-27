@@ -2,18 +2,17 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
-public class WeaponD : Weapon
+public class Bomb : Weapon
 {
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private Sprite[] sprites;
-    [SerializeField] private WeaponDFlare flare;
+    [SerializeField] private BombFlare flare;
 
-    [Header("Debug")]
-    [SerializeField] private int knockbackLevel = 0;
-    [SerializeField] private bool isScaleUp = false;
+    private bool isScaleUp = false;
+    private int knockbackLevel = 0;
 
     private Rigidbody2D rigidbody;
-    private WeaponContainerD container;
+    private BombLauncher container;
     private float timer = 0f;
     private void Awake()
     {
@@ -35,7 +34,7 @@ public class WeaponD : Weapon
             OnExplosion();
         }
     }
-    public void OnShot(WeaponContainerD container, bool isScaleUp, int knockbackLevel, Vector3 position, Vector3 force, float torque)
+    public void OnShot(BombLauncher container, bool isScaleUp, int knockbackLevel, Vector3 position, Vector3 force, float torque)
     {
         gameObject.SetActive(true);
 
@@ -103,6 +102,6 @@ public class WeaponD : Weapon
         renderer.enabled = true;
 
         gameObject.SetActive(false);
-        container.Reload(this);
+        container.Charge(this);
     }
 }

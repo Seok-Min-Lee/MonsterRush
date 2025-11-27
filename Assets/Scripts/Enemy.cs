@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
 
     public BoxCollider2D collider { get; private set; }
     public Rigidbody2D rigidbody { get; private set; }
+    public Vector3 toPlayer /*{ get; private set; }*/ = Vector3.zero;
 
     private float addictTimer = 0f;
     private float bleedTimer = 0f;
@@ -106,10 +107,11 @@ public class Enemy : MonoBehaviour
                     rigidbody.linearVelocity = Vector2.zero;
                 }
 
-                Vector2 dir = (Player.Instance.transform.position - transform.position);
-                transform.position += (Vector3)(dir.normalized * speed * (1 - slowPower) * Time.deltaTime);
-                collider.enabled = !Player.Instance.IsDead && dir.sqrMagnitude < 25 && !isForceStop;
-                character.FlipX(dir.x > 0);
+                toPlayer = (Player.Instance.transform.position - transform.position);
+                
+                transform.position += (Vector3)(toPlayer.normalized * speed * (1 - slowPower) * Time.deltaTime);
+                collider.enabled = !Player.Instance.IsDead && toPlayer.sqrMagnitude < 25 && !isForceStop;
+                character.FlipX(toPlayer.x > 0);
             }
         }
     }

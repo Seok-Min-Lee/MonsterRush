@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
 {
     public static Player Instance;
 
-    [SerializeField] private Transform[] weaponContainers;
+    [SerializeField] private WeaponControllerBase[] weaponControllers;
     [SerializeField] private Transform magnetArea;
     [SerializeField] private Transform characterArea;
     [SerializeField] private ParticleSystem healParticle;
@@ -96,22 +96,22 @@ public class Player : MonoBehaviour
         switch (StaticValues.playerCharacterNum)
         {
             case 0:
-                weaponContainers[0].GetComponent<WeaponContainerA>().Strengthen(0);
+                weaponControllers[0].Strengthen(0);
                 statDictionary[PlayerStat.WeaponA].Increase();
                 statDictionary[PlayerStat.Strength].Increase();
                 break;
             case 1:
-                weaponContainers[1].GetComponent<WeaponContainerB>().Strengthen(0);
+                weaponControllers[1].Strengthen(0);
                 statDictionary[PlayerStat.WeaponB].Increase();
                 statDictionary[PlayerStat.Speed].Increase();
                 break;
             case 2:
-                weaponContainers[2].GetComponent<WeaponContainerC>().Strengthen(0);
+                weaponControllers[2].Strengthen(0);
                 statDictionary[PlayerStat.WeaponC].Increase();
                 statDictionary[PlayerStat.Magnet].Increase();
                 break;
             case 3:
-                weaponContainers[3].GetComponent<WeaponContainerD>().Strengthen(0);
+                weaponControllers[3].Strengthen(0);
                 statDictionary[PlayerStat.WeaponD].Increase();
                 statDictionary[PlayerStat.Heal].Increase();
                 break;
@@ -171,7 +171,7 @@ public class Player : MonoBehaviour
         character.FlipX(moveVec.x < 0);
 
         float angle = Mathf.Atan2(joystick.Vertical, joystick.Horizontal) * Mathf.Rad2Deg;
-        weaponContainers[1].rotation = Quaternion.Euler(0, 0, angle);
+        weaponContainers[1].transform.rotation = Quaternion.Euler(0, 0, angle);
 #else
         transform.position += moveVec;
 #endif
@@ -262,7 +262,7 @@ public class Player : MonoBehaviour
                 {
                     GameObject.Instantiate(buffIcons[0], buffIconStack);
                 }
-                weaponContainers[0].GetComponent<WeaponContainerA>().Strengthen(rewardInfo.index);
+                weaponControllers[0].Strengthen(rewardInfo.index);
                 break;
             case 2000:
                 if (rewardInfo.type == RewardInfo.Type.Weapon)
@@ -273,7 +273,7 @@ public class Player : MonoBehaviour
                 {
                     GameObject.Instantiate(buffIcons[1], buffIconStack);
                 }
-                weaponContainers[1].GetComponent<WeaponContainerB>().Strengthen(rewardInfo.index);
+                weaponControllers[1].Strengthen(rewardInfo.index);
                 break;
             case 3000:
                 if (rewardInfo.type == RewardInfo.Type.Weapon)
@@ -284,7 +284,7 @@ public class Player : MonoBehaviour
                 {
                     GameObject.Instantiate(buffIcons[2], buffIconStack);
                 }
-                weaponContainers[2].GetComponent<WeaponContainerC>().Strengthen(rewardInfo.index);
+                weaponControllers[2].Strengthen(rewardInfo.index);
                 break;
             case 4000:
                 if (rewardInfo.type == RewardInfo.Type.Weapon)
@@ -295,7 +295,7 @@ public class Player : MonoBehaviour
                 {
                     GameObject.Instantiate(buffIcons[3], buffIconStack);
                 }
-                weaponContainers[3].GetComponent<WeaponContainerD>().Strengthen(rewardInfo.index);
+                weaponControllers[3].Strengthen(rewardInfo.index);
                 break;
             case 0:
                 switch (rewardInfo.index)
@@ -330,9 +330,9 @@ public class Player : MonoBehaviour
             isMagnetVisible = false;
             magnetRenderer.enabled = isMagnetVisible;
 
-            for (int i = 0; i < weaponContainers.Length; i++)
+            for (int i = 0; i < weaponControllers.Length; i++)
             {
-                weaponContainers[i].gameObject.SetActive(false);
+                weaponControllers[i].gameObject.SetActive(false);
             }
 
             canvasGO.SetActive(false);
@@ -397,7 +397,7 @@ public class Player : MonoBehaviour
             character.PlayAnimation(PlayerCharacter.AniType.Move);
 
             float angle = Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
-            weaponContainers[1].rotation = Quaternion.Euler(0, 0, angle);
+            //weaponControllers[1].transform.rotation = Quaternion.Euler(0, 0, angle);
 
             character.FlipX(moveVec.x < 0);
         }

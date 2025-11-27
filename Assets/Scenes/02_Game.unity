@@ -903,7 +903,7 @@ GameObject:
   - component: {fileID: 143908993}
   - component: {fileID: 143908994}
   m_Layer: 9
-  m_Name: Weapon Container C
+  m_Name: Weapon Controller EffectArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -936,8 +936,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 525821b3a3f7a6d43b978ddf2fe9529e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: -7014794405667175891, guid: e67aa137798cd204ea3116dee7a7bb61, type: 3}
   stateToggle: {fileID: 847367731}
+  prefab: {fileID: -7014794405667175891, guid: e67aa137798cd204ea3116dee7a7bb61, type: 3}
   state: 0
   areaLevel: 0
   effectLevel: 0
@@ -1531,7 +1531,7 @@ GameObject:
   - component: {fileID: 236381562}
   - component: {fileID: 236381563}
   m_Layer: 9
-  m_Name: Weapon Container A
+  m_Name: Weapon Controller Saw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1564,13 +1564,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a52145e31a8088408f7b10377346671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: -592160648459502713, guid: 12fdca63908c4334a84ade2c4ffd4182, type: 3}
   stateToggle: {fileID: 3971250556727094110}
+  prefab: {fileID: -592160648459502713, guid: 12fdca63908c4334a84ade2c4ffd4182, type: 3}
   radiusMin: 0.5
   radiusMax: 2
   speed: 2
-  powerLevel: 0
-  isKnockback: 0
 --- !u!1001 &258022387
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2995,11 +2993,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e06b01699c117074fabe3eeba54c503c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponContainers:
-  - {fileID: 236381562}
-  - {fileID: 1257691377}
-  - {fileID: 143908993}
-  - {fileID: 1262095960}
+  weaponControllers:
+  - {fileID: 236381563}
+  - {fileID: 1257691378}
+  - {fileID: 143908994}
+  - {fileID: 1262095961}
   magnetArea: {fileID: 1461840807}
   characterArea: {fileID: 1103334606}
   healParticle: {fileID: 302969026}
@@ -7548,7 +7546,7 @@ GameObject:
   - component: {fileID: 1257691377}
   - component: {fileID: 1257691378}
   m_Layer: 9
-  m_Name: Weapon Container B
+  m_Name: Weapon Controller Knife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7581,12 +7579,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2740f001aec90054f81d208b1e640b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2818138152051590392, guid: 5ba87572bfd394a4d94dba1e6306c06a, type: 3}
   stateToggle: {fileID: 1041378663}
+  prefab: {fileID: 2818138152051590392, guid: 5ba87572bfd394a4d94dba1e6306c06a, type: 3}
   radius: 0.5
   detectRaidus: 5
-  isPenetrate: 0
-  bleedLevel: 0
 --- !u!1 &1262095959
 GameObject:
   m_ObjectHideFlags: 0
@@ -7598,7 +7594,7 @@ GameObject:
   - component: {fileID: 1262095960}
   - component: {fileID: 1262095961}
   m_Layer: 9
-  m_Name: Weapon Container D
+  m_Name: Weapon Controller Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7631,10 +7627,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92a5ba2ceab2d7c4e92923130bb8fe80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: -2729381700743918988, guid: 7f9353f8a21e9d64f83132b4b09e8455, type: 3}
   stateToggle: {fileID: 2074761790}
-  knockbackLevel: 0
-  isScaleUp: 0
+  prefab: {fileID: -2729381700743918988, guid: 7f9353f8a21e9d64f83132b4b09e8455, type: 3}
 --- !u!1 &1267310303
 GameObject:
   m_ObjectHideFlags: 0
@@ -7879,7 +7873,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1368663545
 RectTransform:
   m_ObjectHideFlags: 0

@@ -2,22 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponB : Weapon
+public class Knife : Weapon
 {
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private Sprite[] sprites;
 
-    [Header("Debug")]
-    [SerializeField] private int speed;
-    [SerializeField] private float bleedRatio = 0.1f;
-    [SerializeField] private float bleedPower = 0.5f;
-    [SerializeField] private bool isPenetrate;
+    private int speed = 10;
+    private int bleedLevel = 0;
+    private bool isPenetrate = false;
 
     private Rigidbody2D rigidbody;
-    private WeaponContainerB container;
+    private KnifeLauncher container;
 
-    private int bleedLevel = 0;
-
+    private bool isUsed = false;
+    private float bleedRatio = 0.1f;
+    private float bleedPower = 0.5f;
     private float timer = 0f;
     private void Awake()
     {
@@ -34,7 +33,11 @@ public class WeaponB : Weapon
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (isUsed)
+        {
+            return;
+        }
+        else if (collision.gameObject.CompareTag("Enemy"))
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
@@ -47,10 +50,11 @@ public class WeaponB : Weapon
             if (!isPenetrate)
             {
                 timer = 1f;
+                isUsed = true;
             }
         }
     }
-    public void OnShot(WeaponContainerB container, int bleedLevel, bool isPenetrate, Vector3 position, Quaternion rotation, Vector3 direction)
+    public void OnShot(KnifeLauncher container, int bleedLevel, bool isPenetrate, Vector3 position, Quaternion rotation, Vector3 direction)
     {
         gameObject.SetActive(true);
 
@@ -69,6 +73,7 @@ public class WeaponB : Weapon
         rigidbody.AddForce(direction * speed, ForceMode2D.Impulse);
 
         timer = 0f;
+        isUsed = false;
     }
     public void OnReload()
     {
@@ -76,6 +81,6 @@ public class WeaponB : Weapon
         rigidbody.angularVelocity = 0f;
 
         gameObject.SetActive(false);
-        container.Reload(this);
+        container.Charge(this);
     }
 }
