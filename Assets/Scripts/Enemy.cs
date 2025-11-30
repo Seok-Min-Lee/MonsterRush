@@ -6,24 +6,28 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+    public enum State { Live, Shutdown, Dead }
     [SerializeField] private EnemyCharacter character;
+    [SerializeField] private SpriteRenderer bleedSticker;
     [SerializeField] private ParticleSystem deathParticle;
     [SerializeField] private ParticleSystem poisonParticle;
+    [SerializeField] private GameObject hpBar;
+    [SerializeField] private Transform hpGuage;
 
     [SerializeField] [Range(0, 7)] private int itemIndex;
 
     [Header("Current Value")]
     [SerializeField] protected int hp = 1;
-    [SerializeField] private int hpMax = 1;
+    [SerializeField] protected int hpMax = 1;
     [SerializeField] protected int power;
     [SerializeField] protected float speed;
-    [SerializeField] protected float addictInterval = 0.5f;
-    [SerializeField] protected int addictDamage = 0;
     [SerializeField] protected bool isAddict = false;
-    [SerializeField] protected float bleedPower = 0f;
     [SerializeField] protected bool isBleed = false;
-    [SerializeField] protected float slowPower = 0f;
     [SerializeField] protected bool isSlow = false;
+    protected int addictDamage = 0;
+    protected float addictInterval = 0.5f;
+    protected float bleedPower = 0f;
+    protected float slowPower = 0f;
 
     [Header("Default Value")]
     [SerializeField] private int hpDefault = 1;
@@ -35,22 +39,16 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int powerLevel = 0;
     [SerializeField] private int speedLevel = 0;
 
-    [Header("UI")]
-    [SerializeField] private GameObject canvasGO;
-    [SerializeField] private Image hpGuage;
-    [SerializeField] private Image bleedSticker;
-
     private EnemyPool pool;
-
     public BoxCollider2D collider { get; private set; }
     public Rigidbody2D rigidbody { get; private set; }
-    public Vector3 toPlayer /*{ get; private set; }*/ = Vector3.zero;
+    public Vector3 toPlayer { get; private set; } = Vector3.zero;
 
     private float addictTimer = 0f;
     private float bleedTimer = 0f;
     private float knockbackTimer = 0f;
 
-    public bool isDead { get; private set; } = false;
+    public State state = State.Live;
     private bool isKnockback = false;
     private void Awake()
     {
@@ -59,6 +57,14 @@ public class Enemy : MonoBehaviour
     }
     public void UpdateTick(float time)
     {
+        if (state != State.Live)
+        {
+            return;
+        }
+
+        // animation
+        character.UpdateTick(time);
+
         // addict
         if (isAddict)
         {
@@ -83,15 +89,12 @@ public class Enemy : MonoBehaviour
             bleedTimer += time;
         }
 
-        // animation
-        character.UpdateTick(time);
-
         // move
-        if (Player.Instance != null && !isDead)
+        if (Player.Instance != null)
         {
             if (isKnockback)
             {
-                knockbackTimer += Time.deltaTime;
+                knockbackTimer += time;
 
                 if (knockbackTimer > .2f)
                 {
@@ -102,22 +105,20 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                if (rigidbody.linearVelocity != Vector2.zero)
-                {
-                    rigidbody.linearVelocity = Vector2.zero;
-                }
-
                 toPlayer = (Player.Instance.transform.position - transform.position);
                 
-                transform.position += (Vector3)(toPlayer.normalized * speed * (1 - slowPower) * Time.deltaTime);
-                collider.enabled = !Player.Instance.IsDead && toPlayer.sqrMagnitude < 25 && !isForceStop;
+                transform.position += (Vector3)(toPlayer.normalized * speed * (1 - slowPower) * time);
+                collider.enabled = !Player.Instance.IsDead &&
+                                    -5 < toPlayer.y && toPlayer.y < 5 &&
+                                    -3 < toPlayer.x && toPlayer.x < 3;
+
                 character.FlipX(toPlayer.x > 0);
             }
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isDead && !StaticValues.isWait && collision.gameObject.CompareTag("Player"))
+        if (state == State.Live && !StaticValues.isWait && collision.gameObject.CompareTag("Player"))
         {
             AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
             Player.Instance.OnDamage(power);
@@ -128,7 +129,7 @@ public class Enemy : MonoBehaviour
     public virtual void Spawn(EnemyPool pool, int hpLevel, int powerLevel, int speedLevel, Vector3 position, Quaternion rotation)
     {
         //
-        isDead = false;
+        state = State.Live;
 
         this.pool = pool;
         this.hpLevel = hpLevel;
@@ -144,27 +145,22 @@ public class Enemy : MonoBehaviour
         speed = speedDefault * (1 + 0.1f * speedLevel);
 
         hp = hpMax;
-        hpGuage.fillAmount = 1f;
-
-        canvasGO.SetActive(false);
+        hpGuage.localScale = Vector3.one;
+        hpBar.SetActive(false);
     }
-    // 임시 플래그 처리 - 추후 리팩토링
-    private bool isForceStop = false;
-    public virtual void Stop()
+    public virtual void OnShutdown()
     {
         collider.enabled = false;
         rigidbody.linearVelocity = Vector2.zero;
-        rigidbody.angularVelocity = 0f;
 
         knockbackTimer = 0f;
         isKnockback = false;
 
-        isForceStop = true;
-        DOVirtual.DelayedCall(5f, () => { isForceStop = false; });
+        state = State.Shutdown;
     }
     public virtual void OnDeath()
     {
-        if (isDead)
+        if (state == State.Dead)
         {
             return;
         }
@@ -176,7 +172,7 @@ public class Enemy : MonoBehaviour
         {
             deathParticle.Play();
 
-            isDead = true;
+            state = State.Dead;
 
             OffAddict();
             OffBleed();
@@ -185,7 +181,7 @@ public class Enemy : MonoBehaviour
             rigidbody.linearVelocity = Vector2.zero;
             collider.enabled = false;
             character.gameObject.SetActive(false);
-            canvasGO.SetActive(false);
+            hpBar.SetActive(false);
         });
 
         // 파티클 재생 시간
@@ -197,7 +193,6 @@ public class Enemy : MonoBehaviour
             collider.enabled = true;
             gameObject.SetActive(false);
             character.gameObject.SetActive(true);
-            canvasGO.SetActive(true);
 
             pool.Charge(this);
             pool = null;
@@ -205,7 +200,10 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnDamage(int damage)
     {
-        if (isDead) return;
+        if (state != State.Live) 
+        {
+            return;
+        }
 
         AudioManager.Instance.PlaySFX(SoundKey.EnemyHit);
         hp -= (int)(damage * (1 + bleedPower));
@@ -214,8 +212,8 @@ public class Enemy : MonoBehaviour
         {
             character.PlayAnimation(EnemyCharacter.AniType.Hit);
 
-            canvasGO.SetActive(true);
-            hpGuage.fillAmount = (float)hp / (float)hpMax;
+            hpBar.SetActive(true);
+            hpGuage.localScale = new Vector3((float)hp / hpMax, 1, 1);
         }
         else
         {
@@ -275,7 +273,7 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnKnockback(Vector3 direction)
     {
-        if (!isDead &&
+        if (state == State.Live &&
             direction != Vector3.zero &&
             rigidbody.linearVelocity == Vector2.zero)
         {
@@ -285,5 +283,4 @@ public class Enemy : MonoBehaviour
 
         isKnockback = true;
     }
-
 }

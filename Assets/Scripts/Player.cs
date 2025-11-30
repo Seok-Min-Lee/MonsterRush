@@ -171,7 +171,6 @@ public class Player : MonoBehaviour
         character.FlipX(moveVec.x < 0);
 
         float angle = Mathf.Atan2(joystick.Vertical, joystick.Horizontal) * Mathf.Rad2Deg;
-        weaponContainers[1].transform.rotation = Quaternion.Euler(0, 0, angle);
 #else
         transform.position += moveVec;
 #endif
@@ -397,7 +396,6 @@ public class Player : MonoBehaviour
             character.PlayAnimation(PlayerCharacter.AniType.Move);
 
             float angle = Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
-            //weaponControllers[1].transform.rotation = Quaternion.Euler(0, 0, angle);
 
             character.FlipX(moveVec.x < 0);
         }

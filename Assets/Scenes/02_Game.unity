@@ -730,7 +730,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!4 &57035047
 Transform:
   m_ObjectHideFlags: 0
@@ -938,9 +938,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateToggle: {fileID: 847367731}
   prefab: {fileID: -7014794405667175891, guid: e67aa137798cd204ea3116dee7a7bb61, type: 3}
-  state: 0
-  areaLevel: 0
-  effectLevel: 0
 --- !u!1 &147594989
 GameObject:
   m_ObjectHideFlags: 0
@@ -2578,7 +2575,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!4 &359843838
 Transform:
   m_ObjectHideFlags: 0
@@ -4718,7 +4715,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!4 &766837558
 Transform:
   m_ObjectHideFlags: 0
@@ -4769,7 +4766,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!4 &767476727
 Transform:
   m_ObjectHideFlags: 0
@@ -5210,7 +5207,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!4 &788229170
 Transform:
   m_ObjectHideFlags: 0
@@ -6668,7 +6665,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!4 &972684547
 Transform:
   m_ObjectHideFlags: 0
@@ -7629,6 +7626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateToggle: {fileID: 2074761790}
   prefab: {fileID: -2729381700743918988, guid: 7f9353f8a21e9d64f83132b4b09e8455, type: 3}
+  reloadDelay: 2
 --- !u!1 &1267310303
 GameObject:
   m_ObjectHideFlags: 0
@@ -9093,7 +9091,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!4 &1486652377
 Transform:
   m_ObjectHideFlags: 0
@@ -10655,7 +10653,7 @@ MonoBehaviour:
   hpLevel: 0
   powerLevel: 0
   spawnInterval: 0
-  poolSizeMax: 30
+  countMax: 0
 --- !u!1 &1706888144
 GameObject:
   m_ObjectHideFlags: 0
@@ -12712,8 +12710,7 @@ MonoBehaviour:
   spawnInterval: 0.6667
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  poolSizeMin: 0
-  poolSizeMax: 240
+  countMax: 25
 --- !u!1 &2052998580
 GameObject:
   m_ObjectHideFlags: 0

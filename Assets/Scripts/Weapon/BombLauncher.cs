@@ -6,7 +6,9 @@ using UnityEngine;
 public class BombLauncher : WeaponLauncher<Bomb>
 {
     public enum State { None, Fire, Reloading }
-    
+
+    [SerializeField] private float reloadDelay;
+
     private State state = State.None;
     private bool isScaleUp = false;
     private bool isUpper = true;
@@ -42,7 +44,7 @@ public class BombLauncher : WeaponLauncher<Bomb>
         }
         else if (state == State.Reloading)
         {
-            if (timer > 2f)
+            if (timer > reloadDelay)
             {
                 state = State.Fire;
             }

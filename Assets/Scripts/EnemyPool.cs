@@ -11,14 +11,12 @@ public class EnemyPool : MonoBehaviour
     public int powerLevel;
 
     public float spawnInterval;
-    public int poolSizeMax;
+    public int countMax;
     private float spawnDistanceMin;
     private float spawnDistanceMax;
     private int poolSizeMin;
 
     private Transform container;
-
-    private int count;
 
     public List<Enemy> actives { get; private set; } = new List<Enemy>();
     private Queue<Enemy> pool = new Queue<Enemy>();
@@ -33,18 +31,20 @@ public class EnemyPool : MonoBehaviour
 
         if (isSpawn)
         {
+            timer += Time.deltaTime;
+
             if (timer > spawnInterval)
             {
                 Spawn();
                 timer = 0f;
             }
-
-            timer += Time.deltaTime;
         }
 
         if (actives.Count > 0)
         {
-            for (int i = 0; i < actives.Count; i++)
+            Enemy[] snapshot = actives.ToArray();
+
+            for (int i = 0; i < snapshot.Length; i++)
             {
                 actives[i].UpdateTick(Time.deltaTime);
             }
@@ -54,12 +54,11 @@ public class EnemyPool : MonoBehaviour
     {
         pool.Enqueue(enemy);
         actives.Remove(enemy);
-        count--;
     }
 
     private void Spawn()
     {
-        if (count < poolSizeMax)
+        if (actives.Count < countMax)
         {
             // 
             Vector2 direction = Random.insideUnitCircle.normalized;
@@ -89,8 +88,6 @@ public class EnemyPool : MonoBehaviour
             );
 
             actives.Add(enemy);
-
-            count++;
         }
     }
     public void Init(
@@ -98,20 +95,18 @@ public class EnemyPool : MonoBehaviour
         float spawnInterval, 
         float spawnDistanceMin, 
         float spawnDistanceMax, 
-        int poolSizeMin, 
-        int poolSizeMax
+        int countMax
     )
     {
         this.container = container;
         this.spawnInterval = spawnInterval;
         this.spawnDistanceMin = spawnDistanceMin;
         this.spawnDistanceMax = spawnDistanceMax;
-        this.poolSizeMin = poolSizeMin;
-        this.poolSizeMax = poolSizeMax;
+        this.countMax = countMax;
 
         for (int i = 0; i < poolSizeMin; i++)
         {
-            Enemy enemy = Instantiate(prefab, container).GetComponent<Enemy>();
+            Enemy enemy = Instantiate<Enemy>(prefab, container);
             enemy.gameObject.SetActive(false);
             pool.Enqueue(enemy);
         }

@@ -280,15 +280,11 @@ public class GameCtrl : MonoBehaviour
         });
 
         // 몬스터 제거
-        foreach (Enemy enemy in enemies.OrderBy(e => (e.transform.position - playerPosition).sqrMagnitude))
+        foreach (Enemy enemy in enemies.OrderBy(e => e.toPlayer.sqrMagnitude))
         {
-            enemy.Stop();
+            enemy.OnShutdown();
 
-            seq.AppendCallback(() => 
-            {
-                enemy.OnDeath();
-            });
-
+            seq.AppendCallback(() => enemy.OnDeath());
             seq.AppendInterval(Time.deltaTime);
         }
 

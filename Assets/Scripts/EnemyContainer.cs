@@ -13,8 +13,7 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] private float spawnInterval;
     [SerializeField] private float spawnDistanceMin;
     [SerializeField] private float spawnDistanceMax;
-    [SerializeField] private int poolSizeMin;
-    [SerializeField] private int poolSizeMax;
+    [SerializeField] private int countMax;
 
     private void Awake()
     {
@@ -29,8 +28,7 @@ public class EnemyContainer : MonoBehaviour
                 spawnInterval: spawnInterval,
                 spawnDistanceMin: spawnDistanceMin,
                 spawnDistanceMax: spawnDistanceMax,
-                poolSizeMin: poolSizeMin,
-                poolSizeMax: poolSizeMax
+                countMax: countMax
             );
         }
 
@@ -92,11 +90,11 @@ public class EnemyContainer : MonoBehaviour
             pools[stage].isSpawn = true;
 
             spawnInterval *= 0.9f;
-            poolSizeMax = (int)(poolSizeMax * 1.1f);
+            countMax = (int)(countMax * 1.1f);
             for (int i = stage; i < pools.Length; i++)
             {
                 pools[i].spawnInterval *= spawnInterval;
-                pools[i].poolSizeMax = poolSizeMax;
+                pools[i].countMax = countMax;
             }
         }
     }
