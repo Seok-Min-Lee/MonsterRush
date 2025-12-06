@@ -28,6 +28,7 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private RewardInfo[] rewardInfoes;
 
     private Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>> rewardGroup = new Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>>();
+    private int levelUpCount = 0;
     private float timer = 0f;
     private void Awake()
     {
@@ -82,11 +83,18 @@ public class GameCtrl : MonoBehaviour
     }
     private void Update()
     {
-        if (StaticValues.isWait)
+        if (Time.timeScale == 0 || StaticValues.isWait)
         {
             return;
         }
 
+        //
+        if (levelUpCount > 0)
+        {
+            LevelUpProcess();
+        }
+
+        //
         timer += Time.deltaTime;
 
         int minutes = (int)(timer / 60);
@@ -176,55 +184,7 @@ public class GameCtrl : MonoBehaviour
     }
     public void OnLevelUp()
     {
-        Time.timeScale = 0f;
-
-        List<RewardInfo> samples = new List<RewardInfo>();
-
-        int[,] temp = new int[,]
-        {
-            { Player.Instance.weaponALevel, 1000, 1001, 1002, 1099 },
-            { Player.Instance.weaponBLevel, 2000, 2001, 2002, 2099 },
-            { Player.Instance.weaponCLevel, 3000, 3001, 3002, 3099 },
-            { Player.Instance.weaponDLevel, 4000, 4001, 4002, 4099 },
-        };
-        int rows = temp.GetLength(0);
-
-        for (int i = 0; i < rows; i++)
-        {
-            int level = temp[i, 0];
-
-            if (level < 1)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 1]]);
-            }
-            else if (level < 8)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 2]]);
-            }
-            else if (level < 16)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 3]]);
-            }
-
-            if (level > 0 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(temp[i, 4]) && Random.Range(0, 10) == 0)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Ability][temp[i, 4]]);
-            }
-        }
-
-        samples.Add(rewardGroup[RewardInfo.Type.Player][0]);
-        samples.Add(rewardGroup[RewardInfo.Type.Player][1]);
-        samples.Add(rewardGroup[RewardInfo.Type.Player][2]);
-        samples.Add(rewardGroup[RewardInfo.Type.Player][3]);
-
-        List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(samples);
-
-        for (int i = 0; i < rewardButtons.Length; i++)
-        {
-            rewardButtons[i].Init(randoms[i]);
-        }
-
-        rewardWindow.SetActive(true);
+        levelUpCount++;
     }
     public void OnClickReward(RewardInfo rewardInfo)
     {
@@ -235,9 +195,15 @@ public class GameCtrl : MonoBehaviour
             rewardGroup[RewardInfo.Type.Ability].Remove(rewardInfo.UniqueKey);
         }
 
-        Time.timeScale = 1f;
-
-        tutorialWindow.OnReward(rewardInfo);
+        if (--levelUpCount > 0)
+        {
+            LevelUpProcess();
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            tutorialWindow.OnReward(rewardInfo);
+        }
     }
     public void OnGameEnd(GameResult result)
     {
@@ -343,5 +309,61 @@ public class GameCtrl : MonoBehaviour
             endingWindow.gameObject.SetActive(true);
             endingWindow.Show();
         });
+    }
+    private void LevelUpProcess()
+    {
+        Time.timeScale = 0f;
+
+        AudioManager.Instance.PlaySFX(SoundKey.PlayerLevelUp);
+        EnemyContainer.Instance.OnLevelUp();
+
+        //
+        List<RewardInfo> samples = new List<RewardInfo>();
+
+        int[,] temp = new int[,]
+        {
+            { Player.Instance.weaponALevel, 1000, 1001, 1002, 1099 },
+            { Player.Instance.weaponBLevel, 2000, 2001, 2002, 2099 },
+            { Player.Instance.weaponCLevel, 3000, 3001, 3002, 3099 },
+            { Player.Instance.weaponDLevel, 4000, 4001, 4002, 4099 },
+        };
+        int rows = temp.GetLength(0);
+
+        for (int i = 0; i < rows; i++)
+        {
+            int level = temp[i, 0];
+
+            if (level < 1)
+            {
+                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 1]]);
+            }
+            else if (level < 8)
+            {
+                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 2]]);
+            }
+            else if (level < 16)
+            {
+                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 3]]);
+            }
+
+            if (level > 0 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(temp[i, 4]) && Random.Range(0, 10) == 0)
+            {
+                samples.Add(rewardGroup[RewardInfo.Type.Ability][temp[i, 4]]);
+            }
+        }
+
+        samples.Add(rewardGroup[RewardInfo.Type.Player][0]);
+        samples.Add(rewardGroup[RewardInfo.Type.Player][1]);
+        samples.Add(rewardGroup[RewardInfo.Type.Player][2]);
+        samples.Add(rewardGroup[RewardInfo.Type.Player][3]);
+
+        List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(samples);
+
+        for (int i = 0; i < rewardButtons.Length; i++)
+        {
+            rewardButtons[i].Init(randoms[i]);
+        }
+
+        rewardWindow.SetActive(true);
     }
 }

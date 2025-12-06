@@ -77,8 +77,8 @@ public class BombLauncher : WeaponLauncher<Bomb>
     public override void Launch(Vector3 target)
     {
         Bomb bullet = bulletPool.Count > 0 ?
-                         bulletPool.Dequeue() :
-                         GameObject.Instantiate<Bomb>(prefab, transform);
+                      bulletPool.Dequeue() :
+                      GameObject.Instantiate<Bomb>(prefab, transform);
 
         //
         float radian, mass;

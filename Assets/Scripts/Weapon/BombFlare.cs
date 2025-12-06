@@ -3,17 +3,16 @@ using UnityEngine;
 
 public class BombFlare : Weapon
 {
+    private float SCALE_UP_RATIO = 1.75f;
+    [SerializeField] private float radius = 0;
+
     private bool isScaleUp = false;
     private int knockbackLevel = 0;
 
     private ParticleSystem particle;
-    private BoxCollider2D collider;
-    private void Start()
+    private void Awake()
     {
         particle = GetComponent<ParticleSystem>();
-        collider = GetComponent<BoxCollider2D>();
-
-        collider.enabled = false;
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
@@ -29,16 +28,38 @@ public class BombFlare : Weapon
     public void OnExplosion()
     {
         particle.Play();
-        collider.enabled = true;
-    }
-    public void OffExplosion()
-    {
-        collider.enabled = false;
-        particle.Stop();
+
+        Enemy[] arr = EnemyContainer.Instance.GetActiveEnemyAll().ToArray();
+
+        float r = isScaleUp ? radius * radius * SCALE_UP_RATIO * SCALE_UP_RATIO : radius * radius;
+        for (int i = 0; i < arr.Length; i++)
+        {
+            float sqrMagnitude = Vector3.SqrMagnitude(transform.position - arr[i].transform.position);
+
+            if (sqrMagnitude < r)
+            {
+                Enemy enemy = arr[i];
+                enemy.OnDamage(power + Player.Instance.Strength);
+
+                Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * (0.8f + knockbackLevel * 0.4f);
+                enemy.OnKnockback(knockbackForce);
+            }
+        }
     }
     public void Init(bool isScaleUp,  int knockbackLevel)
     {
-        transform.localScale = Vector3.one * (isScaleUp ? 1.75f : 1f);
+        transform.localScale = Vector3.one * (isScaleUp ? SCALE_UP_RATIO : 1f);
+        this.isScaleUp = isScaleUp;
         this.knockbackLevel = knockbackLevel;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (Player.Instance == null)
+        {
+            return;
+        }
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, isScaleUp ? radius * SCALE_UP_RATIO : radius);
     }
 }

@@ -12710,7 +12710,7 @@ MonoBehaviour:
   spawnInterval: 0.6667
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 25
+  countMax: 200
 --- !u!1 &2052998580
 GameObject:
   m_ObjectHideFlags: 0

@@ -240,8 +240,6 @@ public class Player : MonoBehaviour
             else
             {
                 GameCtrl.Instance.OnLevelUp();
-                EnemyContainer.Instance.OnLevelUp();
-                AudioManager.Instance.PlaySFX(SoundKey.PlayerLevelUp);
             }
         }
 

@@ -12,15 +12,17 @@ public class Bomb : Weapon
     private int knockbackLevel = 0;
 
     private Rigidbody2D rigidbody;
+    private BoxCollider2D collider;
     private BombLauncher container;
     private float timer = 0f;
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        collider = GetComponent<BoxCollider2D>();
     }
     private void Update()
     {
-        if (timer > 1f)
+        if (timer > 2f)
         {
             OnReload();
         }
@@ -56,6 +58,8 @@ public class Bomb : Weapon
         {
             AudioManager.Instance.PlaySFX(SoundKey.WeaponDExplosion);
 
+            collider.enabled = false;
+
             rigidbody.linearVelocity = Vector2.zero;
             rigidbody.angularVelocity = 0f;
             rigidbody.gravityScale = 0f;
@@ -64,9 +68,8 @@ public class Bomb : Weapon
 
             flare.OnExplosion();
 
-            yield return new WaitForSeconds(.15f);
+            yield return new WaitForSeconds(1.5f);
 
-            flare.OffExplosion();
             OnReload();
         }
 
@@ -95,6 +98,7 @@ public class Bomb : Weapon
     {
         timer = 0f;
 
+        collider.enabled = true;
         rigidbody.linearVelocity = Vector2.zero;
         rigidbody.angularVelocity = 0f;
         rigidbody.gravityScale = 5f;
