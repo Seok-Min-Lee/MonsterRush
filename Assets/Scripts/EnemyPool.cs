@@ -5,18 +5,15 @@ public class EnemyPool : MonoBehaviour
 {
     [SerializeField] private Enemy prefab;
 
-    public bool isSpawn = false;
+    [SerializeField] private float spawnInterval;
+    [SerializeField] private float spawnDistanceMin;
+    [SerializeField] private float spawnDistanceMax;
+    [SerializeField] private int countMax;
+
+    public bool isSpawn;
     public int speedLevel;
     public int hpLevel;
     public int powerLevel;
-
-    public float spawnInterval;
-    public int countMax;
-    private float spawnDistanceMin;
-    private float spawnDistanceMax;
-    private int poolSizeMin;
-
-    private Transform container;
 
     public List<Enemy> actives { get; private set; } = new List<Enemy>();
     private Queue<Enemy> pool = new Queue<Enemy>();
@@ -50,6 +47,10 @@ public class EnemyPool : MonoBehaviour
             }
         }
     }
+    public void GradeUp()
+    {
+        spawnInterval *= 0.9f;
+    }
     public void Charge(Enemy enemy)
     {
         pool.Enqueue(enemy);
@@ -75,7 +76,7 @@ public class EnemyPool : MonoBehaviour
             }
             else
             {
-                enemy = Instantiate<Enemy>(prefab, container);
+                enemy = Instantiate<Enemy>(prefab, transform.parent);
             }
 
             enemy.Spawn(
@@ -90,26 +91,16 @@ public class EnemyPool : MonoBehaviour
             actives.Add(enemy);
         }
     }
-    public void Init(
-        Transform container, 
-        float spawnInterval, 
-        float spawnDistanceMin, 
-        float spawnDistanceMax, 
-        int countMax
-    )
+    private void OnDrawGizmosSelected()
     {
-        this.container = container;
-        this.spawnInterval = spawnInterval;
-        this.spawnDistanceMin = spawnDistanceMin;
-        this.spawnDistanceMax = spawnDistanceMax;
-        this.countMax = countMax;
-
-        for (int i = 0; i < poolSizeMin; i++)
+        if (Player.Instance == null)
         {
-            Enemy enemy = Instantiate<Enemy>(prefab, container);
-            enemy.gameObject.SetActive(false);
-            pool.Enqueue(enemy);
+            return;
         }
-    }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMax);
 
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMin);
+    }
 }

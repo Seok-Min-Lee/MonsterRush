@@ -10,28 +10,18 @@ public class EnemyContainer : MonoBehaviour
     [SerializeField] private EnemyPool[] pools;
     [SerializeField] private int stage = 0;
 
-    [SerializeField] private float spawnInterval;
-    [SerializeField] private float spawnDistanceMin;
-    [SerializeField] private float spawnDistanceMax;
-    [SerializeField] private int countMax;
-
     private void Awake()
     {
         Instance = this;
     }
     private void Start()
     {
-        for (int i = 0; i < pools.Length; i++)
+        for (int i = 1; i < pools.Length; i++)
         {
-            pools[i].Init(
-                container: transform,
-                spawnInterval: spawnInterval,
-                spawnDistanceMin: spawnDistanceMin,
-                spawnDistanceMax: spawnDistanceMax,
-                countMax: countMax
-            );
+            pools[i].gameObject.SetActive(false);
+            pools[i].isSpawn = false;
         }
-
+        pools[0].gameObject.SetActive(true);
         pools[0].isSpawn = true;
     }
     public List<Enemy> GetActiveEnemyAll()
@@ -86,16 +76,21 @@ public class EnemyContainer : MonoBehaviour
     {
         if (stage < pools.Length - 1)
         {
-            pools[stage++].isSpawn = false;
-            pools[stage].isSpawn = true;
-
-            spawnInterval *= 0.9f;
-            countMax = (int)(countMax * 1.1f);
-            for (int i = stage; i < pools.Length; i++)
+            for (int i = 0; i < stage; i++)
             {
-                pools[i].spawnInterval *= spawnInterval;
-                pools[i].countMax = countMax;
+                if (pools[i].gameObject.activeSelf && pools[i].actives.Count == 0)
+                {
+                    pools[i].gameObject.SetActive(false);
+                }
             }
+
+            pools[stage++].isSpawn = false;
+            pools[stage].gameObject.SetActive(true);
+            pools[stage].isSpawn = true;
+        }
+        else
+        {
+            pools[stage].GradeUp();
         }
     }
     private void SpeedUp()
@@ -109,17 +104,5 @@ public class EnemyContainer : MonoBehaviour
     private void PowerUp()
     {
         pools[stage].powerLevel++;
-    }
-    private void OnDrawGizmosSelected()
-    {
-        if (Player.Instance == null)
-        {
-            return;
-        }
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMax);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMin);
     }
 }

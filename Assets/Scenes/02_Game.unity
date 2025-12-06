@@ -725,12 +725,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7719583536596772918, guid: a44a28bd7b281504987600ebb46ed964, type: 3}
-  isSpawn: 0
+  spawnInterval: 0.2
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 120
+  isSpawn: 1
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!4 &57035047
 Transform:
   m_ObjectHideFlags: 0
@@ -2570,12 +2572,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8603666259036758770, guid: f542cac23a427eb4ab5d449c6b0c68ce, type: 3}
-  isSpawn: 0
+  spawnInterval: 0.16667
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 150
+  isSpawn: 1
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!4 &359843838
 Transform:
   m_ObjectHideFlags: 0
@@ -4710,12 +4714,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7494466539951530819, guid: ab4085e6b7684744abee3bd3eaf17ffb, type: 3}
-  isSpawn: 0
+  spawnInterval: 0.5
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 40
+  isSpawn: 1
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!4 &766837558
 Transform:
   m_ObjectHideFlags: 0
@@ -4761,12 +4767,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5683854456768978766, guid: 6f1ba8138167219418610b7ac15f90cc, type: 3}
-  isSpawn: 0
+  spawnInterval: 0.1
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 210
+  isSpawn: 1
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!4 &767476727
 Transform:
   m_ObjectHideFlags: 0
@@ -5202,12 +5210,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1905836794011710109, guid: 6771886ae0edaf64e9c36994e123567f, type: 3}
-  isSpawn: 0
+  spawnInterval: 0.33333
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 60
+  isSpawn: 1
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!4 &788229170
 Transform:
   m_ObjectHideFlags: 0
@@ -6660,12 +6670,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8869195786773705975, guid: 27db3bba91c317b48bc792af13c0e4e3, type: 3}
-  isSpawn: 0
+  spawnInterval: 0.125
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 180
+  isSpawn: 1
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!4 &972684547
 Transform:
   m_ObjectHideFlags: 0
@@ -9086,12 +9098,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7839606582851678925, guid: 910ce5a00635dc24482dc2779987a638, type: 3}
-  isSpawn: 0
+  spawnInterval: 0.25
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 90
+  isSpawn: 1
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!4 &1486652377
 Transform:
   m_ObjectHideFlags: 0
@@ -10648,12 +10662,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8031777229906548014, guid: 4397598642ec0d342be30db318073b04, type: 3}
+  spawnInterval: 0.66667
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 20
   isSpawn: 0
   speedLevel: 0
   hpLevel: 0
   powerLevel: 0
-  spawnInterval: 0
-  countMax: 0
 --- !u!1 &1706888144
 GameObject:
   m_ObjectHideFlags: 0
@@ -12707,10 +12723,6 @@ MonoBehaviour:
   - {fileID: 972684546}
   - {fileID: 767476726}
   stage: 0
-  spawnInterval: 0.6667
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 200
 --- !u!1 &2052998580
 GameObject:
   m_ObjectHideFlags: 0
