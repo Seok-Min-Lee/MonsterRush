@@ -19,9 +19,9 @@ public class Player : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private VariableJoystick joystick;
-    [SerializeField] private GameObject canvasGO;
+    [SerializeField] private GameObject hpBar;
+    [SerializeField] private Transform hpGuage;
     [SerializeField] private RectTransform stateToggleGroup;
-    [SerializeField] private Image hpGuage;
     [SerializeField] private Image expGuage;
     [SerializeField] private StatSlot[] statSlots;
     [SerializeField] private StateToggle magnetToggle;
@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        canvasGO.SetActive(false);
+        hpBar.SetActive(false);
 
         // 스탯 초기화
         statDictionary = new Dictionary<PlayerStat, StatSlot>();
@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        hpGuage.fillAmount = 1f;
+        hpGuage.localScale = Vector3.one;
         expGuage.fillAmount = 0f;
 
         magnetToggle.Init(isMagnetVisible);
@@ -138,18 +138,17 @@ public class Player : MonoBehaviour
                 int value = Hp + Heal > HpMax ? HpMax - Hp : Heal;
                 healParticle.Play();
                 statDictionary[PlayerStat.Hp].Increase(value);
-                hpGuage.fillAmount = (float)Hp / HpMax;
+                hpGuage.localScale = new Vector3((float)Hp / HpMax, 1f, 1f);
 
                 // 회복량 UI
                 HitHealText hitText = UIContainer.Instance.Pop();
-                Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.3f, -0.2f));
-                Vector2 target = start + new Vector2(0, 0.2f);
+                Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.1f, 0.1f));
                 hitText.Init(
                     value: "+" + value,
                     color: Color.green,
                     position: start,
-                    target: target,
-                    parent: canvasGO.transform
+                    target: start + new Vector2(0, 0.2f),
+                    parent: transform
                 );
 
                 healTimer = 0f;
@@ -332,7 +331,7 @@ public class Player : MonoBehaviour
                 weaponControllers[i].gameObject.SetActive(false);
             }
 
-            canvasGO.SetActive(false);
+            hpBar.SetActive(false);
         };
 
         // death 연출
@@ -357,20 +356,19 @@ public class Player : MonoBehaviour
 
         // 데미지 UI
         HitHealText hitText = UIContainer.Instance.Pop();
-        Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.3f, -0.2f));
-        Vector2 target = start + new Vector2(0, 0.2f);
+        Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.1f, 0.1f));
         hitText.Init(
             value: "-" + damage,
             color: Color.red,
             position: start,
-            target: target,
-            parent: canvasGO.transform
+            target: start + new Vector2(0, 0.2f),
+            parent: transform
         );
 
         if (hp > 0)
         {
-            canvasGO.SetActive(true);
-            hpGuage.fillAmount = (float)hp / hpMax;
+            hpBar.SetActive(true);
+            hpGuage.localScale = new Vector3((float)Hp / HpMax, 1f, 1f);
 
             character.PlayAnimation(PlayerCharacter.AniType.Hit);
 
@@ -408,7 +406,7 @@ public class Player : MonoBehaviour
     public class StatSlot
     {
         public PlayerStat type;
-        public TextMeshProUGUI TextUI;
+        public TMP_Text TextUI;
         public int maxValue = int.MaxValue;
         public int value { get; private set; }
 
@@ -419,7 +417,7 @@ public class Player : MonoBehaviour
             if (TextUI != null)
             {
                 TextUI.text = this.value == maxValue ? "MAX" : this.value.ToString();
-            } 
+            }
         }
         public void Increase(int value = 1)
         {

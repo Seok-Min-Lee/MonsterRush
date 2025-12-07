@@ -7,6 +7,8 @@ public class BombLauncher : WeaponLauncher<Bomb>
 {
     public enum State { None, Fire, Reloading }
 
+    [SerializeField] private GameObject reloadUI;
+    [SerializeField] private Transform reloadGuage;
     [SerializeField] private float reloadDelay;
 
     private State state = State.None;
@@ -39,6 +41,9 @@ public class BombLauncher : WeaponLauncher<Bomb>
                 {
                     bulletCount = 0;
                     state = State.Reloading;
+
+                    reloadUI.SetActive(true);
+                    reloadGuage.localScale = new Vector3(0f, 1f, 1f);
                 }
             }
         }
@@ -47,7 +52,11 @@ public class BombLauncher : WeaponLauncher<Bomb>
             if (timer > reloadDelay)
             {
                 state = State.Fire;
+
+                reloadUI.SetActive(false);
             }
+
+            reloadGuage.localScale = new Vector3(timer / reloadDelay, 1f, 1f);
         }
     }
     public override void OnClickStateToggle()
