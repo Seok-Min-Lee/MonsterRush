@@ -197,8 +197,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 0
-      m_Y: 256
+      m_X: 384
+      m_Y: 384
       m_Width: 128
       m_Height: 128
     m_Scale: 1
@@ -213,8 +213,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 128
-      m_Y: 256
+      m_X: 0
+      m_Y: 128
       m_Width: 128
       m_Height: 128
     m_Scale: 1
@@ -229,8 +229,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 256
-      m_Y: 256
+      m_X: 128
+      m_Y: 128
       m_Width: 128
       m_Height: 128
     m_Scale: 1
@@ -245,7 +245,7 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 0
+      m_X: 256
       m_Y: 128
       m_Width: 128
       m_Height: 128
@@ -261,7 +261,7 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 128
+      m_X: 384
       m_Y: 128
       m_Width: 128
       m_Height: 128
@@ -277,8 +277,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 256
-      m_Y: 128
+      m_X: 0
+      m_Y: 0
       m_Width: 128
       m_Height: 128
     m_Scale: 1
@@ -293,7 +293,7 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 0
+      m_X: 128
       m_Y: 0
       m_Width: 128
       m_Height: 128
@@ -309,7 +309,7 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 128
+      m_X: 256
       m_Y: 0
       m_Width: 128
       m_Height: 128
@@ -325,13 +325,13 @@ MonoBehaviour:
       m_HorizontalBearingY: 112
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 256
+      m_X: 384
       m_Y: 0
       m_Width: 128
       m_Height: 128
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
-    sprite: {fileID: -1009618894, guid: 0a82047ed10c25148af11a503041446d, type: 3}
+    sprite: {fileID: -1308256088, guid: 0a82047ed10c25148af11a503041446d, type: 3}
   spriteInfoList: []
   fallbackSpriteAssets: []

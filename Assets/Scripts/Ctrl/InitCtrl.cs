@@ -1,3 +1,6 @@
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class InitCtrl : MonoBehaviour
@@ -14,6 +17,8 @@ public class InitCtrl : MonoBehaviour
         PlayerPrefs.SetFloat("volumeSFX", volumeSFX);
         PlayerPrefs.SetInt("visibleTutorial", visibleTutorial);
         PlayerPrefs.SetInt("isLeftHand", isLeftHand);
+
+        GameDataContainer.Instance.LoadGameResultLogs();
 
         UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");
     }

@@ -6,6 +6,7 @@ public class TitleCtrl : MonoBehaviour
     [SerializeField] private GameObject homeWindow;
     [SerializeField] private GameObject characterWindow;
     [SerializeField] private GameObject settingWindow;
+    [SerializeField] private HistoryWindow historyWindow;
 
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
@@ -47,6 +48,7 @@ public class TitleCtrl : MonoBehaviour
 
         homeWindow.SetActive(true);
         characterWindow.SetActive(false);
+        historyWindow.gameObject.SetActive(false);
     }
     public void OnClickCharacter(int num)
     {
@@ -55,6 +57,12 @@ public class TitleCtrl : MonoBehaviour
         StaticValues.playerCharacterNum = num;
 
         UnityEngine.SceneManagement.SceneManager.LoadScene("02_Game");
+    }
+    public void OnClickHistory()
+    {
+        AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+        homeWindow.SetActive(false);
+        historyWindow.gameObject.SetActive(true);
     }
     public void OnClickSetting()
     {

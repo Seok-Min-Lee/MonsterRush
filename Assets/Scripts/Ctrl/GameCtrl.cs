@@ -122,6 +122,31 @@ public class GameCtrl : MonoBehaviour
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
         Time.timeScale = 1f;
+
+        //
+        int[] playerStats = new int[4] { Player.Instance.Heal, Player.Instance.Magnet, Player.Instance.Speed, Player.Instance.Strength };
+        int[] weaponLevels = new int[4] { Player.Instance.weaponALevel, Player.Instance.weaponBLevel, Player.Instance.weaponCLevel, Player.Instance.weaponDLevel };
+
+        GameResultLog newLog = new GameResultLog(
+            characterNum: StaticValues.playerCharacterNum,
+            level: Player.Instance.Level,
+            killCount: Player.Instance.killCount,
+            playerStats: playerStats,
+            weaponLevels: weaponLevels,
+            abilityStack: Player.Instance.AbilityStack,
+            playTime: timer,
+            dateTime: System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        );
+
+        if (!GameDataContainer.Instance.TryAddGameResultLog(newLog))
+        {
+            GameDataContainer.Instance.LoadGameResultLogs();
+            GameDataContainer.Instance.TryAddGameResultLog(newLog);
+        }
+
+        GameDataContainer.Instance.TrySaveGameResultLogs();
+
+        //
         UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");
     }
     public void OnClickSetting()

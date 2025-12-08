@@ -6,7 +6,7 @@ public class Singleton<T>
     private static T m_Instance;
     private static object m_PadLock = new object();
 
-    public static T instance
+    public static T Instance
     {
         get
         {

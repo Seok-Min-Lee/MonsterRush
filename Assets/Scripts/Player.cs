@@ -26,15 +26,17 @@ public class Player : MonoBehaviour
     [SerializeField] private StatSlot[] statSlots;
     [SerializeField] private StateToggle magnetToggle;
     [SerializeField] private Image healGuage;
-    [SerializeField] private Transform buffIconStack;
-    [SerializeField] private GameObject[] buffIcons;
+    [SerializeField] private Transform abilityIconStack;
+    [SerializeField] private GameObject[] abilityIcons;
 
     private Dictionary<PlayerStat, StatSlot> statDictionary;
 
     public int Level => statDictionary[PlayerStat.Level].value;
     public int killCount => statDictionary[PlayerStat.Kill].value;
-    public int Strength => statDictionary[PlayerStat.Strength].value;
     public int Heal => statDictionary[PlayerStat.Heal].value;
+    public int Magnet => statDictionary[PlayerStat.Magnet].value;
+    public int Speed => statDictionary[PlayerStat.Speed].value;
+    public int Strength => statDictionary[PlayerStat.Strength].value;
     public int Hp => statDictionary[PlayerStat.Hp].value;
     public int HpMax => statDictionary[PlayerStat.HpMax].value;
     public int Exp => statDictionary[PlayerStat.Exp].value;
@@ -44,6 +46,7 @@ public class Player : MonoBehaviour
     public int weaponCLevel => statDictionary[PlayerStat.WeaponC].value;
     public int weaponDLevel => statDictionary[PlayerStat.WeaponD].value;
     public bool IsDead => isDead;
+    public int[] AbilityStack => abilityStack.ToArray();
 
     public Vector3 moveVec { get; private set; }
     public PlayerCharacter character { get; private set; }
@@ -53,6 +56,7 @@ public class Player : MonoBehaviour
 
     private bool isDead = false;
     private bool isMagnetVisible = true;
+    private List<int> abilityStack = new List<int>();
     private void Awake()
     {
         Instance = this;
@@ -256,7 +260,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(buffIcons[0], buffIconStack);
+                    GameObject.Instantiate(abilityIcons[0], abilityIconStack);
+                    abilityStack.Add(0);
                 }
                 weaponControllers[0].Strengthen(rewardInfo.index);
                 break;
@@ -267,7 +272,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(buffIcons[1], buffIconStack);
+                    GameObject.Instantiate(abilityIcons[1], abilityIconStack);
+                    abilityStack.Add(1);
                 }
                 weaponControllers[1].Strengthen(rewardInfo.index);
                 break;
@@ -278,7 +284,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(buffIcons[2], buffIconStack);
+                    GameObject.Instantiate(abilityIcons[2], abilityIconStack);
+                    abilityStack.Add(2);
                 }
                 weaponControllers[2].Strengthen(rewardInfo.index);
                 break;
@@ -289,7 +296,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(buffIcons[3], buffIconStack);
+                    GameObject.Instantiate(abilityIcons[3], abilityIconStack);
+                    abilityStack.Add(3);
                 }
                 weaponControllers[3].Strengthen(rewardInfo.index);
                 break;
