@@ -89,7 +89,7 @@ public class AudioManager : MonoSingleton<AudioManager>
     {
         if (soundDictionary.TryGetValue(key, out Sound sound))
         {
-            AudioSource src = SFXSources[0];
+            AudioSource src = null;
             int overlapCount = 0;
 
             for (int i = 0; i < SFXSources.Length; i++)
@@ -102,15 +102,18 @@ public class AudioManager : MonoSingleton<AudioManager>
                 {
                     overlapCount++;
 
-                    if (overlapCount > 2)
+                    if (overlapCount > 1)
                     {
                         return;
                     }
                 }
             }
 
-            src.clip = sound.audioClip;
-            src.Play();
+            if (src != null)
+            {
+                src.clip = sound.audioClip;
+                src.Play();
+            }
         }
     }
     public void Init(float volumeBGM, float volumeSFX)
