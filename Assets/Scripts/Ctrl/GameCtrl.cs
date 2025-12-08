@@ -248,6 +248,7 @@ public class GameCtrl : MonoBehaviour
     private void OnGameEndClear()
     {
         List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
+        List<Item> items = ItemContainer.Instance.GetUndetectedsAll();
         Vector3 playerPosition = Player.Instance.transform.position;
 
         Sequence seq = DOTween.Sequence();
@@ -276,6 +277,13 @@ public class GameCtrl : MonoBehaviour
             enemy.OnShutdown();
 
             seq.AppendCallback(() => enemy.OnDeath());
+            seq.AppendInterval(Time.deltaTime);
+        }
+
+        // ¾ÆÀÌÅÛ Èí¼ö
+        foreach (Item item in items.OrderBy(i => (i.transform.position - playerPosition).sqrMagnitude))
+        {
+            seq.AppendCallback(() => item.OnDetected());
             seq.AppendInterval(Time.deltaTime);
         }
 

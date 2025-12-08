@@ -7,8 +7,9 @@ public class Item : MonoBehaviour
 {
     [SerializeField] private ItemInfo itemInfo;
 
+    public bool isMove { get; private set; }
+
     private SpriteRenderer spriteRenderer;
-    private bool isMove;
     private Coroutine cor;
     private void Awake()
     {
@@ -56,7 +57,7 @@ public class Item : MonoBehaviour
             cor = null;
         }
     }
-    private void OnDetected()
+    public void OnDetected()
     {
         if (isMove)
         {

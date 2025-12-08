@@ -4,6 +4,7 @@ using UnityEngine;
 public class ItemContainer : MonoBehaviour
 {
     public static ItemContainer Instance;
+    
     [SerializeField] private Item prefab;
     [SerializeField] private Item.ItemInfo[] itemInfoes;
     private Queue<Item> pool = new Queue<Item>();
@@ -30,5 +31,19 @@ public class ItemContainer : MonoBehaviour
     {
         pool.Enqueue(item); 
         actives.Remove(item);
+    }
+    public List<Item> GetUndetectedsAll()
+    {
+        List<Item> all = new List<Item>();
+
+        for (int i = 0; i < actives.Count; i++)
+        {
+            if (!actives[i].isMove)
+            {
+                all.Add(actives[i]);
+            }
+        }
+
+        return all;
     }
 }
