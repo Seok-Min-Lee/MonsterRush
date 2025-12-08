@@ -14,6 +14,8 @@ public class Bomb : Weapon
     private Rigidbody2D rigidbody;
     private BoxCollider2D collider;
     private BombLauncher container;
+
+    private bool isUsed = false;
     private float timer = 0f;
     private void Awake()
     {
@@ -31,8 +33,9 @@ public class Bomb : Weapon
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && !isUsed)
         {
+            isUsed = true;
             OnExplosion();
         }
     }
@@ -49,6 +52,8 @@ public class Bomb : Weapon
 
         rigidbody.AddForce(force, ForceMode2D.Impulse);
         rigidbody.AddTorque(torque, ForceMode2D.Impulse);
+
+        isUsed = false;
     }
     public void OnExplosion()
     {
