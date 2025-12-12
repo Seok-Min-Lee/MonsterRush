@@ -62,14 +62,15 @@ public class GameDataContainer : Singleton<GameDataContainer>
 [System.Serializable]
 public class GameResultLog
 {
-    public GameResultLog(int characterNum, int level, int killCount, int[] playerStats, int[] weaponLevels, int[] abilityStack, float playTime, string dateTime)
+    public GameResultLog(int characterNum, int level, int killCount, int[] playerStats, int[] weaponLevels, int[] playerAbilities, int[] weaponAbilities, float playTime, string dateTime)
     {
         this.characterNum = characterNum;
         this.level = level;
         this.killCount = killCount;
         this.playerStats = playerStats;
         this.weaponLevels = weaponLevels;
-        this.abilityStack = abilityStack;
+        this.playerAbilities = playerAbilities;
+        this.weaponAbilities = weaponAbilities;
         this.playTime = playTime;
         this.dateTime = dateTime;
     }
@@ -79,7 +80,8 @@ public class GameResultLog
     public int killCount;
     public int[] playerStats;
     public int[] weaponLevels;
-    public int[] abilityStack;
+    public int[] playerAbilities;
+    public int[] weaponAbilities;
     public float playTime;
     public string dateTime;
 }

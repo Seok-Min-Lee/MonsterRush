@@ -48,9 +48,9 @@ public class HistoryRow : MonoBehaviour
                 weaponLevels[i].text = gameResultLog.weaponLevels[i] == 16 ? "MAX" : gameResultLog.weaponLevels[i].ToString();
             }
 
-            for (int i = 0; i < gameResultLog.abilityStack.Length; i++)
+            for (int i = 0; i < gameResultLog.weaponAbilities.Length; i++)
             {
-                weaponLevels[gameResultLog.abilityStack[i]].color = new Color(0.5f, 0f, 1f, 1f);
+                weaponLevels[gameResultLog.weaponAbilities[i]].color = new Color(0.5f, 0f, 1f, 1f);
             }
 
             if (gameResultLog.level < 80)

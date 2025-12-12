@@ -37,15 +37,26 @@ public class Knife : Weapon
         {
             return;
         }
-        else if (collision.gameObject.CompareTag("Enemy"))
+
+        else if (collision.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            Enemy enemy = collision.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.Strength);
 
             if (Random.Range(0f, 1f) < bleedRatio)
             {
                 enemy.OnBleed(bleedPower);
             }
+
+            if (!isPenetrate)
+            {
+                timer = 1f;
+                isUsed = true;
+            }
+        }
+        else if (collision.CompareTag("ItemBox"))
+        {
+            collision.GetComponent<ItemBox>().onHit();
 
             if (!isPenetrate)
             {

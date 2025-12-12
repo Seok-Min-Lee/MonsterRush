@@ -22,5 +22,6 @@ public class RewardButton : MonoBehaviour
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
         GameCtrl.Instance.OnClickReward(rewardInfo);
         Player.Instance.OnReward(rewardInfo);
+        ItemContainer.Instance.OnExistItemBox(rewardInfo);
     }
 }

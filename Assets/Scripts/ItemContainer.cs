@@ -6,14 +6,34 @@ public class ItemContainer : MonoBehaviour
     public static ItemContainer Instance;
     
     [SerializeField] private Item prefab;
-    [SerializeField] private Item.ItemInfo[] itemInfoes;
+    [SerializeField] private ItemBox itemBoxPrefab;
+
+    [SerializeField] private ItemInfo[] itemInfoes;
+    [SerializeField] private ItemInfo[] specialInfoes;
+
     private Queue<Item> pool = new Queue<Item>();
     private List<Item> actives = new List<Item>();
-    private void Start()
+
+    private Queue<ItemBox> itemBoxPool = new Queue<ItemBox>();
+    private List<ItemBox> itemBoxes = new List<ItemBox>();
+
+    public bool existItemBox { get; private set; } = false;
+    private void Awake()
     {
         Instance = this;
     }
     public void Batch(int index, Vector3 position)
+    {
+        if (existItemBox && Random.Range(0, 100) == 0)
+        {
+            BatchItemBox(position);
+        }
+        else 
+        {
+            BatchItem(itemInfoes[index], position);
+        }
+    }
+    public void BatchItem(ItemInfo itemInfo, Vector3 position)
     {
         if (actives.Count > 200)
         {
@@ -24,13 +44,32 @@ public class ItemContainer : MonoBehaviour
                     pool.Dequeue() :
                     GameObject.Instantiate<Item>(prefab, transform);
 
-        item.Init(itemInfoes[index], position);
+        item.Init(itemInfo, position);
         actives.Add(item);
+    }
+    public void BatchItemBox(Vector3 position)
+    {
+        if (itemBoxes.Count > 10)
+        {
+            Reload(itemBoxes[0]);
+        }
+
+        ItemBox itemBox = itemBoxPool.Count > 0 ?
+                          itemBoxPool.Dequeue() :
+                          GameObject.Instantiate<ItemBox>(itemBoxPrefab, transform);
+
+        itemBox.Init(specialInfoes[Random.Range(0, specialInfoes.Length)], position);
+        itemBoxes.Add(itemBox);
     }
     public void Reload(Item item)
     {
         pool.Enqueue(item); 
         actives.Remove(item);
+    }
+    public void Reload(ItemBox itemBox)
+    {
+        itemBoxPool.Enqueue(itemBox);
+        itemBoxes.Remove(itemBox);
     }
     public List<Item> GetUndetectedsAll()
     {
@@ -45,5 +84,25 @@ public class ItemContainer : MonoBehaviour
         }
 
         return all;
+    }
+    public List<ItemBox> GetItemBoxAll()
+    {
+        List<ItemBox> boxes = new List<ItemBox>();
+
+        for (int i = 0; i < itemBoxes.Count; i++)
+        {
+            if (itemBoxes[i].state != ItemBox.State.Open)
+            {
+                boxes.Add(itemBoxes[i]);
+            }
+        }
+        return boxes;
+    }
+    public void OnExistItemBox(RewardInfo rewardInfo)
+    {
+        if (rewardInfo.groupId == 0 && rewardInfo.index == 96)
+        {
+            existItemBox = true;
+        }
     }
 }

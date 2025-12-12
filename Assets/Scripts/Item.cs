@@ -3,6 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct ItemInfo
+{
+    public enum Type
+    {
+        Exp, HpUp, ExpBoost, Barrier, PowerUp
+    }
+
+    public Type type;
+    public int value;
+    public Sprite sprite;
+}
 public class Item : MonoBehaviour
 {
     [SerializeField] private ItemInfo itemInfo;
@@ -76,16 +88,29 @@ public class Item : MonoBehaviour
     }
     private void OnAbsorbed()
     {
-        Player.Instance.IncreaseExp(itemInfo.value);
+        switch (itemInfo.type)
+        {
+            case ItemInfo.Type.Exp:
+                Player.Instance.IncreaseExp(itemInfo.value);
+                break;
+            case ItemInfo.Type.HpUp:
+                Player.Instance.IncreaseHp(5);
+                break;
+            case ItemInfo.Type.ExpBoost:
+                Player.Instance.OnExpBoost();
+                break;
+            case ItemInfo.Type.Barrier:
+                Player.Instance.OnBarrier();
+                break;
+            case ItemInfo.Type.PowerUp:
+                Player.Instance.OnPowerUp();
+                break;
+            default:
+                break;
+        }
+
         ItemContainer.Instance.Reload(this);
         gameObject.SetActive(false);
         isMove = false;
-    }
-
-    [System.Serializable]
-    public struct ItemInfo
-    {
-        public int value;
-        public Sprite sprite;
     }
 }

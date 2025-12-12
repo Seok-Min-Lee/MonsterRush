@@ -33,10 +33,21 @@ public class Bomb : Weapon
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") && !isUsed)
+        if (isUsed)
+        {
+            return;
+        }
+
+        if (collision.CompareTag("Enemy"))
         {
             isUsed = true;
             OnExplosion();
+        }
+        else if (collision.CompareTag("ItemBox"))
+        {
+            isUsed = true;
+            OnExplosion();
+            collision.GetComponent<ItemBox>().onHit();
         }
     }
     public void OnShot(BombLauncher container, bool isScaleUp, int knockbackLevel, Vector3 position, Vector3 force, float torque)

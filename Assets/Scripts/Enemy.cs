@@ -220,7 +220,7 @@ public class Enemy : MonoBehaviour
             OnDeath();
 
             ItemContainer.Instance.Batch(itemIndex, transform.position);
-            Player.Instance.KillEnemy();
+            Player.Instance.IncreaseKill();
         }
     }
     public virtual void OnAddict(int value)

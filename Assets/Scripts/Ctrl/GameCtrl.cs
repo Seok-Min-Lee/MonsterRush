@@ -14,7 +14,7 @@ public class GameCtrl : MonoBehaviour
 
     [SerializeField] private NormalWindow normalWindow;
     [SerializeField] private GameObject pauseWindow;
-    [SerializeField] private GameObject rewardWindow;
+    [SerializeField] private RewardWindow rewardWindow;
     [SerializeField] private EndingWindow endingWindow;
     [SerializeField] private GameObject settingWindow;
     [SerializeField] private TutorialWindow tutorialWindow;
@@ -24,27 +24,15 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private Toggle leftHandToggle;
     [SerializeField] private Toggle tutorialToggle;
 
-    [SerializeField] private RewardButton[] rewardButtons;
     [SerializeField] private RewardInfo[] rewardInfoes;
 
-    private Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>> rewardGroup = new Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>>();
     private int levelUpCount = 0;
     private float timer = 0f;
     private void Awake()
     {
         Instance = this;
 
-        foreach (IGrouping<RewardInfo.Type, RewardInfo> group in rewardInfoes.GroupBy(x => x.type))
-        {
-            Dictionary<int, RewardInfo> dictionary = new Dictionary<int, RewardInfo>();
-
-            foreach (RewardInfo info in group)
-            {
-                dictionary.Add(info.UniqueKey, info);
-            }
-
-            rewardGroup.Add(group.Key, dictionary);
-        }
+        rewardWindow.Init(rewardInfoes);
     }
     private void Start()
     {
@@ -133,7 +121,8 @@ public class GameCtrl : MonoBehaviour
             killCount: Player.Instance.killCount,
             playerStats: playerStats,
             weaponLevels: weaponLevels,
-            abilityStack: Player.Instance.AbilityStack,
+            playerAbilities: Player.Instance.PlayerAbilities,
+            weaponAbilities: Player.Instance.WeaponAbilities,
             playTime: timer,
             dateTime: System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         );
@@ -204,8 +193,13 @@ public class GameCtrl : MonoBehaviour
     public void OnGameChallenge()
     {
         StaticValues.isWait = false;
-        normalWindow.Show();
-        DOVirtual.DelayedCall(1f, () => { normalWindow.Alert("목표: 오래 살아남기!"); });
+        GameCtrl.Instance.OnLevelUp();
+
+        Sequence seq = DOTween.Sequence();
+        seq.AppendInterval(0.25f);
+        seq.AppendCallback(() => normalWindow.Show());
+        seq.AppendInterval(1f);
+        seq.AppendCallback(() => normalWindow.Alert("목표: 오래 살아남기!"));
     }
     public void OnLevelUp()
     {
@@ -213,12 +207,7 @@ public class GameCtrl : MonoBehaviour
     }
     public void OnClickReward(RewardInfo rewardInfo)
     {
-        rewardWindow.SetActive(false);
-        
-        if (rewardInfo.type == RewardInfo.Type.Ability)
-        {
-            rewardGroup[RewardInfo.Type.Ability].Remove(rewardInfo.UniqueKey);
-        }
+        rewardWindow.OnClickReward(rewardInfo);
 
         if (--levelUpCount > 0)
         {
@@ -247,10 +236,6 @@ public class GameCtrl : MonoBehaviour
     }
     private void OnGameEndClear()
     {
-        List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
-        List<Item> items = ItemContainer.Instance.GetUndetectedsAll();
-        Vector3 playerPosition = Player.Instance.transform.position;
-
         Sequence seq = DOTween.Sequence();
 
         // 엔딩 연출
@@ -272,6 +257,7 @@ public class GameCtrl : MonoBehaviour
         });
 
         // 몬스터 제거
+        List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
         foreach (Enemy enemy in enemies.OrderBy(e => e.toPlayer.sqrMagnitude))
         {
             enemy.OnShutdown();
@@ -280,7 +266,18 @@ public class GameCtrl : MonoBehaviour
             seq.AppendInterval(Time.deltaTime);
         }
 
+        // 아이템 박스 오픈
+        List<ItemBox> boxes = ItemContainer.Instance.GetItemBoxAll();
+        for (int i = 0; i < boxes.Count; i++)
+        {
+            seq.AppendCallback(() => boxes[i].onOpen());
+            seq.AppendInterval(Time.deltaTime);
+        }
+
         // 아이템 흡수
+        List<Item> items = ItemContainer.Instance.GetUndetectedsAll();
+        Vector3 playerPosition = Player.Instance.transform.position;
+
         foreach (Item item in items.OrderBy(i => (i.transform.position - playerPosition).sqrMagnitude))
         {
             seq.AppendCallback(() => item.OnDetected());
@@ -349,54 +346,6 @@ public class GameCtrl : MonoBehaviour
 
         AudioManager.Instance.PlaySFX(SoundKey.PlayerLevelUp);
         EnemyContainer.Instance.OnLevelUp();
-
-        //
-        List<RewardInfo> samples = new List<RewardInfo>();
-
-        int[,] temp = new int[,]
-        {
-            { Player.Instance.weaponALevel, 1000, 1001, 1002, 1099 },
-            { Player.Instance.weaponBLevel, 2000, 2001, 2002, 2099 },
-            { Player.Instance.weaponCLevel, 3000, 3001, 3002, 3099 },
-            { Player.Instance.weaponDLevel, 4000, 4001, 4002, 4099 },
-        };
-        int rows = temp.GetLength(0);
-
-        for (int i = 0; i < rows; i++)
-        {
-            int level = temp[i, 0];
-
-            if (level < 1)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 1]]);
-            }
-            else if (level < 8)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 2]]);
-            }
-            else if (level < 16)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 3]]);
-            }
-
-            if (level > 0 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(temp[i, 4]) && Random.Range(0, 10) == 0)
-            {
-                samples.Add(rewardGroup[RewardInfo.Type.Ability][temp[i, 4]]);
-            }
-        }
-
-        samples.Add(rewardGroup[RewardInfo.Type.Player][0]);
-        samples.Add(rewardGroup[RewardInfo.Type.Player][1]);
-        samples.Add(rewardGroup[RewardInfo.Type.Player][2]);
-        samples.Add(rewardGroup[RewardInfo.Type.Player][3]);
-
-        List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(samples);
-
-        for (int i = 0; i < rewardButtons.Length; i++)
-        {
-            rewardButtons[i].Init(randoms[i]);
-        }
-
-        rewardWindow.SetActive(true);
+        rewardWindow.Open();
     }
 }

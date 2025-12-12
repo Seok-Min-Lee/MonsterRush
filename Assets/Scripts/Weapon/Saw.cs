@@ -16,15 +16,19 @@ public class Saw : Weapon
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            Enemy enemy = collision.GetComponent<Enemy>();
             enemy.OnDamage(power + powerLevel * 2 + Player.Instance.Strength);
 
             if (isKnockback)
             {
                 enemy.OnKnockback(Vector3.zero);
             }
+        }
+        else if (collision.CompareTag("ItemBox"))
+        {
+            collision.GetComponent<ItemBox>().onHit();
         }
     }
     public void PowerUp(int level)

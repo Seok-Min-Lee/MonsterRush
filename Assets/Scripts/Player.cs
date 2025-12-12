@@ -9,11 +9,22 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public static Player Instance;
+    private const int HP_MAX_INCREASEMENT_UNIT = 5;
+    private const float BARRIER_DURATION = 20F;
+    private const float EXP_BOOST_DURATION = 20F;
+    private const float POWER_UP_DURATION = 20F;
+
+    private readonly string COMBAT_TEXT_INCREASE_HP = $"최대 HP 증가 +{HP_MAX_INCREASEMENT_UNIT}";
+    private readonly string COMBAT_TEXT_CANCEL = "0";
+    private readonly string COMBAT_TEXT_EXP_BOOST = $"경험치 부스트: {EXP_BOOST_DURATION}초간 경험치 증가";
+    private readonly string COMBAT_TEXT_POWER_UP = $"강화 알약: {POWER_UP_DURATION}초간 공격력 증가";
+    private readonly string COMBAT_TEXT_BARRIER = $"방어막: {BARRIER_DURATION}초간 피격 무효화";
 
     [SerializeField] private WeaponControllerBase[] weaponControllers;
     [SerializeField] private Transform magnetArea;
     [SerializeField] private Transform characterArea;
     [SerializeField] private ParticleSystem healParticle;
+    [SerializeField] private ParticleSystem barrierParticle;
 
     [SerializeField] private float speed = 0.025f;
 
@@ -26,8 +37,14 @@ public class Player : MonoBehaviour
     [SerializeField] private StatSlot[] statSlots;
     [SerializeField] private StateToggle magnetToggle;
     [SerializeField] private Image healGuage;
-    [SerializeField] private Transform abilityIconStack;
-    [SerializeField] private GameObject[] abilityIcons;
+    [SerializeField] private GameObject barrierBar;
+    [SerializeField] private Transform barrierGuage;
+    [SerializeField] private Transform playerAbilityIconGroup;
+    [SerializeField] private GameObject[] playerAbilityIcons;
+    [SerializeField] private Transform weaponAbilityIconGroup;
+    [SerializeField] private GameObject[] weaponAbilityIcons;
+    [SerializeField] private Transform[] buffStackChildren;
+    [SerializeField] private TextMeshPro[] buffStackTexts;
 
     private Dictionary<PlayerStat, StatSlot> statDictionary;
 
@@ -36,7 +53,9 @@ public class Player : MonoBehaviour
     public int Heal => statDictionary[PlayerStat.Heal].value;
     public int Magnet => statDictionary[PlayerStat.Magnet].value;
     public int Speed => statDictionary[PlayerStat.Speed].value;
-    public int Strength => statDictionary[PlayerStat.Strength].value;
+    public int Strength => isPowerUp ? 
+        statDictionary[PlayerStat.Strength].value + 5 : 
+        statDictionary[PlayerStat.Strength].value;
     public int Hp => statDictionary[PlayerStat.Hp].value;
     public int HpMax => statDictionary[PlayerStat.HpMax].value;
     public int Exp => statDictionary[PlayerStat.Exp].value;
@@ -46,7 +65,9 @@ public class Player : MonoBehaviour
     public int weaponCLevel => statDictionary[PlayerStat.WeaponC].value;
     public int weaponDLevel => statDictionary[PlayerStat.WeaponD].value;
     public bool IsDead => isDead;
-    public int[] AbilityStack => abilityStack.ToArray();
+    public bool IsAvailableSecondEnhance => isAvailableSecondEnhance;
+    public int[] PlayerAbilities => playerAbilities.ToArray();
+    public int[] WeaponAbilities => weaponAbilities.ToArray();
 
     public Vector3 moveVec { get; private set; }
     public PlayerCharacter character { get; private set; }
@@ -56,7 +77,20 @@ public class Player : MonoBehaviour
 
     private bool isDead = false;
     private bool isMagnetVisible = true;
-    private List<int> abilityStack = new List<int>();
+    private bool isAvailableSecondEnhance = false;
+    private bool isAvailableExtraExp = false;
+    private bool isBarrier = false;
+    private bool isExpBoost = false;
+    private bool isPowerUp = false;
+    private float barrierTimer = 0f;
+    private float expBoostTimer = 0f;
+    private float powerUpTimer = 0f;
+    private int plusHp = 0;
+    private int extraExp = 1;
+
+    private List<int> weaponAbilities = new List<int>();
+    private List<int> playerAbilities = new List<int>();
+    private List<Vector3> buffStackPositions = new List<Vector3>();
     private void Awake()
     {
         Instance = this;
@@ -71,6 +105,13 @@ public class Player : MonoBehaviour
         // 자석
         magnetRenderer = magnetArea.GetComponent<SpriteRenderer>();
         magnetRenderer.enabled = isMagnetVisible;
+
+        //
+        for (int i = 0; i < buffStackChildren.Length; i++)
+        {
+            buffStackPositions.Add(buffStackChildren[i].localPosition);
+            buffStackChildren[i].gameObject.SetActive(false);
+        }
     }
     private void Start()
     {
@@ -129,6 +170,7 @@ public class Player : MonoBehaviour
         magnetToggle.Init(isMagnetVisible);
     }
     private float healTimer = 0f;
+    private float healCooltime = 10f;
     private void Update()
     {
         character.UpdateTick(Time.deltaTime);
@@ -137,27 +179,13 @@ public class Player : MonoBehaviour
 
         if (Hp < HpMax)
         {
-            if (healTimer > 10f)
+            if (healTimer > healCooltime)
             {
-                int value = Hp + Heal > HpMax ? HpMax - Hp : Heal;
-                healParticle.Play();
-                statDictionary[PlayerStat.Hp].Increase(value);
-                hpGuage.localScale = new Vector3((float)Hp / HpMax, 1f, 1f);
-
-                // 회복량 UI
-                HitHealText hitText = UIContainer.Instance.Pop();
-                Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.1f, 0.1f));
-                hitText.Init(
-                    value: "+" + value,
-                    color: Color.green,
-                    position: start,
-                    target: start + new Vector2(0, 0.2f),
-                    parent: transform
-                );
+                OnHeal(Heal);
 
                 healTimer = 0f;
             }
-            healGuage.fillAmount = healTimer / 10f;
+            healGuage.fillAmount = healTimer / healCooltime;
 
             healTimer += Time.deltaTime;
         }
@@ -207,16 +235,38 @@ public class Player : MonoBehaviour
             stateToggleGroup.anchoredPosition = new Vector2(275, -40);
         }
     }
-    public void KillEnemy()
+    public void IncreaseKill()
     {
+        if (isAvailableExtraExp)
+        {
+            IncreaseExp(extraExp);
+        }
+
         statDictionary[PlayerStat.Kill].Increase();
+    }
+    public void IncreaseHp(int value)
+    {
+        OnHeal(value);
+        statDictionary[PlayerStat.HpMax].Increase(value);
+        ShowCombatText(
+            type: CombatText.Type.StateChange,
+            text: COMBAT_TEXT_INCREASE_HP
+        );
+
+        plusHp += value;
+        buffStackTexts[0].text = $"{(int)plusHp}";
+        if (!buffStackChildren[0].gameObject.activeSelf)
+        {
+            buffStackChildren[0].gameObject.SetActive(true);
+            BuffStackRebuild();
+        }
     }
     public void IncreaseExp(int value)
     {
         int exp = Exp;
         int expMax = ExpMax;
 
-        exp += value;
+        exp += isExpBoost ? value * 2 : value;
 
         if (exp >= expMax)
         {
@@ -244,6 +294,8 @@ public class Player : MonoBehaviour
             {
                 GameCtrl.Instance.OnLevelUp();
             }
+
+            extraExp = (int)(Level * 0.05f);
         }
 
         statDictionary[PlayerStat.Exp].Init(exp);
@@ -260,8 +312,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(abilityIcons[0], abilityIconStack);
-                    abilityStack.Add(0);
+                    GameObject.Instantiate(weaponAbilityIcons[0], weaponAbilityIconGroup);
+                    weaponAbilities.Add(0);
                 }
                 weaponControllers[0].Strengthen(rewardInfo.index);
                 break;
@@ -272,8 +324,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(abilityIcons[1], abilityIconStack);
-                    abilityStack.Add(1);
+                    GameObject.Instantiate(weaponAbilityIcons[1], weaponAbilityIconGroup);
+                    weaponAbilities.Add(1);
                 }
                 weaponControllers[1].Strengthen(rewardInfo.index);
                 break;
@@ -284,8 +336,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(abilityIcons[2], abilityIconStack);
-                    abilityStack.Add(2);
+                    GameObject.Instantiate(weaponAbilityIcons[2], weaponAbilityIconGroup);
+                    weaponAbilities.Add(2);
                 }
                 weaponControllers[2].Strengthen(rewardInfo.index);
                 break;
@@ -296,8 +348,8 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Instantiate(abilityIcons[3], abilityIconStack);
-                    abilityStack.Add(3);
+                    GameObject.Instantiate(weaponAbilityIcons[3], weaponAbilityIconGroup);
+                    weaponAbilities.Add(3);
                 }
                 weaponControllers[3].Strengthen(rewardInfo.index);
                 break;
@@ -318,6 +370,25 @@ public class Player : MonoBehaviour
                         break;
                     case 3:
                         statDictionary[PlayerStat.Strength].Increase();
+                        break;
+                    case 96:
+                        GameObject.Instantiate(playerAbilityIcons[0], playerAbilityIconGroup);
+                        playerAbilities.Add(0);
+                        break;
+                    case 97:
+                        GameObject.Instantiate(playerAbilityIcons[1], playerAbilityIconGroup);
+                        playerAbilities.Add(1);
+                        isAvailableExtraExp = true;
+                        break;
+                    case 98:
+                        GameObject.Instantiate(playerAbilityIcons[2], playerAbilityIconGroup);
+                        playerAbilities.Add(2);
+                        isAvailableSecondEnhance = true;
+                        break;
+                    case 99:
+                        GameObject.Instantiate(playerAbilityIcons[3], playerAbilityIconGroup);
+                        playerAbilities.Add(3);
+                        healCooltime *= 0.6f;
                         break;
                 }
                 break;
@@ -356,21 +427,22 @@ public class Player : MonoBehaviour
         {
             return;
         }
+
+        if (isBarrier)
+        {
+            ShowCombatText(
+                type: CombatText.Type.Cancel,
+                text: COMBAT_TEXT_CANCEL
+            );
+            return;
+        }
         
         int hp = statDictionary[PlayerStat.Hp].value;
-        int hpMax = statDictionary[PlayerStat.HpMax].value;
-
         hp -= damage;
 
-        // 데미지 UI
-        HitHealText hitText = UIContainer.Instance.Pop();
-        Vector2 start = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.1f, 0.1f));
-        hitText.Init(
-            value: "-" + damage,
-            color: Color.red,
-            position: start,
-            target: start + new Vector2(0, 0.2f),
-            parent: transform
+        ShowCombatText(
+            type: CombatText.Type.Damage,
+            text: "-" + damage
         );
 
         if (hp > 0)
@@ -390,6 +462,68 @@ public class Player : MonoBehaviour
 
         healTimer = 0f;
     }
+    public void OnHeal(int value)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        int _value = Hp + value > HpMax ? HpMax - Hp : value;
+        healParticle.Play();
+        statDictionary[PlayerStat.Hp].Increase(_value);
+        hpGuage.localScale = new Vector3((float)Hp / HpMax, 1f, 1f);
+
+        ShowCombatText(
+            type: CombatText.Type.Heal,
+            text: "+" + _value
+        );
+    }
+    public void OnBarrier()
+    {
+        if (isBarrier)
+        {
+            barrierTimer = 0f; 
+            buffStackTexts[2].text = $"{(int)BARRIER_DURATION}";
+        }
+        else
+        {
+            StartCoroutine(OnBarrierCor());
+        }
+    }
+    public void OnExpBoost()
+    {
+        if (isExpBoost)
+        {
+            expBoostTimer = 0f;
+            buffStackTexts[1].text = $"{(int)EXP_BOOST_DURATION}";
+        }
+        else
+        {
+            StartCoroutine(OnExpBoostCor());
+        }
+    }
+    public void OnPowerUp()
+    {
+        if (isPowerUp)
+        {
+            powerUpTimer = 0f;
+            buffStackTexts[3].text = $"{(int)POWER_UP_DURATION}";
+        }
+        else
+        {
+            StartCoroutine(OnPowerUpCor());
+        }
+    }
+    private void ShowCombatText(CombatText.Type type, string text)
+    {
+        CombatText combatText = UIContainer.Instance.Pop();
+        combatText.Init(
+            type: type,
+            value: text,
+            parent: transform
+        );
+    }
     private void OnMove(InputValue value)
     {
         Vector2 v = value.Get<Vector2>();
@@ -407,6 +541,113 @@ public class Player : MonoBehaviour
         {
             moveVec = Vector3.zero;
             character.PlayAnimation(PlayerCharacter.AniType.Idle);
+        }
+    }
+    private WaitForSeconds WaitForSecond = new WaitForSeconds(1f);
+    private IEnumerator OnBarrierCor()
+    {
+        isBarrier = true;
+        barrierParticle.Play();
+
+        ShowCombatText(
+            type: CombatText.Type.StateChange,
+            text: COMBAT_TEXT_BARRIER
+        );
+
+        buffStackChildren[2].gameObject.SetActive(true);
+        buffStackTexts[2].text = $"{(int)BARRIER_DURATION}";
+        BuffStackRebuild();
+
+        barrierTimer = 0f;
+        while (barrierTimer < BARRIER_DURATION)
+        {
+            yield return WaitForSecond;
+
+            barrierTimer += 1;
+            buffStackTexts[2].text = $"{(int)(BARRIER_DURATION - barrierTimer)}";
+        }
+
+        buffStackChildren[2].gameObject.SetActive(false);
+        BuffStackRebuild();
+
+        barrierParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        isBarrier = false;
+    }
+    private IEnumerator OnExpBoostCor()
+    {
+        isExpBoost = true;
+
+        ShowCombatText(
+            type: CombatText.Type.StateChange,
+            text: COMBAT_TEXT_EXP_BOOST
+        );
+
+        buffStackChildren[1].gameObject.SetActive(true);
+        buffStackTexts[1].text = $"{(int)EXP_BOOST_DURATION}";
+        BuffStackRebuild();
+
+        expBoostTimer = 0f;
+        while (expBoostTimer < EXP_BOOST_DURATION)
+        {
+            yield return WaitForSecond;
+
+            expBoostTimer += 1;
+            buffStackTexts[1].text = $"{(int)(EXP_BOOST_DURATION - expBoostTimer)}";
+        }
+
+        buffStackChildren[1].gameObject.SetActive(false);
+        BuffStackRebuild();
+
+        isExpBoost = false;
+    }
+    private IEnumerator OnPowerUpCor()
+    {
+        isPowerUp = true;
+
+        ShowCombatText(
+            type: CombatText.Type.StateChange,
+            text: COMBAT_TEXT_POWER_UP
+        );
+
+        buffStackChildren[3].gameObject.SetActive(true);
+        buffStackTexts[3].text = $"{(int)POWER_UP_DURATION}";
+        BuffStackRebuild();
+
+        powerUpTimer = 0f;
+        while (powerUpTimer < POWER_UP_DURATION)
+        {
+            yield return WaitForSecond;
+
+            powerUpTimer += 1;
+            buffStackTexts[3].text = $"{(int)(POWER_UP_DURATION - powerUpTimer)}";
+        }
+
+        buffStackChildren[3].gameObject.SetActive(false);
+        BuffStackRebuild();
+
+        isPowerUp = false;
+    }
+
+    private void BuffStackRebuild()
+    {
+        int activeCount = 0;
+        for (int i = 0; i < buffStackChildren.Length; i++)
+        {
+            if (buffStackChildren[i].gameObject.activeSelf)
+            {
+                activeCount++;
+            }
+        }
+
+        int idx = 0;
+        for (int i = 0; i < buffStackChildren.Length; i++)
+        {
+            Transform child = buffStackChildren[i];
+
+            if (child.gameObject.activeSelf)
+            {
+                child.localPosition = buffStackPositions[idx++];
+            }
         }
     }
 
