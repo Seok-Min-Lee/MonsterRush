@@ -199,7 +199,7 @@ public class GameCtrl : MonoBehaviour
         seq.AppendInterval(0.25f);
         seq.AppendCallback(() => normalWindow.Show());
         seq.AppendInterval(1f);
-        seq.AppendCallback(() => normalWindow.Alert("목표: 오래 살아남기!"));
+        seq.AppendCallback(() => normalWindow.Alert("목표: 오래 살아남기!\n<color=#FF2200>주의! 강한 적 등장..!</color>"));
     }
     public void OnLevelUp()
     {

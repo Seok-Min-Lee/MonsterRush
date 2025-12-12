@@ -2026,6 +2026,59 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8646933598460796216, guid: 5a6b9734ecdbef64ebf9c8c41f08ca82, type: 3}
   m_PrefabInstance: {fileID: 258022387}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &258502894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 258502895}
+  - component: {fileID: 258502896}
+  m_Layer: 0
+  m_Name: Enemy Pool (8)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &258502895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258502894}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2049672826}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &258502896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258502894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 8544507839688036739, guid: 58964a650a5182d489e45e8bbdf782e0, type: 3}
+  spawnInterval: 0.66667
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 100
+  isSpawn: 1
+  speedLevel: 0
+  hpLevel: 0
+  powerLevel: 0
 --- !u!1 &258528781
 GameObject:
   m_ObjectHideFlags: 0
@@ -3096,7 +3149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8603666259036758770, guid: f542cac23a427eb4ab5d449c6b0c68ce, type: 3}
-  spawnInterval: 0.16667
+  spawnInterval: 0.14286
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 150
@@ -5532,7 +5585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5683854456768978766, guid: 6f1ba8138167219418610b7ac15f90cc, type: 3}
-  spawnInterval: 0.1
+  spawnInterval: 0.083333
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 210
@@ -7944,7 +7997,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8869195786773705975, guid: 27db3bba91c317b48bc792af13c0e4e3, type: 3}
-  spawnInterval: 0.125
+  spawnInterval: 0.11111
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 180
@@ -14377,7 +14430,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 320}
-  m_SizeDelta: {x: 440, y: 120}
+  m_SizeDelta: {x: 440, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1936431798
 MonoBehaviour:
@@ -14576,7 +14629,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBAA9\uD45C \uB2EC\uC131 (Lv 80 \uB2EC\uC131)"
+  m_text: "\uBAA9\uD45C: \uC624\uB798 \uC0B4\uC544\uB0A8\uAE30!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e99c7298de6ee845b70d2ab7250981f, type: 2}
   m_sharedMaterial: {fileID: -82527929076130859, guid: 5e99c7298de6ee845b70d2ab7250981f, type: 2}
@@ -15070,6 +15123,7 @@ Transform:
   - {fileID: 359843838}
   - {fileID: 972684547}
   - {fileID: 767476727}
+  - {fileID: 258502895}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2049672827
@@ -15093,6 +15147,7 @@ MonoBehaviour:
   - {fileID: 359843837}
   - {fileID: 972684546}
   - {fileID: 767476726}
+  epicPool: {fileID: 258502896}
   stage: 0
 --- !u!1 &2052998580
 GameObject:

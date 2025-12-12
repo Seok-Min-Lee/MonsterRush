@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyCharacter : MonoBehaviour
@@ -7,11 +10,12 @@ public class EnemyCharacter : MonoBehaviour
     private const float FRAME_INTERVAL = 0.03333f;
 
     [SerializeField] private Sprite[] moves;
-    [SerializeField] private Sprite[] hits;
+    [SerializeField] private Sprite[] hits; 
     [SerializeField] private Color slowColor; 
     [SerializeField] private Color defaultColor;
 
     private SpriteRenderer renderer;
+    private Sprite[] moveSequences;
 
     private ColorType colorType = ColorType.Default;
     private AniType anitype = AniType.Move;
@@ -20,6 +24,8 @@ public class EnemyCharacter : MonoBehaviour
     private void Awake()
     {
         renderer = GetComponent<SpriteRenderer>();
+
+        moveSequences = moves;
     }
     public void UpdateTick(float time)
     {
@@ -29,7 +35,7 @@ public class EnemyCharacter : MonoBehaviour
         {
             if (anitype == AniType.Move)
             {
-                renderer.sprite = moves[index++ % moves.Length];
+                renderer.sprite = moveSequences[index++ % moveSequences.Length];
             }
             else
             {
@@ -84,5 +90,13 @@ public class EnemyCharacter : MonoBehaviour
     public void Init(Vector3 position)
     {
         transform.position = position;
+    }
+    public void OnSuperArmor(Sprite[] moves)
+    {
+        moveSequences = moves;
+    }
+    public void OffSuperArmor()
+    {
+        moveSequences = moves;
     }
 }

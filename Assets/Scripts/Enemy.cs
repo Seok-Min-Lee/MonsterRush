@@ -7,14 +7,14 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     public enum State { Live, Shutdown, Dead }
-    [SerializeField] private EnemyCharacter character;
-    [SerializeField] private SpriteRenderer bleedSticker;
-    [SerializeField] private ParticleSystem deathParticle;
-    [SerializeField] private ParticleSystem poisonParticle;
-    [SerializeField] private GameObject hpBar;
-    [SerializeField] private Transform hpGuage;
+    [SerializeField] protected EnemyCharacter character;
+    [SerializeField] protected SpriteRenderer bleedSticker;
+    [SerializeField] protected ParticleSystem deathParticle;
+    [SerializeField] protected ParticleSystem poisonParticle;
+    [SerializeField] protected GameObject hpBar;
+    [SerializeField] protected Transform hpGuage;
 
-    [SerializeField] [Range(0, 7)] private int itemIndex;
+    [SerializeField] [Range(0, 7)] protected int itemIndex;
 
     [Header("Current Value")]
     [SerializeField] protected int hp = 1;
@@ -30,32 +30,42 @@ public class Enemy : MonoBehaviour
     protected float slowPower = 0f;
 
     [Header("Default Value")]
-    [SerializeField] private int hpDefault = 1;
-    [SerializeField] private int powerDefault = 1;
-    [SerializeField] private float speedDefault = 1f;
+    [SerializeField] protected int hpDefault = 1;
+    [SerializeField] protected int powerDefault = 1;
+    [SerializeField] protected float speedDefault = 1f;
 
     [Header("level Value")]
-    [SerializeField] private int hpLevel = 0;
-    [SerializeField] private int powerLevel = 0;
-    [SerializeField] private int speedLevel = 0;
+    [SerializeField] protected int hpLevel = 0;
+    [SerializeField] protected int powerLevel = 0;
+    [SerializeField] protected int speedLevel = 0;
 
-    private EnemyPool pool;
+    protected EnemyPool pool;
     public BoxCollider2D collider { get; private set; }
     public Rigidbody2D rigidbody { get; private set; }
     public Vector3 toPlayer { get; private set; } = Vector3.zero;
 
-    private float addictTimer = 0f;
-    private float bleedTimer = 0f;
-    private float knockbackTimer = 0f;
+    protected float addictTimer = 0f;
+    protected float bleedTimer = 0f;
+    protected float knockbackTimer = 0f;
 
     public State state = State.Live;
-    private bool isKnockback = false;
+    protected bool isKnockback = false;
+    protected bool isSuperArmor = false;
     private void Awake()
     {
         collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
     }
-    public void UpdateTick(float time)
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (state == State.Live && !StaticValues.isWait && collision.gameObject.CompareTag("Player"))
+        {
+            AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
+            Player.Instance.OnDamage(power);
+            OnDeath();
+        }
+    }
+    public virtual void UpdateTick(float time)
     {
         if (state != State.Live)
         {
@@ -116,15 +126,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (state == State.Live && !StaticValues.isWait && collision.gameObject.CompareTag("Player"))
-        {
-            AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
-            Player.Instance.OnDamage(power);
-            OnDeath();
-        }
-    }
 
     public virtual void Spawn(EnemyPool pool, int hpLevel, int powerLevel, int speedLevel, Vector3 position, Quaternion rotation)
     {
@@ -176,7 +177,8 @@ public class Enemy : MonoBehaviour
 
             OffAddict();
             OffBleed();
-            OffSlow();
+            OffSlow(); 
+            OffSuperArmor();
 
             rigidbody.linearVelocity = Vector2.zero;
             collider.enabled = false;
@@ -225,6 +227,11 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnAddict(int value)
     {
+        if (isSuperArmor)
+        {
+            return;
+        }
+
         isAddict = true;
         addictDamage = value < 4 ? 1 : 2;
         addictTimer = 0f;
@@ -243,6 +250,11 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnBleed(float value)
     {
+        if (isSuperArmor)
+        {
+            return;
+        }
+
         isBleed = true;
         bleedPower = value;
         bleedTimer = 0f;
@@ -259,6 +271,11 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnSlow(float value)
     {
+        if (isSuperArmor)
+        {
+            return;
+        }
+
         slowPower = 0.3f + value * 0.025f;
         isSlow = true;
 
@@ -271,8 +288,21 @@ public class Enemy : MonoBehaviour
 
         character.ChangeColor(EnemyCharacter.ColorType.Default);
     }
+    public virtual void OnSuperArmor()
+    {
+        isSuperArmor = true;
+    }
+    public virtual void OffSuperArmor()
+    {
+        isSuperArmor = false;
+    }
     public virtual void OnKnockback(Vector3 direction)
     {
+        if (isSuperArmor)
+        {
+            return;
+        }
+
         if (state == State.Live &&
             direction != Vector3.zero &&
             rigidbody.linearVelocity == Vector2.zero)

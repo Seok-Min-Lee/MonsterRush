@@ -8,6 +8,7 @@ public class EnemyContainer : MonoBehaviour
     public EnemyPool currentPool => pools[stage];
     
     [SerializeField] private EnemyPool[] pools;
+    [SerializeField] private EnemyPool epicPool;
     [SerializeField] private int stage = 0;
 
     private void Awake()
@@ -23,6 +24,9 @@ public class EnemyContainer : MonoBehaviour
         }
         pools[0].gameObject.SetActive(true);
         pools[0].isSpawn = true;
+
+        epicPool.gameObject.SetActive(false);
+        epicPool.isSpawn = false;
     }
     public List<Enemy> GetActiveEnemyAll()
     {
@@ -32,11 +36,25 @@ public class EnemyContainer : MonoBehaviour
         {
             enemies.AddRange(pools[i].actives);
         }
+        enemies.AddRange(epicPool.actives);
 
         return enemies;
     }
     public void OnLevelUp()
     {
+        //
+        if (Player.Instance.Level == 80)
+        {
+            epicPool.gameObject.SetActive(true);
+            epicPool.isSpawn = true;
+        }
+        else if (Player.Instance.Level > 80)
+        {
+            epicPool.GradeUp();
+            epicPool.hpLevel++;
+            epicPool.powerLevel++;
+            epicPool.speedLevel++;
+        }
         // 난이도 상승 구조
         // 10 레벨동안 등급 상승 1회, 능력치 강화 9회
         int remain = Player.Instance.Level % 10;
