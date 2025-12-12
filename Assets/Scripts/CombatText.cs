@@ -30,7 +30,7 @@ public class CombatText : MonoBehaviour
     {
         new Preset(Type.Damage, 2f, 0.5f, Color.red),
         new Preset(Type.Heal, 2f, 0.5f, Color.green),
-        new Preset(Type.Cancel, 2f, 0.5f, Color.gray),
+        new Preset(Type.Cancel, 2f, 0.5f, Color.white),
         new Preset(Type.StateChange, 1.5f, 3f, Color.yellow),
     };
 

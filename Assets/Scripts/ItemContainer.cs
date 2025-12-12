@@ -8,6 +8,7 @@ public class ItemContainer : MonoBehaviour
     [SerializeField] private Item prefab;
     [SerializeField] private ItemBox itemBoxPrefab;
 
+    [SerializeField] private ItemInfo healInfo;
     [SerializeField] private ItemInfo[] itemInfoes;
     [SerializeField] private ItemInfo[] specialInfoes;
 
@@ -30,7 +31,17 @@ public class ItemContainer : MonoBehaviour
         }
         else 
         {
-            BatchItem(itemInfoes[index], position);
+            if (Random.Range(0, 100) < 2)
+            {
+                Vector3 offset = (Vector3)(Random.insideUnitCircle.normalized * 0.1f);
+
+                BatchItem(healInfo, position + offset);
+                BatchItem(itemInfoes[index], position - offset);
+            }
+            else
+            {
+                BatchItem(itemInfoes[index], position);
+            }
         }
     }
     public void BatchItem(ItemInfo itemInfo, Vector3 position)

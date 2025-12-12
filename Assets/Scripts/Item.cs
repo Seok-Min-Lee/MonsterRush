@@ -8,7 +8,7 @@ public struct ItemInfo
 {
     public enum Type
     {
-        Exp, HpUp, ExpBoost, Barrier, PowerUp
+        Exp, Heal, HpUp, ExpBoost, Barrier, PowerUp
     }
 
     public Type type;
@@ -92,6 +92,9 @@ public class Item : MonoBehaviour
         {
             case ItemInfo.Type.Exp:
                 Player.Instance.IncreaseExp(itemInfo.value);
+                break;
+            case ItemInfo.Type.Heal:
+                Player.Instance.OnHeal(itemInfo.value);
                 break;
             case ItemInfo.Type.HpUp:
                 Player.Instance.IncreaseHp(5);

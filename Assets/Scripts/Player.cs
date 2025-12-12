@@ -469,14 +469,24 @@ public class Player : MonoBehaviour
             return;
         }
 
-        int _value = Hp + value > HpMax ? HpMax - Hp : value;
-        healParticle.Play();
-        statDictionary[PlayerStat.Hp].Increase(_value);
-        hpGuage.localScale = new Vector3((float)Hp / HpMax, 1f, 1f);
+        int amount = Mathf.Clamp(value, 0, HpMax - Hp);
+
+        if (amount > 0)
+        {
+            healParticle.Play();
+            statDictionary[PlayerStat.Hp].Increase(amount);
+            hpGuage.localScale = new Vector3((float)Hp / HpMax, 1f, 1f);
+
+            if (Hp >= HpMax)
+            {
+                healTimer = 0f;
+                healGuage.fillAmount = 0f;
+            }
+        }
 
         ShowCombatText(
-            type: CombatText.Type.Heal,
-            text: "+" + _value
+            type: amount > 0 ? CombatText.Type.Heal: CombatText.Type.Cancel,
+            text: $"+{amount}"
         );
     }
     public void OnBarrier()

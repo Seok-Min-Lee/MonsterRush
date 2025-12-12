@@ -5114,6 +5114,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: -5731314708739717568, guid: 5e5873e19411eaa47934da1c275e3362, type: 3}
   itemBoxPrefab: {fileID: 7226413439154877903, guid: e457dbed92b598d40894a2f7418d5092, type: 3}
+  healInfo:
+    type: 1
+    value: 1
+    sprite: {fileID: 21300000, guid: 33056c87da5a4c14c9a1d4c46cdfa0b5, type: 3}
   itemInfoes:
   - type: 0
     value: 2
@@ -5140,16 +5144,16 @@ MonoBehaviour:
     value: 16
     sprite: {fileID: 1775669009216684005, guid: a2c110585eb710b408972fbc3b96136d, type: 3}
   specialInfoes:
-  - type: 1
-    value: 1
-    sprite: {fileID: 871354900, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
   - type: 2
     value: 1
-    sprite: {fileID: 2141877078, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
+    sprite: {fileID: 871354900, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
   - type: 3
     value: 1
-    sprite: {fileID: 1770861854, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
+    sprite: {fileID: 2141877078, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
   - type: 4
+    value: 1
+    sprite: {fileID: 1770861854, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
+  - type: 5
     value: 1
     sprite: {fileID: -1959837590, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
 --- !u!4 &722182477
@@ -14835,7 +14839,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7970397521461929931, guid: e747544088e0b8842a0eca8697a4f65a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.125
+      value: -0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7970397521461929931, guid: e747544088e0b8842a0eca8697a4f65a, type: 3}
       propertyPath: m_LocalPosition.z
