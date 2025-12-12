@@ -84,7 +84,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 60
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &9079993630375386889
 MonoBehaviour:

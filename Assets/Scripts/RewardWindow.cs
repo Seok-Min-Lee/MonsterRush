@@ -43,9 +43,9 @@ public class RewardWindow : MonoBehaviour
         if (Player.Instance.Level == 80)
         {
             headName.text = "체크포인트 보상";
-            headName.color = new Color(0.125f, 0.125f, 0.125f);
+            headName.color = new Color(0f, 1f, 0.75f);
             headDesc.text = "아래 보상들은 이후에 얻을 수 없습니다.";
-            headDesc.color = new Color(0f, 1f, 1f);
+            headDesc.color = new Color(0f, 0.9f, 0.65f);
 
             samples.Add(rewardGroup[RewardInfo.Type.Ability][96]);
             samples.Add(rewardGroup[RewardInfo.Type.Ability][97]);
@@ -56,7 +56,7 @@ public class RewardWindow : MonoBehaviour
             headName.text = "레벨업 보상";
             headName.color = new Color(1f, 1f, 1f);
             headDesc.text = "아래 보상들 중에서 1개를 선택할 수 있습니다.";
-            headDesc.color = new Color(0.125f, 0.125f, 0.125f);
+            headDesc.color = new Color(0.9f, 0.9f, 0.9f);
 
             int[,] temp = new int[,]
             {

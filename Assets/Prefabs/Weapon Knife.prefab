@@ -52,10 +52,6 @@ MonoBehaviour:
   sprites:
   - {fileID: -239601807, guid: b1ab57032853a90488f4bc2e99553b8f, type: 3}
   - {fileID: 1622405090, guid: 99671e56114fa4b4c87d98110a5a4521, type: 3}
-  speed: 10
-  bleedRatio: 0.1
-  bleedPower: 0.5
-  isPenetrate: 0
 --- !u!61 &3179183510129802340
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -207,7 +203,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 8
+  m_SortingOrder: 40
   m_Sprite: {fileID: -239601807, guid: b1ab57032853a90488f4bc2e99553b8f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

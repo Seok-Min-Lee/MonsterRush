@@ -205,7 +205,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 8
+  m_SortingOrder: 40
   m_Sprite: {fileID: 21300000, guid: 5f6a819513709ca4f8fd12e1d5201e9c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -227,7 +227,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 370671274440637860, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
       propertyPath: m_SortingOrder
-      value: 9
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 370671274440637863, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
       propertyPath: playOnAwake
@@ -247,7 +247,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5798524614144908062, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
       propertyPath: m_SortingOrder
-      value: 9
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 5798524614144908063, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
       propertyPath: playOnAwake
@@ -275,11 +275,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7554899049934289063, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
       propertyPath: m_SortingOrder
-      value: 9
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 7554899050958319902, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
       propertyPath: m_SortingOrder
-      value: 9
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 7554899050958319905, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
       propertyPath: playOnAwake
@@ -350,7 +350,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5798524615177868478, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
+    - {fileID: 5798524613865619796, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7554899051286264844, guid: a6fc1e688a90e7d4caab89c0ca876bf7, type: 3}
