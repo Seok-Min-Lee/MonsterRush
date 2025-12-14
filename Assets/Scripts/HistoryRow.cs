@@ -10,6 +10,9 @@ public class HistoryRow : MonoBehaviour
     [SerializeField] private Image highlightMask;
 
     [SerializeField] private Image characterIcon;
+    [SerializeField] private GameObject[] playerAbilities;
+    [SerializeField] private GameObject[] weaponAbilities;
+
     [SerializeField] private TextMeshProUGUI character;
     [SerializeField] private TextMeshProUGUI level;
     [SerializeField] private TextMeshProUGUI killCount;
@@ -47,11 +50,29 @@ public class HistoryRow : MonoBehaviour
             {
                 weaponLevels[i].text = gameResultLog.weaponLevels[i] == 16 ? "MAX" : gameResultLog.weaponLevels[i].ToString();
             }
+            //
+            for (int i = 0; i < playerAbilities.Length; i++)
+            {
+                playerAbilities[i].SetActive(false);
+            }
+            for (int i = 0; i < gameResultLog.playerAbilities.Length; i++)
+            {
+                playerAbilities[gameResultLog.playerAbilities[i]].SetActive(true);
+            }
 
+            //
+            for (int i = 0; i < weaponAbilities.Length; i++)
+            {
+                weaponAbilities[i].SetActive(false);
+            }
             for (int i = 0; i < gameResultLog.weaponAbilities.Length; i++)
             {
-                weaponLevels[gameResultLog.weaponAbilities[i]].color = new Color(0.5f, 0f, 1f, 1f);
+                weaponAbilities[gameResultLog.weaponAbilities[i]].SetActive(true);
             }
+            //for (int i = 0; i < gameResultLog.weaponAbilities.Length; i++)
+            //{
+            //    weaponLevels[gameResultLog.weaponAbilities[i]].color = new Color(0.5f, 0f, 1f, 1f);
+            //}
 
             if (gameResultLog.level < 80)
             {
