@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8235072232735017719
 Transform:
   m_ObjectHideFlags: 0
@@ -401,6 +401,7 @@ MonoBehaviour:
   hpBar: {fileID: 1760365026936867831}
   hpGuage: {fileID: 8668585985751418689}
   itemIndex: 7
+  deathSFX: 24
   hp: 1
   hpMax: 1
   power: 0
@@ -560,6 +561,10 @@ PrefabInstance:
     - target: {fileID: 2265229504755624935, guid: a5751cdcc19e35141b9794ed4c040008, type: 3}
       propertyPath: ShapeModule.length
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265229504755624935, guid: a5751cdcc19e35141b9794ed4c040008, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2265229504755624935, guid: a5751cdcc19e35141b9794ed4c040008, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.ctime0

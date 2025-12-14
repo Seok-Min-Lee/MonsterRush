@@ -769,7 +769,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7719583536596772918, guid: a44a28bd7b281504987600ebb46ed964, type: 3}
-  spawnInterval: 0.16667
+  spawnInterval: 0.2
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 120
@@ -1980,7 +1980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8544507839688036739, guid: 58964a650a5182d489e45e8bbdf782e0, type: 3}
-  spawnInterval: 1.2
+  spawnInterval: 1
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 100
@@ -2782,7 +2782,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 362, y: -52.5}
+  m_AnchoredPosition: {x: 362, y: -50}
   m_SizeDelta: {x: 724, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &320015564
@@ -3026,7 +3026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8603666259036758770, guid: f542cac23a427eb4ab5d449c6b0c68ce, type: 3}
-  spawnInterval: 0.1
+  spawnInterval: 0.14286
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 150
@@ -5479,7 +5479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5683854456768978766, guid: 6f1ba8138167219418610b7ac15f90cc, type: 3}
-  spawnInterval: 0.05
+  spawnInterval: 0.083333
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 210
@@ -7500,7 +7500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 362, y: -102.5}
+  m_AnchoredPosition: {x: 362, y: -100}
   m_SizeDelta: {x: 724, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &952252894
@@ -7894,7 +7894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8869195786773705975, guid: 27db3bba91c317b48bc792af13c0e4e3, type: 3}
-  spawnInterval: 0.08
+  spawnInterval: 0.11111
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 180
@@ -13779,7 +13779,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 5
+    m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
   m_Spacing: 0

@@ -278,8 +278,23 @@ public class GameCtrl : MonoBehaviour
         List<Item> items = ItemContainer.Instance.GetUndetectedsAll();
         Vector3 playerPosition = Player.Instance.transform.position;
 
+        items.Sort((a, b) =>
+        {
+            float da = (a.transform.position - playerPosition).sqrMagnitude;
+            float db = (b.transform.position - playerPosition).sqrMagnitude;
+
+            return da.CompareTo(db);
+        });
+
         foreach (Item item in items.OrderBy(i => (i.transform.position - playerPosition).sqrMagnitude))
         {
+            Vector3 toItem = item.transform.position - playerPosition;
+
+            if (toItem.sqrMagnitude > 25)
+            {
+                item.transform.position = playerPosition + toItem.normalized * 5;
+            }
+
             seq.AppendCallback(() => item.OnDetected());
             seq.AppendInterval(Time.deltaTime);
         }

@@ -22,6 +22,18 @@ public enum SoundKey
     WeaponDLaunch,
     GameEndClear,
     GameEndChallenge,
+    PlayerGetWeaponA,
+    PlayerGetSpecialItem,
+    BarrierHit,
+    EnemyDeadA,
+    EnemyDeadB,
+    EnemyDeadC,
+    EnemyDeathD,
+    EnemyDeadE,
+    EnemyDeadF,
+    EnemyDeadG,
+    EenemyDeathH,
+    EenemyDeathI,
 }
 [System.Serializable]
 public struct Sound
@@ -38,6 +50,7 @@ public struct Sound
 public class AudioManager : MonoSingleton<AudioManager>
 {
     [SerializeField] private Sound[] sounds;
+    [SerializeField] private Sound[] enemySounds;
     [SerializeField] private AudioSource sourceBGM;
     [SerializeField] private AudioSource sourceSFX;
 
@@ -60,7 +73,11 @@ public class AudioManager : MonoSingleton<AudioManager>
 
         IEnumerator Cor()
         {
-            foreach (Sound sound in sounds)
+            List<Sound> soundList = new List<Sound>();
+            soundList.AddRange(sounds);
+            soundList.AddRange(enemySounds);
+
+            foreach (Sound sound in soundList)
             {
                 soundDictionary.Add(sound.key, sound);
 
@@ -97,6 +114,7 @@ public class AudioManager : MonoSingleton<AudioManager>
                 if (!SFXSources[i].isPlaying)
                 {
                     src = SFXSources[i];
+                    break;
                 }
                 else if (SFXSources[i].clip == sound.audioClip)
                 {

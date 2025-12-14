@@ -435,13 +435,18 @@ public class Player : MonoBehaviour
 
         if (isBarrier)
         {
+            AudioManager.Instance.PlaySFX(SoundKey.BarrierHit);
+
             ShowCombatText(
                 type: CombatText.Type.Cancel,
                 text: COMBAT_TEXT_CANCEL
             );
+
             return;
         }
-        
+
+        AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
+
         int hp = statDictionary[PlayerStat.Hp].Value;
         hp -= damage;
 

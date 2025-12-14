@@ -112,6 +112,7 @@ public class Item : MonoBehaviour
                 break;
         }
 
+        AudioManager.Instance.PlaySFX(itemInfo.type == ItemInfo.Type.Exp ? SoundKey.PlayerGetItem : SoundKey.PlayerGetSpecialItem);
         ItemContainer.Instance.Reload(this);
         gameObject.SetActive(false);
         isMove = false;

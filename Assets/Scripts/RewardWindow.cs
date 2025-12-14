@@ -66,11 +66,13 @@ public class RewardWindow : MonoBehaviour
                 { Player.Instance.weaponDLevel, 4000, 4001, 4002, 4099 },
             };
             int firstEndCount = 0;
+            int weaponTotal = 0;
             int rows = temp.GetLength(0);
 
             for (int i = 0; i < rows; i++)
             {
                 int level = temp[i, 0];
+                weaponTotal += level;
 
                 if (level < 1)
                 {
@@ -101,7 +103,7 @@ public class RewardWindow : MonoBehaviour
             samples.Add(rewardGroup[RewardInfo.Type.Player][2]);
             samples.Add(rewardGroup[RewardInfo.Type.Player][3]);
 
-            if (firstEndCount > 2 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(98))
+            if (firstEndCount > 0 && weaponTotal > 20 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(98))
             {
                 samples.Add(rewardGroup[RewardInfo.Type.Ability][98]);
             }

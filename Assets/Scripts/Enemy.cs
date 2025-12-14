@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected Transform hpGuage;
 
     [SerializeField] [Range(0, 7)] protected int itemIndex;
+    [SerializeField] protected SoundKey deathSFX;
 
     [Header("Current Value")]
     [SerializeField] protected int hp = 1;
@@ -60,7 +61,6 @@ public class Enemy : MonoBehaviour
     {
         if (state == State.Live && !StaticValues.isWait && collision.gameObject.CompareTag("Player"))
         {
-            AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
             Player.Instance.OnDamage(power);
             OnDeath();
         }
@@ -171,6 +171,8 @@ public class Enemy : MonoBehaviour
         // death 처리 로직
         seq.AppendCallback(() =>
         {
+            AudioManager.Instance.PlaySFX(deathSFX);
+
             deathParticle.Play();
 
             state = State.Dead;
@@ -235,8 +237,8 @@ public class Enemy : MonoBehaviour
         isAddict = true;
         addictDamage = value < 4 ? 1 : 2;
         addictTimer = 0f;
-        addictInterval = 0.5f - value * 0.0375f; // 0.5 ~ 0.2
-        
+        addictInterval = 0.4f - Mathf.Lerp(0f, 0.3f, (float)value / 8);
+
         poisonParticle.Play();
     }
     public virtual void OffAddict()
@@ -276,7 +278,8 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        slowPower = 0.3f + value * 0.025f;
+        slowPower = 0.25f + Mathf.Lerp(0f, 0.25f, (float)value / 8);
+
         isSlow = true;
 
         character.ChangeColor(EnemyCharacter.ColorType.Slow);

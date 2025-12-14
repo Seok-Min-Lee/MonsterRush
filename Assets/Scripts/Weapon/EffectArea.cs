@@ -107,7 +107,7 @@ public class EffectArea : Weapon
     }
     public void PowerUp(int level)
     {
-        power = 1 * level;
+        power = level;
         effectLevel = level;
         Refresh(state);
     }

@@ -72,6 +72,8 @@ public class SawContainer : WeaponContainer<Saw>
             return;
         }
 
+        AudioManager.Instance.PlaySFX(SoundKey.PlayerGetWeaponA);
+
         if (quantityLevel == 0)
         {
             stateToggle.Unlock();
