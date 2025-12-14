@@ -10,9 +10,9 @@ public class Player : MonoBehaviour
 {
     public static Player Instance;
     private const int HP_MAX_INCREASEMENT_UNIT = 5;
-    private const float BARRIER_DURATION = 20F;
-    private const float EXP_BOOST_DURATION = 20F;
-    private const float POWER_UP_DURATION = 20F;
+    private const float BARRIER_DURATION = 10F;
+    private const float EXP_BOOST_DURATION = 30F;
+    private const float POWER_UP_DURATION = 10F;
 
     private readonly string COMBAT_TEXT_INCREASE_HP = $"최대 HP 증가 +{HP_MAX_INCREASEMENT_UNIT}";
     private readonly string COMBAT_TEXT_CANCEL = "0";
@@ -48,22 +48,22 @@ public class Player : MonoBehaviour
 
     private Dictionary<PlayerStat, StatSlot> statDictionary;
 
-    public int Level => statDictionary[PlayerStat.Level].value;
-    public int killCount => statDictionary[PlayerStat.Kill].value;
-    public int Heal => statDictionary[PlayerStat.Heal].value;
-    public int Magnet => statDictionary[PlayerStat.Magnet].value;
-    public int Speed => statDictionary[PlayerStat.Speed].value;
+    public int Level => statDictionary[PlayerStat.Level].Value;
+    public int killCount => statDictionary[PlayerStat.Kill].Value;
+    public int Heal => statDictionary[PlayerStat.Heal].Value;
+    public int Magnet => statDictionary[PlayerStat.Magnet].Value;
+    public int Speed => statDictionary[PlayerStat.Speed].Value;
     public int Strength => isPowerUp ? 
-        statDictionary[PlayerStat.Strength].value + 5 : 
-        statDictionary[PlayerStat.Strength].value;
-    public int Hp => statDictionary[PlayerStat.Hp].value;
-    public int HpMax => statDictionary[PlayerStat.HpMax].value;
-    public int Exp => statDictionary[PlayerStat.Exp].value;
-    public int ExpMax => statDictionary[PlayerStat.ExpMax].value;
-    public int weaponALevel => statDictionary[PlayerStat.WeaponA].value;
-    public int weaponBLevel => statDictionary[PlayerStat.WeaponB].value;
-    public int weaponCLevel => statDictionary[PlayerStat.WeaponC].value;
-    public int weaponDLevel => statDictionary[PlayerStat.WeaponD].value;
+        statDictionary[PlayerStat.Strength].Value + 10 : 
+        statDictionary[PlayerStat.Strength].Value;
+    public int Hp => statDictionary[PlayerStat.Hp].Value;
+    public int HpMax => statDictionary[PlayerStat.HpMax].Value;
+    public int Exp => statDictionary[PlayerStat.Exp].Value;
+    public int ExpMax => statDictionary[PlayerStat.ExpMax].Value;
+    public int weaponALevel => statDictionary[PlayerStat.WeaponA].Value;
+    public int weaponBLevel => statDictionary[PlayerStat.WeaponB].Value;
+    public int weaponCLevel => statDictionary[PlayerStat.WeaponC].Value;
+    public int weaponDLevel => statDictionary[PlayerStat.WeaponD].Value;
     public bool IsDead => isDead;
     public bool IsAvailableSecondEnhance => isAvailableSecondEnhance;
     public int[] PlayerAbilities => playerAbilities.ToArray();
@@ -121,22 +121,22 @@ public class Player : MonoBehaviour
         statDictionary = new Dictionary<PlayerStat, StatSlot>();
         foreach (StatSlot slot in statSlots)
         {
-            statDictionary.Add(slot.type, slot);
+            statDictionary.Add(slot.Type, slot);
         }
-        statDictionary[PlayerStat.Level].Init(1);
-        statDictionary[PlayerStat.Kill].Init(0);
-        statDictionary[PlayerStat.Magnet].Init(0);
-        statDictionary[PlayerStat.Speed].Init(0);
-        statDictionary[PlayerStat.Strength].Init(0);
-        statDictionary[PlayerStat.Heal].Init(0);
-        statDictionary[PlayerStat.WeaponA].Init(0);
-        statDictionary[PlayerStat.WeaponB].Init(0);
-        statDictionary[PlayerStat.WeaponC].Init(0);
-        statDictionary[PlayerStat.WeaponD].Init(0);
-        statDictionary[PlayerStat.Hp].Init(100);
-        statDictionary[PlayerStat.HpMax].Init(100);
-        statDictionary[PlayerStat.Exp].Init(0);
-        statDictionary[PlayerStat.ExpMax].Init(10);
+        statDictionary[PlayerStat.Level].InitValue(1);
+        statDictionary[PlayerStat.Kill].InitValue(0);
+        statDictionary[PlayerStat.Magnet].InitValue(0);
+        statDictionary[PlayerStat.Speed].InitValue(0);
+        statDictionary[PlayerStat.Strength].InitValue(0);
+        statDictionary[PlayerStat.Heal].InitValue(0);
+        statDictionary[PlayerStat.WeaponA].InitValue(0);
+        statDictionary[PlayerStat.WeaponB].InitValue(0);
+        statDictionary[PlayerStat.WeaponC].InitValue(0);
+        statDictionary[PlayerStat.WeaponD].InitValue(0);
+        statDictionary[PlayerStat.Hp].InitValue(100);
+        statDictionary[PlayerStat.HpMax].InitValue(100);
+        statDictionary[PlayerStat.Exp].InitValue(0);
+        statDictionary[PlayerStat.ExpMax].InitValue(10);
 
         switch (StaticValues.playerCharacterNum)
         {
@@ -266,7 +266,7 @@ public class Player : MonoBehaviour
         int exp = Exp;
         int expMax = ExpMax;
 
-        exp += isExpBoost ? value * 2 : value;
+        exp += isExpBoost ? (int)(value * 1.5) : value;
 
         if (exp >= expMax)
         {
@@ -274,7 +274,7 @@ public class Player : MonoBehaviour
             expMax = (int)(expMax * 1.1f);
 
             statDictionary[PlayerStat.Level].Increase();
-            statDictionary[PlayerStat.ExpMax].Init(expMax);
+            statDictionary[PlayerStat.ExpMax].InitValue(expMax);
 
             // 입력 초기화
             var pointerData = new PointerEventData(EventSystem.current)
@@ -295,10 +295,10 @@ public class Player : MonoBehaviour
                 GameCtrl.Instance.OnLevelUp();
             }
 
-            extraExp = (int)(Level * 0.05f);
+            extraExp = (int)(Level * 0.2f);
         }
 
-        statDictionary[PlayerStat.Exp].Init(exp);
+        statDictionary[PlayerStat.Exp].InitValue(exp);
         expGuage.fillAmount = exp / (float)expMax;
     }
     public void OnReward(RewardInfo rewardInfo)
@@ -383,12 +383,17 @@ public class Player : MonoBehaviour
                     case 98:
                         GameObject.Instantiate(playerAbilityIcons[2], playerAbilityIconGroup);
                         playerAbilities.Add(2);
+
+                        statDictionary[PlayerStat.WeaponA].InitMaxValue(16);
+                        statDictionary[PlayerStat.WeaponB].InitMaxValue(16);
+                        statDictionary[PlayerStat.WeaponC].InitMaxValue(16);
+                        statDictionary[PlayerStat.WeaponD].InitMaxValue(16);
                         isAvailableSecondEnhance = true;
                         break;
                     case 99:
                         GameObject.Instantiate(playerAbilityIcons[3], playerAbilityIconGroup);
                         playerAbilities.Add(3);
-                        healCooltime *= 0.6f;
+                        healCooltime *= 0.5f;
                         break;
                 }
                 break;
@@ -437,7 +442,7 @@ public class Player : MonoBehaviour
             return;
         }
         
-        int hp = statDictionary[PlayerStat.Hp].value;
+        int hp = statDictionary[PlayerStat.Hp].Value;
         hp -= damage;
 
         ShowCombatText(
@@ -452,7 +457,7 @@ public class Player : MonoBehaviour
 
             character.PlayAnimation(PlayerCharacter.AniType.Hit);
 
-            statDictionary[PlayerStat.Hp].Init(hp);
+            statDictionary[PlayerStat.Hp].InitValue(hp);
         }
         else
         {
@@ -664,14 +669,25 @@ public class Player : MonoBehaviour
     [System.Serializable]
     public class StatSlot
     {
-        public PlayerStat type;
-        public TMP_Text TextUI;
-        public int maxValue = int.MaxValue;
-        public int value { get; private set; }
+        [SerializeField] private PlayerStat type;
+        [SerializeField] private TMP_Text TextUI;
+        [SerializeField] private int maxValue = int.MaxValue;
+        [SerializeField] private int value;
 
-        public void Init(int value)
+        public PlayerStat Type => type;
+        public int Value => value;
+        public void InitValue(int value)
         {
             this.value = Mathf.Min(value, maxValue);
+
+            if (TextUI != null)
+            {
+                TextUI.text = this.value == maxValue ? "MAX" : this.value.ToString();
+            }
+        }
+        public void InitMaxValue(int value)
+        {
+            maxValue = value;
 
             if (TextUI != null)
             {
