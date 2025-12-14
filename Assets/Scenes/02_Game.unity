@@ -577,7 +577,7 @@ MonoBehaviour:
   - groupId: 2000
     index: 99
     icon: {fileID: -707454913, guid: 0a82047ed10c25148af11a503041446d, type: 3}
-    head: "<color=#8800ff>\uB0A0\uB835\uD55C \uAD00\uD1B5/color>"
+    head: "<color=#8800ff>\uB0A0\uB835\uD55C \uAD00\uD1B5</color>"
     desc: "\uCE7C\uC774 \uC801\uC744 \uAD00\uD1B5\uD55C\uB2E4."
     type: 1
   - groupId: 3000

@@ -52,8 +52,14 @@ public class PlayerCharacter : MonoBehaviour
     private AniType lastType;
     public void PlayAnimation(AniType type)
     {
-        if (aniType == type || aniType == AniType.Hit)
+        if (aniType == type)
         {
+            return;
+        }
+
+        if (aniType == AniType.Hit)
+        {
+            lastType = type;
             return;
         }
 
