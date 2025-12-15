@@ -290,9 +290,9 @@ public class GameCtrl : MonoBehaviour
         {
             Vector3 toItem = item.transform.position - playerPosition;
 
-            if (toItem.sqrMagnitude > 25)
+            if (toItem.sqrMagnitude > 36)
             {
-                item.transform.position = playerPosition + toItem.normalized * 5;
+                item.transform.position = playerPosition + toItem.normalized * 6;
             }
 
             seq.AppendCallback(() => item.OnDetected());

@@ -416,6 +416,10 @@ public class Player : MonoBehaviour
             }
 
             hpBar.SetActive(false);
+            for (int i = 0; i < buffStackChildren.Length; i++)
+            {
+                buffStackChildren[i].gameObject.SetActive(false);
+            }
         };
 
         // death ¿¬Ãâ
