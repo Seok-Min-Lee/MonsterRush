@@ -51,6 +51,12 @@ public class TutorialWindow : MonoBehaviour
         if (isUsing)
         {
             background.gameObject.SetActive(true);
+            if (background.TryGetComponent<SwipeDetector>(out SwipeDetector swipeDetector))
+            {
+                swipeDetector.ToLeft += ShowPrevious;
+                swipeDetector.ToRight += ShowNext;
+            }
+
             tutorial.gameObject.SetActive(true);
 
             parts[stage].SetSiblingIndex(siblingIndex);
@@ -103,40 +109,12 @@ public class TutorialWindow : MonoBehaviour
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
 
-        parts[stage].SetSiblingIndex(indexOrigins[stage]);
-        guides[stage++].SetActive(false);
-
-        parts[stage].SetSiblingIndex(siblingIndex);
-        guides[stage].SetActive(true);
-
-        for (int i = 0; i < paginations.Length; i++)
-        {
-            paginations[i].SetValue(i == stage);
-        }
-
-        previousButton.SetActive(true);
-        nextButton.SetActive(stage < parts.Length - 1);
-        startButton.SetActive(stage == parts.Length - 1);
+        ShowNext();
     }
-
     public void OnClickPrevious()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-
-        parts[stage].SetSiblingIndex(indexOrigins[stage]);
-        guides[stage--].SetActive(false);
-
-        parts[stage].SetSiblingIndex(siblingIndex);
-        guides[stage].SetActive(true);
-
-        for (int i = 0; i < paginations.Length; i++)
-        {
-            paginations[i].SetValue(i == stage);
-        }
-
-        previousButton.SetActive(stage > 0);
-        nextButton.SetActive(true);
-        startButton.SetActive(false);
+        ShowPrevious();
     }
     public void OnClickStart()
     {
@@ -218,6 +196,46 @@ public class TutorialWindow : MonoBehaviour
         {
             StopCoroutine(coroutine);
             coroutine = null;
+        }
+    }
+    private void ShowNext()
+    {
+        if (stage < guides.Length - 1)
+        {
+            parts[stage].SetSiblingIndex(indexOrigins[stage]);
+            guides[stage++].SetActive(false);
+
+            parts[stage].SetSiblingIndex(siblingIndex);
+            guides[stage].SetActive(true);
+
+            for (int i = 0; i < paginations.Length; i++)
+            {
+                paginations[i].SetValue(i == stage);
+            }
+
+            previousButton.SetActive(true);
+            nextButton.SetActive(stage < parts.Length - 1);
+            startButton.SetActive(stage == parts.Length - 1);
+        }
+    }
+    private void ShowPrevious()
+    {
+        if (stage > 0)
+        {
+            parts[stage].SetSiblingIndex(indexOrigins[stage]);
+            guides[stage--].SetActive(false);
+
+            parts[stage].SetSiblingIndex(siblingIndex);
+            guides[stage].SetActive(true);
+
+            for (int i = 0; i < paginations.Length; i++)
+            {
+                paginations[i].SetValue(i == stage);
+            }
+
+            previousButton.SetActive(stage > 0);
+            nextButton.SetActive(true);
+            startButton.SetActive(false);
         }
     }
     private IEnumerator RewardGuideCor()
