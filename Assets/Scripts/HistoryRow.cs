@@ -24,6 +24,8 @@ public class HistoryRow : MonoBehaviour
 
     [SerializeField] private Image resultSticker;
     [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private Color positiveColor;
+    [SerializeField] private Color negativeColor;
 
     private GameResultLog gameResultLog;
 
@@ -69,21 +71,17 @@ public class HistoryRow : MonoBehaviour
             {
                 weaponAbilities[gameResultLog.weaponAbilities[i]].SetActive(true);
             }
-            //for (int i = 0; i < gameResultLog.weaponAbilities.Length; i++)
-            //{
-            //    weaponLevels[gameResultLog.weaponAbilities[i]].color = new Color(0.5f, 0f, 1f, 1f);
-            //}
 
             if (gameResultLog.level < 80)
             {
-                resultSticker.color = Color.black;
-                resultText.color = Color.black;
+                resultSticker.color = negativeColor;
+                resultText.color = negativeColor;
                 resultText.text = "ÆÐ¹è";
             }
             else
             {
-                resultSticker.color = Color.yellow;
-                resultText.color = Color.yellow;
+                resultSticker.color = positiveColor;
+                resultText.color = positiveColor;
                 resultText.text = "½Â¸®!";
             }
 
@@ -96,12 +94,12 @@ public class HistoryRow : MonoBehaviour
             offData.SetActive(true);
         }
     }
-    public void Highlight()
+    public void Highlight(Color color)
     {
         seq?.Kill();
         seq = DOTween.Sequence();
 
-        seq.AppendCallback(() => highlightMask.color = new Color(0f, 0.5f, 1f, 0f));
-        seq.Append(highlightMask.DOColor(new Color(0f, 0.5f, 1f, 0.5f), 0.25f).SetLoops(4, LoopType.Yoyo));
+        seq.AppendCallback(() => highlightMask.color = new Color(color.r, color.g, color.b, 0f));
+        seq.Append(highlightMask.DOColor(new Color(color.r, color.g, color.b, 0.5f), 0.25f).SetLoops(4, LoopType.Yoyo));
     }
 }

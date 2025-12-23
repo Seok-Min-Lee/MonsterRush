@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class HistoryWindow : MonoBehaviour
 {
     [SerializeField] private HistoryRow prefab;
-    [SerializeField] private Transform parent;
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private RectTransform content;
 
@@ -61,7 +60,7 @@ public class HistoryWindow : MonoBehaviour
                 GameResultLog log = logs[i];
                 CharacterData character = characterDictionary[log.characterNum];
 
-                HistoryRow row = GameObject.Instantiate<HistoryRow>(prefab, parent);
+                HistoryRow row = GameObject.Instantiate<HistoryRow>(prefab, content);
                 row.Init(
                     gameResultLog: log,
                     characterIcon: character.icon,
@@ -112,12 +111,12 @@ public class HistoryWindow : MonoBehaviour
             playTimeMax.text = "--:--:--";
         }
 
-        if (logs.Count < 3)
+        if (logs.Count < 4)
         {
-            int emptyCount = 3 - logs.Count;
+            int emptyCount = 4 - logs.Count;
             for (int i = 0; i < emptyCount; i++)
             {
-                HistoryRow row = GameObject.Instantiate<HistoryRow>(prefab, parent);
+                HistoryRow row = GameObject.Instantiate<HistoryRow>(prefab, content);
                 row.Init(null, null, null);
                 rows.Add(row);
             }
@@ -126,19 +125,19 @@ public class HistoryWindow : MonoBehaviour
     public void OnClickMaxLevel()
     {
         int index = rows.IndexOf(maxLevelRow);
-        ScrollToIndex(index);
+        ScrollToIndex(index, Color.red);
     }
     public void OnClickMaxKill()
     {
         int index = rows.IndexOf(maxKillRow);
-        ScrollToIndex(index);
+        ScrollToIndex(index, Color.green);
     }
     public void OnClickMaxPlayTime()
     {
         int index = rows.IndexOf(maxPlayTimeRow);
-        ScrollToIndex(index);
+        ScrollToIndex(index, Color.blue);
     }
-    private void ScrollToIndex(int index)
+    private void ScrollToIndex(int index, Color color)
     {
         float duration = 0.5f;
 
@@ -160,7 +159,7 @@ public class HistoryWindow : MonoBehaviour
             ));
         }
 
-        seq.AppendCallback(() => rows[index].Highlight());
+        seq.AppendCallback(() => rows[index].Highlight(color));
     }
 }
 
