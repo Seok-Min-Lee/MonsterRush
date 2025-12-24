@@ -1,8 +1,12 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TitleCtrl : MonoBehaviour
 {
+    [SerializeField] private ScreenSwitcher screenSwitcher;
+    [SerializeField] private CanvasGroup canvasGroup;
+
     [SerializeField] private GameObject homeWindow;
     [SerializeField] private GameObject characterWindow;
     [SerializeField] private GameObject settingWindow;
@@ -27,8 +31,12 @@ public class TitleCtrl : MonoBehaviour
             });
         }
 
-        homeWindow.SetActive(true);
-        characterWindow.SetActive(false);
+        screenSwitcher.Show(() => { canvasGroup.alpha = 0f; }, () =>
+        {
+            homeWindow.SetActive(true);
+            characterWindow.SetActive(false);
+            canvasGroup.DOFade(1f, 0.25f);
+        });
     }
     public void OnClickPlay()
     {
@@ -56,7 +64,16 @@ public class TitleCtrl : MonoBehaviour
 
         StaticValues.playerCharacterNum = num;
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene("02_Game");
+        
+        screenSwitcher.Hide(
+            () => 
+        {
+            canvasGroup.DOFade(0f, 0.25f);
+        },
+            () => 
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("02_Game");
+        });
     }
     public void OnClickHistory()
     {

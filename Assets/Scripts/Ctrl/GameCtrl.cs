@@ -10,6 +10,9 @@ public class GameCtrl : MonoBehaviour
 {
     public static GameCtrl Instance;
 
+    [SerializeField] private ScreenSwitcher screenSwitcher;
+    [SerializeField] private CanvasGroup canvasGroup;
+
     [SerializeField] private TextMeshProUGUI timeText;
 
     [SerializeField] private NormalWindow normalWindow;
@@ -54,20 +57,31 @@ public class GameCtrl : MonoBehaviour
         QualitySettings.vSyncCount = 0;
 #endif
 
-        // 튜토리얼 UI 표시
-        bool isVisibleTutorial = PlayerPrefs.GetInt("visibleTutorial") == 1;
-        StaticValues.isWait = isVisibleTutorial;
-        tutorialWindow.Init(isVisibleTutorial);
-
-        if (!StaticValues.isWait)
+        screenSwitcher.Show(
+            () => 
         {
-            OnGameStart();
-        }
+            canvasGroup.alpha = 0f;
 
-        //
-        bool isLeftHand = PlayerPrefs.GetInt("isLeftHand") == 1;
-        Player.Instance.OnChangeUI(isLeftHand);
-        tutorialWindow.OnChangeUI(isLeftHand);
+            // 튜토리얼 UI 표시
+            bool isVisibleTutorial = PlayerPrefs.GetInt("visibleTutorial") == 1;
+            StaticValues.isWait = isVisibleTutorial;
+            tutorialWindow.Init(isVisibleTutorial);
+
+            if (!StaticValues.isWait)
+            {
+                OnGameStart();
+            }
+
+            //
+            bool isLeftHand = PlayerPrefs.GetInt("isLeftHand") == 1;
+            Player.Instance.OnChangeUI(isLeftHand);
+            tutorialWindow.OnChangeUI(isLeftHand);
+        }, 
+            () =>
+        {
+            canvasGroup.DOFade(1f, 0.25f);
+
+        });
     }
     private void Update()
     {
@@ -136,7 +150,16 @@ public class GameCtrl : MonoBehaviour
         GameDataContainer.Instance.TrySaveGameResultLogs();
 
         //
-        UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");
+        screenSwitcher.Hide(
+            () =>
+            {
+                StaticValues.isWait = true;
+                canvasGroup.DOFade(0f, 0.25f);
+            },
+            () =>
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");
+            });
     }
     public void OnClickSetting()
     {
