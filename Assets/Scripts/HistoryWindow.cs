@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class HistoryWindow : MonoBehaviour
@@ -32,7 +31,6 @@ public class HistoryWindow : MonoBehaviour
     private Sequence seq;
     private void Awake()
     {
-        characterDictionary = new Dictionary<int, CharacterData>();
         for (int i = 0; i < characters.Length; i++)
         {
             characterDictionary.Add(characters[i].id, characters[i]);
@@ -109,6 +107,8 @@ public class HistoryWindow : MonoBehaviour
             levelMax.text = "-";
             killMax.text = "-";
             playTimeMax.text = "--:--:--";
+
+            logs = new List<GameResultLog>();
         }
 
         if (logs.Count < 4)

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BombFlare : Weapon
@@ -29,16 +30,16 @@ public class BombFlare : Weapon
     {
         particle.Play();
 
-        Enemy[] arr = EnemyContainer.Instance.GetActiveEnemyAll().ToArray();
+        List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
 
         float r = isScaleUp ? radius * radius * SCALE_UP_RATIO * SCALE_UP_RATIO : radius * radius;
-        for (int i = 0; i < arr.Length; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            float sqrMagnitude = Vector3.SqrMagnitude(transform.position - arr[i].transform.position);
+            float sqrMagnitude = Vector3.SqrMagnitude(transform.position - enemies[i].transform.position);
 
             if (sqrMagnitude < r)
             {
-                Enemy enemy = arr[i];
+                Enemy enemy = enemies[i];
                 enemy.OnDamage(power + Player.Instance.Strength);
 
                 Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * (0.8f + knockbackLevel * 0.4f);

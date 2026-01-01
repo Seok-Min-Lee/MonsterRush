@@ -4014,7 +4014,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EndingWindow
   head: {fileID: 1989500192}
   timeScoreText: {fileID: 1794462689}
-  LevelScoreText: {fileID: 2069345088}
+  levelScoreText: {fileID: 2069345088}
   killScoreText: {fileID: 1382643447}
   continueButton: {fileID: 8827749705400416599}
 --- !u!225 &502644044

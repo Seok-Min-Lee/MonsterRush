@@ -654,15 +654,6 @@ public class Player : MonoBehaviour
 
     private void BuffStackRebuild()
     {
-        int activeCount = 0;
-        for (int i = 0; i < buffStackChildren.Length; i++)
-        {
-            if (buffStackChildren[i].gameObject.activeSelf)
-            {
-                activeCount++;
-            }
-        }
-
         int idx = 0;
         for (int i = 0; i < buffStackChildren.Length; i++)
         {
