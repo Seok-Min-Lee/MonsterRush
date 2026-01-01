@@ -30,10 +30,7 @@ public class Enemy : MonoBehaviour
     protected float bleedPower = 0f;
     protected float slowPower = 0f;
 
-    [Header("Default Value")]
-    [SerializeField] protected int hpDefault = 1;
-    [SerializeField] protected int powerDefault = 1;
-    [SerializeField] protected float speedDefault = 1f;
+    [SerializeField] protected DataContainer dataContainer;
 
     [Header("level Value")]
     [SerializeField] protected int hpLevel = 0;
@@ -41,9 +38,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected int speedLevel = 0;
 
     protected EnemyPool pool;
-    public BoxCollider2D collider { get; private set; }
-    public Rigidbody2D rigidbody { get; private set; }
-    public Vector3 toPlayer { get; private set; } = Vector3.zero;
+    public EnemyInfo enemyInfo { get; protected set; }
+    public BoxCollider2D collider { get; protected set; }
+    public Rigidbody2D rigidbody { get; protected set; }
+    public Vector3 toPlayer { get; protected set; } = Vector3.zero;
 
     protected float addictTimer = 0f;
     protected float bleedTimer = 0f;
@@ -56,6 +54,8 @@ public class Enemy : MonoBehaviour
     {
         collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
+
+        enemyInfo = dataContainer.enemies[itemIndex];
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -141,9 +141,9 @@ public class Enemy : MonoBehaviour
         transform.rotation = rotation;
 
         //
-        hpMax = (int)(hpDefault * (1 + 0.1f * hpLevel));
-        power = (int)(powerDefault * (1 + 0.1f * powerLevel));
-        speed = speedDefault * (1 + 0.1f * speedLevel);
+        hpMax = (int)(enemyInfo.hp * (1 + 0.1f * hpLevel));
+        power = (int)(enemyInfo.power * (1 + 0.1f * powerLevel));
+        speed = enemyInfo.speed * (1 + 0.1f * speedLevel);
 
         hp = hpMax;
         hpGuage.localScale = Vector3.one;

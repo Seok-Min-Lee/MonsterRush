@@ -319,9 +319,7 @@ MonoBehaviour:
   isAddict: 0
   isBleed: 0
   isSlow: 0
-  hpDefault: 60
-  powerDefault: 6
-  speedDefault: 1.6
+  dataContainer: {fileID: 11400000, guid: 25a9c7449fa45a243a2bc8cc75a9f9c2, type: 2}
   hpLevel: 0
   powerLevel: 0
   speedLevel: 0

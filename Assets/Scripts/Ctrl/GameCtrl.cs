@@ -27,7 +27,7 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private Toggle leftHandToggle;
     [SerializeField] private Toggle tutorialToggle;
 
-    [SerializeField] private RewardInfo[] rewardInfoes;
+    [SerializeField] private DataContainer dataContainer;
 
     private int levelUpCount = 0;
     private float timer = 0f;
@@ -35,7 +35,7 @@ public class GameCtrl : MonoBehaviour
     {
         Instance = this;
 
-        rewardWindow.Init(rewardInfoes);
+        rewardWindow.Init(dataContainer.rewards);
     }
     private void Start()
     {

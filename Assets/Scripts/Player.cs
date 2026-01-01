@@ -37,8 +37,6 @@ public class Player : MonoBehaviour
     [SerializeField] private StatSlot[] statSlots;
     [SerializeField] private StateToggle magnetToggle;
     [SerializeField] private Image healGuage;
-    [SerializeField] private GameObject barrierBar;
-    [SerializeField] private Transform barrierGuage;
     [SerializeField] private Transform playerAbilityIconGroup;
     [SerializeField] private GameObject[] playerAbilityIcons;
     [SerializeField] private Transform weaponAbilityIconGroup;

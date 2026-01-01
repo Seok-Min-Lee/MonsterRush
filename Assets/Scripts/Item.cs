@@ -3,18 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct ItemInfo
-{
-    public enum Type
-    {
-        Exp, Heal, HpUp, ExpBoost, Barrier, PowerUp
-    }
-
-    public Type type;
-    public int value;
-    public Sprite sprite;
-}
 public class Item : MonoBehaviour
 {
     [SerializeField] private ItemInfo itemInfo;

@@ -3,6 +3,13 @@ using UnityEngine;
 public class SuperArmorEnemy : Enemy
 {
     [SerializeField] private Sprite[] superArmorMoves;
+    private void Awake()
+    {
+        collider = GetComponent<BoxCollider2D>();
+        rigidbody = GetComponent<Rigidbody2D>();
+
+        enemyInfo = dataContainer.enemies[itemIndex];
+    }
     public override void OnDamage(int damage)
     {
         if (state != State.Live)
