@@ -38,6 +38,28 @@ public class TitleCtrl : MonoBehaviour
             canvasGroup.DOFade(1f, 0.25f);
         });
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (characterWindow.activeSelf || historyWindow.gameObject.activeSelf)
+            {
+                homeWindow.SetActive(true);
+                characterWindow.SetActive(false);
+                historyWindow.gameObject.SetActive(false);
+            }
+            else if (settingWindow.activeSelf)
+            {
+                settingWindow.SetActive(false);
+                homeWindow.SetActive(true);
+
+                float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
+                float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
+
+                AudioManager.Instance.Init(volumeBGM, volumeSFX);
+            }
+        }
+    }
     public void OnClickPlay()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
