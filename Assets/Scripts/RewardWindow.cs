@@ -10,27 +10,33 @@ public class RewardWindow : MonoBehaviour
 
     [SerializeField] private RewardButton[] rewardButtons;
 
-    private Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>> rewardGroup = new Dictionary<RewardInfo.Type, Dictionary<int, RewardInfo>>();
-
+    private Dictionary<int, RewardInfo> weaponRewards = new Dictionary<int, RewardInfo>();
+    private Dictionary<int, RewardInfo> playerRewards = new Dictionary<int, RewardInfo>();
+    private Dictionary<int, RewardInfo> abilityRewards = new Dictionary<int, RewardInfo>();
+    
     public void Init(IEnumerable<RewardInfo> rewardInfoes)
     {
-        foreach (IGrouping<RewardInfo.Type, RewardInfo> group in rewardInfoes.GroupBy(x => x.type))
+        foreach (RewardInfo rewardInfo in rewardInfoes)
         {
-            Dictionary<int, RewardInfo> dictionary = new Dictionary<int, RewardInfo>();
-
-            foreach (RewardInfo info in group)
+            if (rewardInfo.type == RewardInfo.Type.Weapon)
             {
-                dictionary.Add(info.UniqueKey, info);
+                weaponRewards.Add(rewardInfo.UniqueKey, rewardInfo);
             }
-
-            rewardGroup.Add(group.Key, dictionary);
+            else if (rewardInfo.type == RewardInfo.Type.Player)
+            {
+                playerRewards.Add(rewardInfo.UniqueKey, rewardInfo);
+            }
+            else if (rewardInfo.type == RewardInfo.Type.Ability)
+            {
+                abilityRewards.Add(rewardInfo.UniqueKey, rewardInfo);
+            }
         }
     }
     public void OnClickReward(RewardInfo rewardInfo)
     {
-        if (rewardInfo.type == RewardInfo.Type.Ability)
+        if (abilityRewards.ContainsKey(rewardInfo.UniqueKey))
         {
-            rewardGroup[RewardInfo.Type.Ability].Remove(rewardInfo.UniqueKey);
+            abilityRewards.Remove(rewardInfo.UniqueKey);
         }
 
         gameObject.SetActive(false);
@@ -47,9 +53,9 @@ public class RewardWindow : MonoBehaviour
             headDesc.text = "아래 보상들은 이후에 얻을 수 없습니다!";
             headDesc.color = new Color(0.9f, 0.45f, 0f);
 
-            samples.Add(rewardGroup[RewardInfo.Type.Ability][96]);
-            samples.Add(rewardGroup[RewardInfo.Type.Ability][97]);
-            samples.Add(rewardGroup[RewardInfo.Type.Ability][99]);
+            samples.Add(abilityRewards[96]);
+            samples.Add(abilityRewards[97]);
+            samples.Add(abilityRewards[99]);
         }
         else
         {
@@ -58,54 +64,62 @@ public class RewardWindow : MonoBehaviour
             headDesc.text = "아래 보상들 중에서 1개를 선택할 수 있습니다.";
             headDesc.color = new Color(0f, 0.45f, 0f);
 
-            int[,] temp = new int[,]
+            int[,] levelAndGroupIds = new int[4, 2]
             {
-                { Player.Instance.weaponALevel, 1000, 1001, 1002, 1099 },
-                { Player.Instance.weaponBLevel, 2000, 2001, 2002, 2099 },
-                { Player.Instance.weaponCLevel, 3000, 3001, 3002, 3099 },
-                { Player.Instance.weaponDLevel, 4000, 4001, 4002, 4099 },
+                { Player.Instance.weaponALevel, 1000 },
+                { Player.Instance.weaponBLevel, 2000 },
+                { Player.Instance.weaponCLevel, 3000 },
+                { Player.Instance.weaponDLevel, 4000 },
             };
+
             int firstEndCount = 0;
-            int weaponTotal = 0;
-            int rows = temp.GetLength(0);
+            int levelTotal = 0;
+            int rows = levelAndGroupIds.GetLength(0);
 
             for (int i = 0; i < rows; i++)
             {
-                int level = temp[i, 0];
-                weaponTotal += level;
+                int level = levelAndGroupIds[i, 0];
+                int groupId = levelAndGroupIds[i, 1];
+                levelTotal += level;
 
                 if (level < 1)
                 {
-                    samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 1]]);
+                    // 무기 획득
+                    samples.Add(weaponRewards[groupId + 0]);
                 }
                 else if (level < 8)
                 {
-                    samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 2]]);
+                    // 1차 강화
+                    samples.Add(weaponRewards[groupId + 1]);
                 }
                 else
                 {
                     firstEndCount++;
                 }
 
+                // 2차 강화
                 if (8 <= level && level < 16 && Player.Instance.IsAvailableSecondEnhance)
                 {
-                    samples.Add(rewardGroup[RewardInfo.Type.Weapon][temp[i, 3]]);
+                    samples.Add(weaponRewards[groupId + 2]);
                 }
 
-                if (level > 0 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(temp[i, 4]) && Random.Range(0, 10) == 0)
+                // 특수 능력
+                if (level > 0 && abilityRewards.ContainsKey(groupId + 99) && Random.Range(0, 10) == 0)
                 {
-                    samples.Add(rewardGroup[RewardInfo.Type.Ability][temp[i, 4]]);
+                    samples.Add(abilityRewards[groupId + 99]);
                 }
             }
 
-            samples.Add(rewardGroup[RewardInfo.Type.Player][0]);
-            samples.Add(rewardGroup[RewardInfo.Type.Player][1]);
-            samples.Add(rewardGroup[RewardInfo.Type.Player][2]);
-            samples.Add(rewardGroup[RewardInfo.Type.Player][3]);
+            // 플레이어 능력
+            samples.Add(playerRewards[0]);
+            samples.Add(playerRewards[1]);
+            samples.Add(playerRewards[2]);
+            samples.Add(playerRewards[3]);
 
-            if (firstEndCount > 0 && weaponTotal > 20 && rewardGroup[RewardInfo.Type.Ability].ContainsKey(98))
+            // 2차 강화 개방
+            if (firstEndCount > 0 && levelTotal > 20 && abilityRewards.ContainsKey(98))
             {
-                samples.Add(rewardGroup[RewardInfo.Type.Ability][98]);
+                samples.Add(abilityRewards[98]);
             }
         }
 

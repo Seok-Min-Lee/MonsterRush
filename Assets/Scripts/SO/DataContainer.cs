@@ -17,7 +17,11 @@ public class DataContainer : ScriptableObject
 [Serializable]
 public struct RewardInfo
 {
-    public enum Type { Weapon, Ability, Player, Buff, }
+    public enum Type 
+    {
+        Weapon, Ability, Player,
+    }
+
     public int groupId;
     public int index;
     public Sprite icon;

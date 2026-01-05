@@ -42,10 +42,11 @@ public class MapMaker : MonoBehaviour
     }
 
     // 중심 좌표 기준으로 주변 타일 유지
+    HashSet<Vector2Int> neededCoords = new HashSet<Vector2Int>();
+    List<Vector2Int> removeCoords = new List<Vector2Int>();
     private void UpdateTiles()
     {
-        HashSet<Vector2Int> neededCoords = new HashSet<Vector2Int>();
-
+        neededCoords.Clear();
         for (int y = -radius; y <= radius; y++)
         {
             for (int x = -radius; x <= radius; x++)
@@ -75,7 +76,7 @@ public class MapMaker : MonoBehaviour
         }
 
         // 필요 없는 타일 반환
-        List<Vector2Int> toRemove = new List<Vector2Int>();
+        removeCoords.Clear();
         foreach (KeyValuePair<Vector2Int, GameObject> pair in activeTiles)
         {
             if (!neededCoords.Contains(pair.Key))
@@ -83,11 +84,11 @@ public class MapMaker : MonoBehaviour
                 pair.Value.SetActive(false);
                 tilePool.Enqueue(pair.Value);
 
-                toRemove.Add(pair.Key);
+                removeCoords.Add(pair.Key);
             }
         }
 
-        foreach (Vector2Int coord in toRemove)
+        foreach (Vector2Int coord in removeCoords)
         {
             activeTiles.Remove(coord);
         }
