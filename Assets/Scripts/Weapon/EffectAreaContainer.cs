@@ -17,12 +17,12 @@ public class EffectAreaContainer : WeaponOneOnOne<EffectArea>
         if (state == EffectArea.State.Poison)
         {
             state = EffectArea.State.Slow;
-            stateToggle.Init(false);
+            stateToggle.SetState(false);
         }
         else
         {
             state = EffectArea.State.Poison;
-            stateToggle.Init(true);
+            stateToggle.SetState(true);
         }
 
         weapon.SwitchMode(state);
@@ -59,7 +59,7 @@ public class EffectAreaContainer : WeaponOneOnOne<EffectArea>
             weapon.gameObject.SetActive(true);
 
             stateToggle.Unlock();
-            stateToggle.Init(state == EffectArea.State.Poison);
+            stateToggle.SetState(state == EffectArea.State.Poison);
         }
 
         weapon.Refresh(state);

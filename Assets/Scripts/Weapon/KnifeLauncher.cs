@@ -56,7 +56,7 @@ public class KnifeLauncher : WeaponLauncher<Knife>
         base.OnClickStateToggle();
 
         isRandomTarget = !isRandomTarget;
-        stateToggle.Init(isRandomTarget);
+        stateToggle.SetState(isRandomTarget);
     }
     public override void Strengthen(int key)
     {
@@ -84,7 +84,7 @@ public class KnifeLauncher : WeaponLauncher<Knife>
         if (frequencyLevel++ == 0)
         {
             stateToggle.Unlock();
-            stateToggle.Init(isRandomTarget);
+            stateToggle.SetState(isRandomTarget);
         }
 
         interval = 1f / frequencyLevel;

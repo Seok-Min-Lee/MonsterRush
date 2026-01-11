@@ -307,8 +307,7 @@ MonoBehaviour:
   bleedSticker: {fileID: 2031350085961645250}
   deathParticle: {fileID: 523279199593394036}
   poisonParticle: {fileID: 459236820381183945}
-  hpBar: {fileID: 5651201004990537856}
-  hpGuage: {fileID: 5137143171637514158}
+  hpGaugeBar: {fileID: 4252797202476740865}
   itemIndex: 0
   deathSFX: 16
   hp: 0
@@ -333,6 +332,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1879424601838811705}
   - component: {fileID: 8736573239633061806}
+  - component: {fileID: 4252797202476740865}
   m_Layer: 8
   m_Name: HP bar
   m_TagString: Untagged
@@ -414,6 +414,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4252797202476740865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5651201004990537856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2302e2bbcb0aca444a6fb0abb4f15d15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GuageBar
+  fill: {fileID: 5137143171637514158}
 --- !u!1 &6962831178342903339
 GameObject:
   m_ObjectHideFlags: 0

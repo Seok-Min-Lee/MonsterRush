@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class GameCtrl : MonoBehaviour
 {
-    public static GameCtrl Instance;
+    public static GameCtrl Instance { get; private set; }
 
     [SerializeField] private ScreenSwitcher screenSwitcher;
     [SerializeField] private CanvasGroup canvasGroup;
@@ -19,13 +19,8 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private GameObject pauseWindow;
     [SerializeField] private RewardWindow rewardWindow;
     [SerializeField] private EndingWindow endingWindow;
-    [SerializeField] private GameObject settingWindow;
+    [SerializeField] private SettingWindow settingWindow;
     [SerializeField] private TutorialWindow tutorialWindow;
-
-    [SerializeField] private Slider bgmSlider;
-    [SerializeField] private Slider sfxSlider;
-    [SerializeField] private Toggle leftHandToggle;
-    [SerializeField] private Toggle tutorialToggle;
 
     [SerializeField] private DataContainer dataContainer;
 
@@ -45,8 +40,8 @@ public class GameCtrl : MonoBehaviour
         {
             AudioManager.Instance.Load(() =>
             {
-                float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
-                float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
+                float volumeBGM = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_BGM);
+                float volumeSFX = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_SFX);
 
                 AudioManager.Instance.Init(volumeBGM, volumeSFX);
                 AudioManager.Instance.PlayBGM(SoundKey.BGM);
@@ -58,30 +53,30 @@ public class GameCtrl : MonoBehaviour
 #endif
 
         screenSwitcher.Show(
-            () => 
-        {
-            canvasGroup.alpha = 0f;
-
-            // 튜토리얼 UI 표시
-            bool isVisibleTutorial = PlayerPrefs.GetInt("visibleTutorial") == 1;
-            StaticValues.isWait = isVisibleTutorial;
-            tutorialWindow.Init(isVisibleTutorial);
-
-            if (!StaticValues.isWait)
+            preprocess: () => 
             {
-                OnGameStart();
+                canvasGroup.alpha = 0f;
+
+                // 튜토리얼 UI 표시
+                bool isVisibleTutorial = PlayerPrefs.GetInt(PlayerPrefKeys.VISIBLE_TUTORIAL) == 1;
+                StaticValues.isWait = isVisibleTutorial;
+                tutorialWindow.Init(isVisibleTutorial);
+
+                if (!StaticValues.isWait)
+                {
+                    OnGameStart();
+                }
+
+                //
+                bool isLeftHand = PlayerPrefs.GetInt(PlayerPrefKeys.IS_LEFT_HAND) == 1;
+                Player.Instance.OnChangeUI(isLeftHand);
+                tutorialWindow.OnChangeUI(isLeftHand);
+            }, 
+            postprocess: () => 
+            {
+                canvasGroup.DOFade(1f, 0.25f);
             }
-
-            //
-            bool isLeftHand = PlayerPrefs.GetInt("isLeftHand") == 1;
-            Player.Instance.OnChangeUI(isLeftHand);
-            tutorialWindow.OnChangeUI(isLeftHand);
-        }, 
-            () =>
-        {
-            canvasGroup.DOFade(1f, 0.25f);
-
-        });
+        );
     }
     private void Update()
     {
@@ -98,11 +93,13 @@ public class GameCtrl : MonoBehaviour
 
         //
         timer += Time.deltaTime;
-
-        int minutes = (int)(timer / 60);
-        int seconds = (int)(timer % 60);
-
-        timeText.text = $"{minutes:00}:{seconds:00}";
+        timeText.text = Utils.FormatTimeTommss(timer);
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Player.Instance.OnClickLevelUp();
+        }
+#endif
     }
     public void OnClickPause()
     {
@@ -127,7 +124,7 @@ public class GameCtrl : MonoBehaviour
 
         //
         int[] playerStats = new int[4] { Player.Instance.Heal, Player.Instance.Magnet, Player.Instance.Speed, Player.Instance.Strength };
-        int[] weaponLevels = new int[4] { Player.Instance.weaponALevel, Player.Instance.weaponBLevel, Player.Instance.weaponCLevel, Player.Instance.weaponDLevel };
+        int[] weaponLevels = new int[4] { Player.Instance.WeaponALevel, Player.Instance.WeaponBLevel, Player.Instance.WeaponCLevel, Player.Instance.WeaponDLevel };
 
         GameResultLog newLog = new GameResultLog(
             characterNum: StaticValues.playerCharacterNum,
@@ -135,77 +132,56 @@ public class GameCtrl : MonoBehaviour
             killCount: Player.Instance.killCount,
             playerStats: playerStats,
             weaponLevels: weaponLevels,
-            playerAbilities: Player.Instance.PlayerAbilities,
-            weaponAbilities: Player.Instance.WeaponAbilities,
+            playerAbilities: Player.Instance.PlayerAbilities.ToArray(),
+            weaponAbilities: Player.Instance.WeaponAbilities.ToArray(),
             playTime: timer,
             dateTime: System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         );
-
-        if (!GameDataContainer.Instance.TryAddGameResultLog(newLog))
+                
+        if (!GameDataContainer.Instance.IsLoaded)
         {
             GameDataContainer.Instance.LoadGameResultLogs();
-            GameDataContainer.Instance.TryAddGameResultLog(newLog);
         }
-
+        GameDataContainer.Instance.TryAddGameResultLog(newLog);
         GameDataContainer.Instance.TrySaveGameResultLogs();
 
         //
         screenSwitcher.Hide(
-            () =>
+            preprocess: () =>
             {
                 StaticValues.isWait = true;
                 canvasGroup.DOFade(0f, 0.25f);
             },
-            () =>
-            {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");
-            });
+            postprocess: () => 
+            { 
+                UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title"); 
+            }
+        );
     }
     public void OnClickSetting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        settingWindow.SetActive(true);
+        settingWindow.Open();
         pauseWindow.SetActive(false);
-
-        bgmSlider.value = PlayerPrefs.GetFloat("volumeBGM");
-        sfxSlider.value = PlayerPrefs.GetFloat("volumeSFX");
-        tutorialToggle.isOn = PlayerPrefs.GetInt("visibleTutorial") == 1;
-        leftHandToggle.isOn = PlayerPrefs.GetInt("isLeftHand") == 1;
-    }
-    public void OnValueChangedVolumeBGM()
-    {
-        AudioManager.Instance.SetVolumeBGM(bgmSlider.value);
-    }
-    public void OnValueChangedVolumeSFX()
-    {
-        AudioManager.Instance.SetVolumeSFX(sfxSlider.value);
     }
     public void OnClickSaveSeting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        settingWindow.SetActive(false);
+        settingWindow.Save();
+        settingWindow.Close();
         pauseWindow.SetActive(true);
 
-        PlayerPrefs.SetFloat("volumeBGM", bgmSlider.value);
-        PlayerPrefs.SetFloat("volumeSFX", sfxSlider.value);
-        PlayerPrefs.SetInt("visibleTutorial", tutorialToggle.isOn ? 1 : 0);
-        PlayerPrefs.SetInt("isLeftHand", leftHandToggle.isOn ? 1 : 0);
+        tutorialWindow.OnChangeTutorial(settingWindow.IsTutorialVisible);
 
-        tutorialWindow.OnChangeTutorial(tutorialToggle.isOn);
-
-        Player.Instance.OnChangeUI(leftHandToggle.isOn);
-        tutorialWindow.OnChangeUI(leftHandToggle.isOn);
+        Player.Instance.OnChangeUI(settingWindow.IsLeftHand);
+        tutorialWindow.OnChangeUI(settingWindow.IsLeftHand);
     }
     public void OnClickCancelSetting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        settingWindow.SetActive(false);
+        settingWindow.Cancel();
+        settingWindow.Close();
         pauseWindow.SetActive(true);
-
-        float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
-        float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
-
-        AudioManager.Instance.Init(volumeBGM, volumeSFX);
     }
     public void OnGameStart()
     {

@@ -1483,8 +1483,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TitleCtrl, Assembly-CSharp
+      - m_Target: {fileID: 2881813032469861884}
+        m_TargetAssemblyTypeName: SettingWindow, Assembly-CSharp
         m_MethodName: OnValueChangedVolumeBGM
         m_Mode: 1
         m_Arguments:
@@ -2242,8 +2242,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TitleCtrl, Assembly-CSharp
+      - m_Target: {fileID: 2881813032469861884}
+        m_TargetAssemblyTypeName: SettingWindow, Assembly-CSharp
         m_MethodName: OnValueChangedVolumeSFX
         m_Mode: 1
         m_Arguments:
@@ -2732,6 +2732,7 @@ GameObject:
   - component: {fileID: 1756666825527322668}
   - component: {fileID: 4545435853600897318}
   - component: {fileID: 7255889284685400558}
+  - component: {fileID: 2881813032469861884}
   m_Layer: 5
   m_Name: Setting Window
   m_TagString: Untagged
@@ -2797,6 +2798,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2881813032469861884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8447873191732255596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad0a90d53723cc47bb12a236710f848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingWindow
+  bgmSlider: {fileID: 6556288959776971242}
+  sfxSlider: {fileID: 8689329210006185734}
+  leftHandToggle: {fileID: 2176516020441763699}
+  tutorialToggle: {fileID: 3979893108539754443}
 --- !u!1 &8483840392190479867
 GameObject:
   m_ObjectHideFlags: 0

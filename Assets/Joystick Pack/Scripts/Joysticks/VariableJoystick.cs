@@ -40,7 +40,7 @@ public class VariableJoystick : Joystick
         }
         base.OnPointerDown(eventData);
 
-        Player.Instance.character.PlayAnimation(PlayerCharacter.AniType.Move);
+        Player.Instance.Character.PlayAnimation(PlayerCharacter.AniType.Move);
     }
 
     public override void OnPointerUp(PointerEventData eventData)
@@ -50,7 +50,7 @@ public class VariableJoystick : Joystick
 
         base.OnPointerUp(eventData);
 
-        Player.Instance.character.PlayAnimation(PlayerCharacter.AniType.Idle);
+        Player.Instance.Character.PlayAnimation(PlayerCharacter.AniType.Idle);
     }
 
     protected override void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)

@@ -178,8 +178,7 @@ MonoBehaviour:
   - {fileID: -2983415483628201805, guid: 19e07f9d107e445408633f50457d456e, type: 3}
   - {fileID: 1880024034202856855, guid: 19e07f9d107e445408633f50457d456e, type: 3}
   - {fileID: -3888567672798316567, guid: 19e07f9d107e445408633f50457d456e, type: 3}
-  hpBar: {fileID: 8522427028877736098}
-  hpGuage: {fileID: 9048171145487687542}
+  hpGaugeBar: {fileID: 6148912552528682105}
 --- !u!61 &4886908280365089671
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -326,6 +325,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4173585132088697562}
   - component: {fileID: 9119908204494143401}
+  - component: {fileID: 6148912552528682105}
   m_Layer: 0
   m_Name: Hp Guage
   m_TagString: Untagged
@@ -407,3 +407,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6148912552528682105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8522427028877736098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2302e2bbcb0aca444a6fb0abb4f15d15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GuageBar
+  fill: {fileID: 9048171145487687542}

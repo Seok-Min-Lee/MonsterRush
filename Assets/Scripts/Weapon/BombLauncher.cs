@@ -7,8 +7,7 @@ public class BombLauncher : WeaponLauncher<Bomb>
 {
     public enum State { None, Fire, Reloading }
 
-    [SerializeField] private GameObject reloadUI;
-    [SerializeField] private Transform reloadGuage;
+    [SerializeField] private GaugeBar reloadGaugeBar;
     [SerializeField] private float reloadDelay;
 
     private State state = State.None;
@@ -19,7 +18,10 @@ public class BombLauncher : WeaponLauncher<Bomb>
 
     private float timer = 0f;
     private int bulletCount = 0;
-
+    private void Awake()
+    {
+        reloadGaugeBar.Init(maxValue: reloadDelay, currentValue: 0, visible: false);
+    }
     private void Update()
     {
         if (Time.timeScale == 0f || StaticValues.isWait || launchLevel == 0)
@@ -42,21 +44,20 @@ public class BombLauncher : WeaponLauncher<Bomb>
                     bulletCount = 0;
                     state = State.Reloading;
 
-                    reloadUI.SetActive(true);
-                    reloadGuage.localScale = new Vector3(0f, 1f, 1f);
+                    reloadGaugeBar.SetValue(0);
                 }
             }
         }
         else if (state == State.Reloading)
         {
+            reloadGaugeBar.SetValue(timer);
+
             if (timer > reloadDelay)
             {
                 state = State.Fire;
 
-                reloadUI.SetActive(false);
+                reloadGaugeBar.Hide();
             }
-
-            reloadGuage.localScale = new Vector3(timer / reloadDelay, 1f, 1f);
         }
     }
     public override void OnClickStateToggle()
@@ -64,7 +65,7 @@ public class BombLauncher : WeaponLauncher<Bomb>
         base.OnClickStateToggle();
 
         isUpper = !isUpper;
-        stateToggle.Init(isUpper);
+        stateToggle.SetState(isUpper);
         timer = 0f;
     }
     public override void Strengthen(int key)
@@ -132,7 +133,7 @@ public class BombLauncher : WeaponLauncher<Bomb>
         if (launchLevel == 0)
         {
             stateToggle.Unlock();
-            stateToggle.Init(isUpper);
+            stateToggle.SetState(isUpper);
 
             state = State.Fire;
             bulletCount = 0;

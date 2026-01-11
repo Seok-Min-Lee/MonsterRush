@@ -20,7 +20,7 @@ public class BombFlare : Weapon
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-            enemy.OnDamage(power + Player.Instance.Strength);
+            enemy.OnDamage(power + Player.Instance.AdditionalDamage);
 
             Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * (0.8f + knockbackLevel * 0.4f);
             enemy.OnKnockback(knockbackForce);
@@ -40,7 +40,7 @@ public class BombFlare : Weapon
             if (sqrMagnitude < r)
             {
                 Enemy enemy = enemies[i];
-                enemy.OnDamage(power + Player.Instance.Strength);
+                enemy.OnDamage(power + Player.Instance.AdditionalDamage);
 
                 Vector3 knockbackForce = (enemy.transform.position - transform.position).normalized * (0.8f + knockbackLevel * 0.4f);
                 enemy.OnKnockback(knockbackForce);

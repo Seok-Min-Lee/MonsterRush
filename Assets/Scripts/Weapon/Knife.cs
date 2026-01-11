@@ -41,7 +41,7 @@ public class Knife : Weapon
         else if (collision.CompareTag("Enemy"))
         {
             Enemy enemy = collision.GetComponent<Enemy>();
-            enemy.OnDamage(power + Player.Instance.Strength);
+            enemy.OnDamage(power + Player.Instance.AdditionalDamage);
 
             if (Random.Range(0f, 1f) < bleedRatio)
             {

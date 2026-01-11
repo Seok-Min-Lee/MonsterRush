@@ -38,7 +38,7 @@ public class SawContainer : WeaponContainer<Saw>
         base.OnClickStateToggle();
 
         isExpand = !isExpand;
-        stateToggle.Init(isExpand);
+        stateToggle.SetState(isExpand);
         Relocation();
     }
     public override void Strengthen(int key)
@@ -77,7 +77,7 @@ public class SawContainer : WeaponContainer<Saw>
         if (quantityLevel == 0)
         {
             stateToggle.Unlock();
-            stateToggle.Init(isExpand);
+            stateToggle.SetState(isExpand);
         }
 
         weapons[quantityLevel++].gameObject.SetActive(true);

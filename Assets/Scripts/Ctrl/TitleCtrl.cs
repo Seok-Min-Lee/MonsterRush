@@ -9,13 +9,8 @@ public class TitleCtrl : MonoBehaviour
 
     [SerializeField] private GameObject homeWindow;
     [SerializeField] private GameObject characterWindow;
-    [SerializeField] private GameObject settingWindow;
+    [SerializeField] private SettingWindow settingWindow;
     [SerializeField] private HistoryWindow historyWindow;
-
-    [SerializeField] private Slider bgmSlider;
-    [SerializeField] private Slider sfxSlider;
-    [SerializeField] private Toggle leftHandToggle;
-    [SerializeField] private Toggle tutorialToggle;
 
     private void Start()
     {
@@ -23,20 +18,26 @@ public class TitleCtrl : MonoBehaviour
         {
             AudioManager.Instance.Load(() =>
             {
-                float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
-                float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
+                float volumeBGM = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_BGM);
+                float volumeSFX = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_SFX);
 
                 AudioManager.Instance.Init(volumeBGM, volumeSFX);
                 AudioManager.Instance.PlayBGM(SoundKey.BGM);
             });
         }
 
-        screenSwitcher.Show(() => { canvasGroup.alpha = 0f; }, () =>
-        {
-            homeWindow.SetActive(true);
-            characterWindow.SetActive(false);
-            canvasGroup.DOFade(1f, 0.25f);
-        });
+        screenSwitcher.Show(
+            preprocess: () => 
+            {
+                canvasGroup.alpha = 0f; 
+            }, 
+            postprocess: () =>
+            {
+                homeWindow.SetActive(true);
+                characterWindow.SetActive(false);
+                canvasGroup.DOFade(1f, 0.25f);
+            }
+        );
     }
     private void Update()
     {
@@ -48,13 +49,13 @@ public class TitleCtrl : MonoBehaviour
                 characterWindow.SetActive(false);
                 historyWindow.gameObject.SetActive(false);
             }
-            else if (settingWindow.activeSelf)
+            else if (settingWindow.gameObject.activeSelf)
             {
-                settingWindow.SetActive(false);
+                settingWindow.Close();
                 homeWindow.SetActive(true);
 
-                float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
-                float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
+                float volumeBGM = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_BGM);
+                float volumeSFX = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_SFX);
 
                 AudioManager.Instance.Init(volumeBGM, volumeSFX);
             }
@@ -88,14 +89,15 @@ public class TitleCtrl : MonoBehaviour
 
         
         screenSwitcher.Hide(
-            () => 
-        {
-            canvasGroup.DOFade(0f, 0.25f);
-        },
-            () => 
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("02_Game");
-        });
+            preprocess: () => 
+            {
+                canvasGroup.DOFade(0f, 0.25f);
+            },
+            postprocess: () => 
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("02_Game");
+            }
+        );
     }
     public void OnClickHistory()
     {
@@ -106,42 +108,21 @@ public class TitleCtrl : MonoBehaviour
     public void OnClickSetting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        settingWindow.SetActive(true);
+        settingWindow.Open();
         homeWindow.SetActive(false);
-
-        bgmSlider.value = PlayerPrefs.GetFloat("volumeBGM");
-        sfxSlider.value = PlayerPrefs.GetFloat("volumeSFX");
-        tutorialToggle.isOn = PlayerPrefs.GetInt("visibleTutorial") == 1;
-        leftHandToggle.isOn = PlayerPrefs.GetInt("isLeftHand") == 1;
-    }
-    public void OnValueChangedVolumeBGM()
-    {
-        AudioManager.Instance.SetVolumeBGM(bgmSlider.value);
-    }
-    public void OnValueChangedVolumeSFX()
-    {
-        AudioManager.Instance.SetVolumeSFX(sfxSlider.value);
     }
     public void OnClickSaveSeting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        settingWindow.SetActive(false);
+        settingWindow.Save();
+        settingWindow.Close();
         homeWindow.SetActive(true);
-
-        PlayerPrefs.SetFloat("volumeBGM", bgmSlider.value);
-        PlayerPrefs.SetFloat("volumeSFX", sfxSlider.value);
-        PlayerPrefs.SetInt("visibleTutorial", tutorialToggle.isOn ? 1 : 0);
-        PlayerPrefs.SetInt("isLeftHand", leftHandToggle.isOn ? 1 : 0);
     }
     public void OnClickCancelSetting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-        settingWindow.SetActive(false);
+        settingWindow.Cancel();
+        settingWindow.Close();
         homeWindow.SetActive(true);
-
-        float volumeBGM = PlayerPrefs.GetFloat("volumeBGM");
-        float volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
-
-        AudioManager.Instance.Init(volumeBGM, volumeSFX);
     }
 }

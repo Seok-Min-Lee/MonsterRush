@@ -8,7 +8,7 @@ public class Weapon : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Enemy>().OnDamage(power + Player.Instance.Strength);
+            collision.gameObject.GetComponent<Enemy>().OnDamage(power + Player.Instance.AdditionalDamage);
         }
     }
 }

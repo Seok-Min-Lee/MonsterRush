@@ -19,7 +19,7 @@ public class Saw : Weapon
         if (collision.CompareTag("Enemy"))
         {
             Enemy enemy = collision.GetComponent<Enemy>();
-            enemy.OnDamage(power + powerLevel * 2 + Player.Instance.Strength);
+            enemy.OnDamage(power + powerLevel * 2 + Player.Instance.AdditionalDamage);
 
             if (isKnockback)
             {
