@@ -13,8 +13,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] [Range(0, 7)] protected int groupId;
     [SerializeField] protected SoundKey deathSFX;
 
-    [SerializeField] protected DataContainer dataContainer;
-
     [Header("level Monitor")]
     [SerializeField] protected int hpLevel = 0;
     [SerializeField] protected int powerLevel = 0;
@@ -60,7 +58,7 @@ public class Enemy : MonoBehaviour
         collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
 
-        enemyInfo = dataContainer.enemies[groupId];
+        enemyInfo = DataAssetService.Instance.EnemyDataAsset.Enemies[groupId];
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

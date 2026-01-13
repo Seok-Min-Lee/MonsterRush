@@ -17,6 +17,7 @@ public class InitCtrl : MonoBehaviour
 
         // 게임 기록 불러오기
         GameDataContainer.Instance.LoadGameResultLogs();
+        DataAssetService.Instance.Load();
 
         UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");
     }

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59ae2551d1948e543b2ada6fd0624850, type: 3}
-  m_Name: DataContainer
-  m_EditorClassIdentifier: Assembly-CSharp::DataContainer
+  m_Script: {fileID: 11500000, guid: e1704953b7c71be48b1677b9c36c67f2, type: 3}
+  m_Name: RewardDataAsset
+  m_EditorClassIdentifier: Assembly-CSharp::RewardDataAsset
   rewards:
   - groupId: 1000
     index: 0
@@ -172,74 +172,3 @@ MonoBehaviour:
     head: "<color=#80ff00>\uCD08\uC7AC\uC0DD \uB2A5\uB825</color>"
     desc: "\uD68C\uBCF5 \uCFE8\uD0C0\uC784\uC774 \uC904\uC5B4\uB4ED\uB2C8\uB2E4."
     type: 1
-  healItem:
-    type: 1
-    value: 1
-    sprite: {fileID: 21300000, guid: 33056c87da5a4c14c9a1d4c46cdfa0b5, type: 3}
-  expItems:
-  - type: 0
-    value: 2
-    sprite: {fileID: 7293598183456022363, guid: 1ddc9afd21fec77489b1248d18f31b68, type: 3}
-  - type: 0
-    value: 3
-    sprite: {fileID: -5728686177044832811, guid: b1f24b3bc2e2f1d4b858657ad5c115a0, type: 3}
-  - type: 0
-    value: 4
-    sprite: {fileID: -4570538037665054336, guid: 3d6be91968cb95546ac95aeff5e52f84, type: 3}
-  - type: 0
-    value: 6
-    sprite: {fileID: 4138223980208024357, guid: 5100b75572e484e458e4340e2afe9454, type: 3}
-  - type: 0
-    value: 8
-    sprite: {fileID: 3776312371561069292, guid: 031678d507e557a41b7a16fc33bf6c39, type: 3}
-  - type: 0
-    value: 10
-    sprite: {fileID: 4121880872312635667, guid: ffc9f271fad56c243a45f100b9dc6778, type: 3}
-  - type: 0
-    value: 13
-    sprite: {fileID: 837517196756356485, guid: 131e485692e27e84c86170dad18cda85, type: 3}
-  - type: 0
-    value: 16
-    sprite: {fileID: 1775669009216684005, guid: a2c110585eb710b408972fbc3b96136d, type: 3}
-  specialItems:
-  - type: 2
-    value: 1
-    sprite: {fileID: 871354900, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
-  - type: 3
-    value: 1
-    sprite: {fileID: 2141877078, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
-  - type: 4
-    value: 1
-    sprite: {fileID: 1770861854, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
-  - type: 5
-    value: 1
-    sprite: {fileID: -1959837590, guid: 6e0fa5d690c1a854691978e23ea7ea1f, type: 3}
-  enemies:
-  - hp: 10
-    power: 1
-    speed: 1.1
-  - hp: 20
-    power: 2
-    speed: 1.2
-  - hp: 30
-    power: 3
-    speed: 1.3
-  - hp: 40
-    power: 4
-    speed: 1.4
-  - hp: 50
-    power: 5
-    speed: 1.5
-  - hp: 60
-    power: 6
-    speed: 1.6
-  - hp: 70
-    power: 7
-    speed: 1.7
-  - hp: 80
-    power: 8
-    speed: 1.8
-  superArmorEnemy:
-    hp: 200
-    power: 10
-    speed: 1.5

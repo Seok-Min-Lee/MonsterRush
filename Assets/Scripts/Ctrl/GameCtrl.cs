@@ -20,16 +20,20 @@ public class GameCtrl : MonoBehaviour
     [SerializeField] private SettingWindow settingWindow;
     [SerializeField] private TutorialWindow tutorialWindow;
 
-    [SerializeField] private DataContainer dataContainer;
-
     private int lastLevel = 1;
     private int levelUpCount = 0;
     private float timer = 0f;
     private void Awake()
     {
         Instance = this;
+#if UNITY_EDITOR
+        if (!DataAssetService.Instance.IsLoaded)
+        {
+            DataAssetService.Instance.Load();
+        }
+#endif
 
-        rewardWindow.Init(dataContainer.rewards);
+        rewardWindow.Init(DataAssetService.Instance.RewardDataAsset.Rewards);
     }
     private void Start()
     {

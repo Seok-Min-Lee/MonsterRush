@@ -8,8 +8,6 @@ public class ItemContainer : MonoBehaviour
     [SerializeField] private Item prefab;
     [SerializeField] private ItemBox itemBoxPrefab;
 
-    [SerializeField] private DataContainer dataContainer;
-
     private Queue<Item> pool = new Queue<Item>();
     private List<Item> actives = new List<Item>();
 
@@ -35,12 +33,12 @@ public class ItemContainer : MonoBehaviour
             {
                 Vector3 offset = (Vector3)(Random.insideUnitCircle.normalized * 0.1f);
 
-                BatchItem(dataContainer.healItem, position + offset);
-                BatchItem(dataContainer.expItems[index], position - offset);
+                BatchItem(DataAssetService.Instance.ItemDataAsset.HealItem, position + offset);
+                BatchItem(DataAssetService.Instance.ItemDataAsset.ExpItems[index], position - offset);
             }
             else
             {
-                BatchItem(dataContainer.expItems[index], position);
+                BatchItem(DataAssetService.Instance.ItemDataAsset.ExpItems[index], position);
             }
         }
     }
@@ -73,7 +71,7 @@ public class ItemContainer : MonoBehaviour
                           itemBoxPool.Dequeue() :
                           GameObject.Instantiate<ItemBox>(itemBoxPrefab, transform);
 
-        itemBox.Init(dataContainer.specialItems[Random.Range(0, dataContainer.specialItems.Count)], position);
+        itemBox.Init(DataAssetService.Instance.ItemDataAsset.randomSpecialItem, position);
         itemBoxes.Add(itemBox);
     }
     public void Charge(Item item)

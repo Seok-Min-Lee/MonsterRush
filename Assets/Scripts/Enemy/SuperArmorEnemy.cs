@@ -8,7 +8,7 @@ public class SuperArmorEnemy : Enemy
         collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
 
-        enemyInfo = dataContainer.enemies[groupId];
+        enemyInfo = DataAssetService.Instance.EnemyDataAsset.Enemies[groupId];
     }
     public override void OnDamage(int damage)
     {
