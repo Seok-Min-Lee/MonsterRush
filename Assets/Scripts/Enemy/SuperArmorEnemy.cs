@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SuperArmorEnemy : Enemy
 {
@@ -8,7 +8,7 @@ public class SuperArmorEnemy : Enemy
         collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
 
-        enemyInfo = dataContainer.enemies[itemIndex];
+        enemyInfo = dataContainer.enemies[groupId];
     }
     public override void OnDamage(int damage)
     {
@@ -40,7 +40,7 @@ public class SuperArmorEnemy : Enemy
         {
             OnDeath();
 
-            ItemContainer.Instance.Batch(itemIndex, transform.position);
+            ItemContainer.Instance.Batch(groupId, transform.position);
             Player.Instance.IncreaseKill();
         }
     }

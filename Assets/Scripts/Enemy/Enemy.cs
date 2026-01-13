@@ -1,8 +1,5 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -13,52 +10,61 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected ParticleSystem poisonParticle;
     [SerializeField] protected GaugeBar hpGaugeBar;
 
-    [SerializeField] [Range(0, 7)] protected int itemIndex;
+    [SerializeField] [Range(0, 7)] protected int groupId;
     [SerializeField] protected SoundKey deathSFX;
-
-    [Header("Current Value")]
-    [SerializeField] protected int hp = 1;
-    [SerializeField] protected int hpMax = 1;
-    [SerializeField] protected int power;
-    [SerializeField] protected float speed;
-    [SerializeField] protected bool isAddict = false;
-    [SerializeField] protected bool isBleed = false;
-    [SerializeField] protected bool isSlow = false;
-    protected int addictDamage = 0;
-    protected float addictInterval = 0.5f;
-    protected float bleedPower = 0f;
-    protected float slowPower = 0f;
 
     [SerializeField] protected DataContainer dataContainer;
 
-    [Header("level Value")]
+    [Header("level Monitor")]
     [SerializeField] protected int hpLevel = 0;
     [SerializeField] protected int powerLevel = 0;
     [SerializeField] protected int speedLevel = 0;
 
-    protected EnemyPool pool;
     public EnemyInfo enemyInfo { get; protected set; }
     public BoxCollider2D collider { get; protected set; }
     public Rigidbody2D rigidbody { get; protected set; }
     public Vector3 toPlayer { get; protected set; } = Vector3.zero;
+    public State state { get; protected set; } = State.Live;
 
+    protected EnemyPool pool;
+
+    // 기본 속성
+    protected int hp = 1;
+    protected int hpMax = 1;
+    protected int power;
+    protected float speed;
+
+    // 중독
+    protected bool isAddict = false;
+    protected int addictDamage = 0;
+    protected float addictInterval = 0.5f;
     protected float addictTimer = 0f;
+
+    // 출혈
+    protected bool isBleed = false;
+    protected float bleedPower = 0f;
     protected float bleedTimer = 0f;
+
+    // 둔화
+    protected bool isSlow = false;
+    protected float slowPower = 0f;
+
+    // 넉백
+    protected bool isKnockback = false;
     protected float knockbackTimer = 0f;
 
-    public State state = State.Live;
-    protected bool isKnockback = false;
+    // 슈퍼아머
     protected bool isSuperArmor = false;
     private void Awake()
     {
         collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
 
-        enemyInfo = dataContainer.enemies[itemIndex];
+        enemyInfo = dataContainer.enemies[groupId];
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (state == State.Live && !StaticValues.isWait && collision.gameObject.CompareTag("Player"))
+        if (state == State.Live && !StaticValues.isWait && collision.gameObject.CompareTag(TagKeys.PLAYER))
         {
             Player.Instance.OnDamage(power);
             OnDeath();
@@ -71,10 +77,10 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        // animation
+        // 애니메이션
         character.UpdateTick(time);
 
-        // addict
+        // 중독 처리
         if (isAddict)
         {
             if (addictTimer > addictInterval)
@@ -86,7 +92,7 @@ public class Enemy : MonoBehaviour
             addictTimer += time;
         }
 
-        // bleed
+        // 출혈 처리
         if (isBleed)
         {
             if (bleedTimer > 2f)
@@ -98,9 +104,10 @@ public class Enemy : MonoBehaviour
             bleedTimer += time;
         }
 
-        // move
+        // 이동
         if (Player.Instance != null)
         {
+            // 넉백 처리
             if (isKnockback)
             {
                 knockbackTimer += time;
@@ -112,6 +119,7 @@ public class Enemy : MonoBehaviour
                     rigidbody.linearVelocity = Vector2.zero;
                 }
             }
+            // 평상시 이동 처리
             else
             {
                 toPlayer = (Player.Instance.transform.position - transform.position);
@@ -126,9 +134,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public virtual void Spawn(EnemyPool pool, int hpLevel, int powerLevel, int speedLevel, Vector3 position, Quaternion rotation)
+    public virtual void Spawn(
+        EnemyPool pool, 
+        int hpLevel, 
+        int powerLevel, 
+        int speedLevel, 
+        Vector3 position, 
+        Quaternion rotation
+    )
     {
-        //
         state = State.Live;
 
         this.pool = pool;
@@ -139,7 +153,7 @@ public class Enemy : MonoBehaviour
         transform.position = position;
         transform.rotation = rotation;
 
-        //
+        // 스탯 초기화
         hpMax = (int)(enemyInfo.hp * (1 + 0.1f * hpLevel));
         power = (int)(enemyInfo.power * (1 + 0.1f * powerLevel));
         speed = enemyInfo.speed * (1 + 0.1f * speedLevel);
@@ -166,7 +180,7 @@ public class Enemy : MonoBehaviour
 
         Sequence seq = DOTween.Sequence();
 
-        // death ó�� ����
+        // death 처리 로직
         seq.AppendCallback(() =>
         {
             AudioManager.Instance.PlaySFX(deathSFX);
@@ -186,10 +200,10 @@ public class Enemy : MonoBehaviour
             hpGaugeBar.Hide();
         });
 
-        // ��ƼŬ ��� �ð�
+        // 파티클 재생 시간
         seq.AppendInterval(1f);
 
-        // ��Ȱ��ȭ
+        // 비활성화
         seq.AppendCallback(() =>
         {
             collider.enabled = true;
@@ -220,7 +234,7 @@ public class Enemy : MonoBehaviour
         {
             OnDeath();
 
-            ItemContainer.Instance.Batch(itemIndex, transform.position);
+            ItemContainer.Instance.Batch(groupId, transform.position);
             Player.Instance.IncreaseKill();
         }
     }

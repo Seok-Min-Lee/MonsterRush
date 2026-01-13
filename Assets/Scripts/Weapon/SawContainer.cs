@@ -1,7 +1,4 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+ï»¿using DG.Tweening;
 using UnityEngine;
 
 public class SawContainer : WeaponContainer<Saw>
@@ -45,18 +42,18 @@ public class SawContainer : WeaponContainer<Saw>
     {
         switch (key)
         {
-            case 0: // È¹µæ
-            case 1: // °³¼ö Áõ°¡
+            case 0: // íšë“
+            case 1: // ê°œìˆ˜ ì¦ê°€
                 StrengthenFirst();
                 break;
-            case 2: // ÇÇÇØ·® Áõ°¡
+            case 2: // í”¼í•´ëŸ‰ ì¦ê°€
                 powerLevel++;
                 for (int i = 0; i < weapons.Count; i++)
                 {
                     weapons[i].PowerUp(powerLevel);
                 }
                 break;
-            case 99: // ³Ë¹é È°¼ºÈ­
+            case 99: // ë„‰ë°± í™œì„±í™”
                 isKnockback = true;
                 for (int i = 0; i < weapons.Count; i++)
                 {
@@ -85,7 +82,7 @@ public class SawContainer : WeaponContainer<Saw>
     }
     private void Relocation()
     {
-        // ÀÚ½ÄµéÀ» ¿ø À§¿¡ µ¿ÀÏÇÑ °£°İÀ¸·Î ¹èÄ¡
+        // ìì‹ë“¤ì„ ì› ìœ„ì— ë™ì¼í•œ ê°„ê²©ìœ¼ë¡œ ë°°ì¹˜
         float radius = isExpand ? radiusMax : radiusMin;
 
         for (int i = 0; i < quantityLevel; i++)

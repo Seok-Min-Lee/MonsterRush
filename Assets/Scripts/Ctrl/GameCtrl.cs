@@ -1,10 +1,8 @@
-using DG.Tweening;
-using System.Collections;
+ï»¿using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameCtrl : MonoBehaviour
 {
@@ -24,6 +22,7 @@ public class GameCtrl : MonoBehaviour
 
     [SerializeField] private DataContainer dataContainer;
 
+    private int lastLevel = 1;
     private int levelUpCount = 0;
     private float timer = 0f;
     private void Awake()
@@ -57,7 +56,7 @@ public class GameCtrl : MonoBehaviour
             {
                 canvasGroup.alpha = 0f;
 
-                // Æ©Åä¸®¾ó UI Ç¥½Ã
+                // íŠœí† ë¦¬ì–¼ UI í‘œì‹œ
                 bool isVisibleTutorial = PlayerPrefs.GetInt(PlayerPrefKeys.VISIBLE_TUTORIAL) == 1;
                 StaticValues.isWait = isVisibleTutorial;
                 tutorialWindow.Init(isVisibleTutorial);
@@ -67,7 +66,7 @@ public class GameCtrl : MonoBehaviour
                     OnGameStart();
                 }
 
-                //
+                // ì¢Œ/ìš°ì†ì¡ì´ ì„¤ì •
                 bool isLeftHand = PlayerPrefs.GetInt(PlayerPrefKeys.IS_LEFT_HAND) == 1;
                 Player.Instance.OnChangeUI(isLeftHand);
                 tutorialWindow.OnChangeUI(isLeftHand);
@@ -122,7 +121,7 @@ public class GameCtrl : MonoBehaviour
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
         Time.timeScale = 1f;
 
-        //
+        // ê²Œì„ ê²°ê³¼ ê¸°ë¡ ì €ì¥
         int[] playerStats = new int[4] { Player.Instance.Heal, Player.Instance.Magnet, Player.Instance.Speed, Player.Instance.Strength };
         int[] weaponLevels = new int[4] { Player.Instance.WeaponALevel, Player.Instance.WeaponBLevel, Player.Instance.WeaponCLevel, Player.Instance.WeaponDLevel };
 
@@ -137,7 +136,7 @@ public class GameCtrl : MonoBehaviour
             playTime: timer,
             dateTime: System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         );
-                
+
         if (!GameDataContainer.Instance.IsLoaded)
         {
             GameDataContainer.Instance.LoadGameResultLogs();
@@ -145,7 +144,7 @@ public class GameCtrl : MonoBehaviour
         GameDataContainer.Instance.TryAddGameResultLog(newLog);
         GameDataContainer.Instance.TrySaveGameResultLogs();
 
-        //
+        // ì”¬ ì „í™˜
         screenSwitcher.Hide(
             preprocess: () =>
             {
@@ -167,27 +166,33 @@ public class GameCtrl : MonoBehaviour
     public void OnClickSaveSeting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+
+        // ì„¤ì • ì €ì¥
         settingWindow.Save();
         settingWindow.Close();
-        pauseWindow.SetActive(true);
 
+        // íŠœí† ë¦¬ì–¼ UI í‘œì‹œ ì—¬ë¶€ ë° ì¢Œ/ìš°ì†ì¡ì´ ì„¤ì • ì ìš©
         tutorialWindow.OnChangeTutorial(settingWindow.IsTutorialVisible);
-
         Player.Instance.OnChangeUI(settingWindow.IsLeftHand);
         tutorialWindow.OnChangeUI(settingWindow.IsLeftHand);
+
+        pauseWindow.SetActive(true);
     }
     public void OnClickCancelSetting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+
+        // ì„¤ì • ì·¨ì†Œ
         settingWindow.Cancel();
         settingWindow.Close();
+
         pauseWindow.SetActive(true);
     }
     public void OnGameStart()
     {
         StaticValues.isWait = false;
         tutorialWindow.OnGameStart();
-        normalWindow.Alert("¸ñÇ¥: Lv 80 µµ´Ş!");
+        normalWindow.Alert($"ëª©í‘œ: Lv {StaticValues.CHECKPOINT_LEVEL} ë„ë‹¬!");
     }
     public void OnGameChallenge()
     {
@@ -198,36 +203,30 @@ public class GameCtrl : MonoBehaviour
         seq.AppendInterval(0.25f);
         seq.AppendCallback(() => normalWindow.Show());
         seq.AppendInterval(1f);
-        seq.AppendCallback(() => normalWindow.Alert("¸ñÇ¥: ¿À·¡ »ì¾Æ³²±â!\n<color=#FF8000>ÁÖÀÇ! °­ÇÑ Àû µîÀå..!</color>"));
+        seq.AppendCallback(() => normalWindow.Alert("ëª©í‘œ: ì˜¤ë˜ ì‚´ì•„ë‚¨ê¸°!\n<color=#FF8000>ì£¼ì˜! ê°•í•œ ì  ë“±ì¥..!</color>"));
     }
     public void OnLevelUp()
     {
         levelUpCount++;
     }
-    public void OnClickReward(RewardInfo rewardInfo)
+    public void OnReward(RewardInfo rewardInfo)
     {
-        rewardWindow.OnClickReward(rewardInfo);
-
-        if (--levelUpCount > 0)
-        {
-            LevelUpProcess();
-        }
-        else
-        {
-            Time.timeScale = 1f;
-            tutorialWindow.OnReward(rewardInfo);
-        }
+        Time.timeScale = 1f;
+        tutorialWindow.OnReward(rewardInfo);
     }
     public void OnGameEnd(GameResult result)
     {
         switch (result)
         {
+            // ê²Œì„ í´ë¦¬ì–´
             case GameResult.Clear:
                 OnGameEndClear();
                 break;
+            // ê²Œì„ íŒ¨ë°°
             case GameResult.Defeat:
                 OnGameEndDefeat();
                 break;
+            // ì±Œë¦°ì§€ ëª¨ë“œ ì¢…ë£Œ
             case GameResult.Challenge:
                 OnGameEndChallenge();
                 break;
@@ -237,25 +236,26 @@ public class GameCtrl : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        // ¿£µù ¿¬Ãâ
+        // ì—”ë”© ì—°ì¶œ
         seq.AppendCallback(() =>
         {
             StaticValues.isWait = true;
             AudioManager.Instance.PlaySFX(SoundKey.GameEndClear);
 
-            normalWindow.Alert("¸ñÇ¥ ´Ş¼º! (Lv 80 µµ´Ş)");
+            normalWindow.Alert("ëª©í‘œ ë‹¬ì„±! (Lv 80 ë„ë‹¬)");
         });
 
-        // µô·¹ÀÌ
+        // ë”œë ˆì´
         seq.AppendInterval(2f);
 
+        // ì—”ë”© ì—°ì¶œ
         seq.AppendCallback(() =>
         {
             normalWindow.Hide();
             endingWindow.Init(GameResult.Clear, timer);
         });
 
-        // ¸ó½ºÅÍ Á¦°Å
+        // ë‚¨ì•„ìˆëŠ” ëª¬ìŠ¤í„° ì œê±°
         List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
         foreach (Enemy enemy in enemies.OrderBy(e => e.toPlayer.sqrMagnitude))
         {
@@ -265,15 +265,15 @@ public class GameCtrl : MonoBehaviour
             seq.AppendInterval(Time.deltaTime);
         }
 
-        // ¾ÆÀÌÅÛ ¹Ú½º ¿ÀÇÂ
+        // ë‚¨ì•„ìˆëŠ” ì•„ì´í…œ ë°•ìŠ¤ ì˜¤í”ˆ
         List<ItemBox> boxes = ItemContainer.Instance.GetItemBoxAll();
         for (int i = 0; i < boxes.Count; i++)
         {
-            seq.AppendCallback(() => boxes[i].onOpen());
+            seq.AppendCallback(() => boxes[i].OnOpen());
             seq.AppendInterval(Time.deltaTime);
         }
 
-        // ¾ÆÀÌÅÛ Èí¼ö
+        // ë‚¨ì•„ìˆëŠ” ì•„ì´í…œ í¡ìˆ˜
         List<Item> items = ItemContainer.Instance.GetUndetectedsAll();
         Vector3 playerPosition = Player.Instance.transform.position;
 
@@ -298,10 +298,10 @@ public class GameCtrl : MonoBehaviour
             seq.AppendInterval(Time.deltaTime);
         }
 
-        // µô·¹ÀÌ
+        // ë”œë ˆì´
         seq.AppendInterval(1f);
 
-        // °á°úÃ¢ Ç¥½Ã
+        // ê²°ê³¼ì°½ í‘œì‹œ
         seq.AppendCallback(() =>
         {
             endingWindow.gameObject.SetActive(true);
@@ -312,7 +312,7 @@ public class GameCtrl : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        // ¿£µù ¿¬Ãâ
+        // ì—”ë”© ì—°ì¶œ
         seq.AppendCallback(() =>
         {
             AudioManager.Instance.PlaySFX(SoundKey.GameEndDefeat);
@@ -321,10 +321,10 @@ public class GameCtrl : MonoBehaviour
             endingWindow.Init(GameResult.Defeat, timer);
         });
 
-        // µô·¹ÀÌ
+        // ë”œë ˆì´
         seq.AppendInterval(2.5f);
 
-        // °á°úÃ¢ Ç¥½Ã
+        // ê²°ê³¼ì°½ í‘œì‹œ
         seq.AppendCallback(() =>
         {
             endingWindow.gameObject.SetActive(true);
@@ -335,7 +335,7 @@ public class GameCtrl : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        // ¿£µù ¿¬Ãâ
+        // ì—”ë”© ì—°ì¶œ
         seq.AppendCallback(() =>
         {
             AudioManager.Instance.PlaySFX(SoundKey.GameEndChallenge);
@@ -344,10 +344,10 @@ public class GameCtrl : MonoBehaviour
             endingWindow.Init(GameResult.Challenge, timer);
         });
 
-        // µô·¹ÀÌ
+        // ë”œë ˆì´
         seq.AppendInterval(2.5f);
 
-        // °á°úÃ¢ Ç¥½Ã
+        // ê²°ê³¼ì°½ í‘œì‹œ
         seq.AppendCallback(() =>
         {
             endingWindow.gameObject.SetActive(true);
@@ -359,7 +359,12 @@ public class GameCtrl : MonoBehaviour
         Time.timeScale = 0f;
 
         AudioManager.Instance.PlaySFX(SoundKey.PlayerLevelUp);
-        EnemyContainer.Instance.OnLevelUp();
-        rewardWindow.Open();
+
+        int targetLevel = lastLevel + 1;
+        EnemyContainer.Instance.UpdateByLevel(targetLevel);
+        rewardWindow.OpenByLevel(targetLevel);
+
+        lastLevel = targetLevel;
+        levelUpCount--;
     }
 }

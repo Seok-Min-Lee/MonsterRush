@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Knife : Weapon
 {
@@ -38,7 +36,7 @@ public class Knife : Weapon
             return;
         }
 
-        else if (collision.CompareTag("Enemy"))
+        else if (collision.CompareTag(TagKeys.ENEMY))
         {
             Enemy enemy = collision.GetComponent<Enemy>();
             enemy.OnDamage(power + Player.Instance.AdditionalDamage);
@@ -54,9 +52,9 @@ public class Knife : Weapon
                 isUsed = true;
             }
         }
-        else if (collision.CompareTag("ItemBox"))
+        else if (collision.CompareTag(TagKeys.ITEM_BOX))
         {
-            collision.GetComponent<ItemBox>().onHit();
+            collision.GetComponent<ItemBox>().OnHit();
 
             if (!isPenetrate)
             {

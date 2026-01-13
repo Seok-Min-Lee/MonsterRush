@@ -1,8 +1,4 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class KnifeLauncher : WeaponLauncher<Knife>
 {
@@ -27,7 +23,7 @@ public class KnifeLauncher : WeaponLauncher<Knife>
         timer += Time.deltaTime;
         if (timer > interval)
         {
-            // °¡Àå °¡±î¿î ÀûÀ» Ã£±â
+            // ê°€ì¥ ê°€ê¹Œìš´ ì ì„ ì°¾ê¸°
             Enemy nearest = null;
             float sqrMagnitude = float.MaxValue;
 
@@ -62,14 +58,14 @@ public class KnifeLauncher : WeaponLauncher<Knife>
     {
         switch (key)
         {
-            case 0: // È¹µæ
-            case 1: // °³¼ö Áõ°¡
+            case 0: // íšë“
+            case 1: // ê°œìˆ˜ ì¦ê°€
                 StrengthenFirst();
                 break;
-            case 2: // È®·ü Áõ°¡
+            case 2: // í™•ë¥  ì¦ê°€
                 bleedLevel++;
                 break;
-            case 99: // °üÅë È°¼ºÈ­
+            case 99: // ê´€í†µ í™œì„±í™”
                 isPenetrate = true;
                 break;
         }
@@ -99,7 +95,7 @@ public class KnifeLauncher : WeaponLauncher<Knife>
         Vector3 position = Player.Instance.transform.position + (Vector3)Random.insideUnitCircle * 0.25f;
         Vector3 direction = (target - position).normalized;
 
-        // ¹æÇâÀ» °¢µµ·Î º¯È¯ (¶óµğ¾È ¡æ µµ)
+        // ë°©í–¥ì„ ê°ë„ë¡œ ë³€í™˜ (ë¼ë””ì•ˆ â†’ ë„)
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         //
         bullet.OnShot(

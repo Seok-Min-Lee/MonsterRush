@@ -1,7 +1,12 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using TMPro;
 using UnityEngine;
-public enum GameResult { Clear, Defeat, Challenge }
+public enum GameResult 
+{ 
+    Clear, 
+    Defeat, 
+    Challenge
+}
 public class EndingWindow : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI head;
@@ -37,12 +42,12 @@ public class EndingWindow : MonoBehaviour
 
         if (result != GameResult.Defeat)
         {
-            head.text = "½Â¸®!!";
+            head.text = "ìŠ¹ë¦¬!!";
             head.color = Color.yellow;
         }
         else
         {
-            head.text = "ÆÐ¹è..";
+            head.text = "íŒ¨ë°°..";
             head.color = new Color(0.125f, 0.125f, 0.125f, 1f);
         }
 

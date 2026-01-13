@@ -1,4 +1,4 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using UnityEngine;
 
 public class EffectArea : Weapon
@@ -39,9 +39,9 @@ public class EffectArea : Weapon
     {
         Refresh(value);
 
-        // ÁÖº¯ Àû Å½»ö ÈÄ È¿°ú Àû¿ë
+        // ì£¼ë³€ ì  íƒìƒ‰ í›„ íš¨ê³¼ ì ìš©
         ContactFilter2D contactFilter = new ContactFilter2D();
-        contactFilter.layerMask = LayerMask.GetMask("Enemy");
+        contactFilter.layerMask = LayerMask.GetMask(LayerKeys.ENEMY);
 
         int detectCount = Physics2D.OverlapCircle(
             point: Player.Instance.transform.position,
@@ -100,7 +100,7 @@ public class EffectArea : Weapon
         Vector2 textureSize = Vector2.one * (2f + level * 0.25f);
         float collierRadius = 1f + (level * 0.125f);
 
-        // ¸ð¼Ç Àû¿ë
+        // ëª¨ì…˜ ì ìš©
         maskTransform.DOScale(maskScale, 0.5f);
         DOTween.To(() => textureRenderer.size, x => textureRenderer.size = x, textureSize, 0.5f);
         DOTween.To(() => collider.radius, x => collider.radius = x, collierRadius, 0.5f);
@@ -113,7 +113,7 @@ public class EffectArea : Weapon
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag(TagKeys.ENEMY))
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
 
@@ -136,7 +136,7 @@ public class EffectArea : Weapon
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag(TagKeys.ENEMY))
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             enemy.OffAddict();

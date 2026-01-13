@@ -413,8 +413,9 @@ MonoBehaviour:
   deathParticle: {fileID: 6518833572500671380}
   poisonParticle: {fileID: 6305267608186930736}
   hpGaugeBar: {fileID: 7099508247493649627}
-  itemIndex: 7
+  groupId: 7
   deathSFX: 23
+  dataContainer: {fileID: 11400000, guid: 25a9c7449fa45a243a2bc8cc75a9f9c2, type: 2}
   hp: 0
   hpMax: 0
   power: 0
@@ -422,7 +423,6 @@ MonoBehaviour:
   isAddict: 0
   isBleed: 0
   isSlow: 0
-  dataContainer: {fileID: 11400000, guid: 25a9c7449fa45a243a2bc8cc75a9f9c2, type: 2}
   hpLevel: 0
   powerLevel: 0
   speedLevel: 0

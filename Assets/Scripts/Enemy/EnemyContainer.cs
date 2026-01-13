@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyContainer : MonoBehaviour
 {
     public static EnemyContainer Instance { get; private set; }
 
-    public EnemyPool currentPool => pools[stage];
+    public EnemyPool currentPool => pools[Mathf.Min(stage, pools.Length)];
     
     [SerializeField] private EnemyPool[] pools;
     [SerializeField] private EnemyPool epicPool;
@@ -20,13 +20,13 @@ public class EnemyContainer : MonoBehaviour
         for (int i = 1; i < pools.Length; i++)
         {
             pools[i].gameObject.SetActive(false);
-            pools[i].isSpawn = false;
+            pools[i].SetSpawnState(false);
         }
         pools[0].gameObject.SetActive(true);
-        pools[0].isSpawn = true;
+        pools[0].SetSpawnState(true);
 
         epicPool.gameObject.SetActive(false);
-        epicPool.isSpawn = false;
+        epicPool.SetSpawnState(false);
     }
     public List<Enemy> GetActiveEnemyAll()
     {
@@ -40,87 +40,66 @@ public class EnemyContainer : MonoBehaviour
 
         return enemies;
     }
-    public void OnLevelUp()
+    public void UpdateByLevel(int level)
     {
-        //
-        if (Player.Instance.Level == 80)
-        {
-            epicPool.gameObject.SetActive(true);
-            epicPool.isSpawn = true;
-        }
-        else if (Player.Instance.Level > 80)
-        {
-            epicPool.GradeUp();
-            epicPool.hpLevel++;
-            epicPool.powerLevel++;
-            epicPool.speedLevel++;
-        }
-        // ³­ÀÌµµ »ó½Â ±¸Á¶
-        // 10 ·¹º§µ¿¾È µî±Ş »ó½Â 1È¸, ´É·ÂÄ¡ °­È­ 9È¸
-        int remain = Player.Instance.Level % 10;
-
+        // ë ˆë²¨ì— ë”°ë¥¸ ë“±ê¸‰ ë° ê°•í™” ì²˜ë¦¬
+        int remain = level % 10;
         switch (remain)
         {
-            // Àû µî±Ş »ó½Â
+            // 10ë ˆë²¨ë§ˆë‹¤ ë“±ê¸‰ ìƒìŠ¹
+            // ìµœìƒìœ„ ë“±ê¸‰ ë„ë‹¬ í›„ì—ëŠ” ìŠ¤í° ë ˆë²¨ ìƒìŠ¹
             case 0:
-                GradeUp();
-                break;
+                if (level < StaticValues.CHECKPOINT_LEVEL)
+                {
+                    stage = level / 10;
 
-            // Àû °ø°İ·Â Áõ°¡ 3È¸
+                    for (int i = 0; i < pools.Length; i++)
+                    {
+                        pools[i].SetSpawnState(i == stage);
+                    }
+
+                    pools[stage].gameObject.SetActive(true);
+                }
+                else
+                {
+                    pools[stage].SetSpawnLevel((level - StaticValues.CHECKPOINT_LEVEL) / 10);
+                }
+                break;
+            // ì  ê³µê²©ë ¥ ì¦ê°€ 3íšŒ
             case 1:
             case 4:
             case 7:
-                PowerUp();
+                pools[stage].SetPowerLevel(remain / 3 + 1);
                 break;
-
-            // Àû ÀÌµ¿¼Óµµ Áõ°¡ 3È¸
+            // ì  ì´ë™ì†ë„ ì¦ê°€ 3íšŒ
             case 2:
             case 5:
             case 8:
-                SpeedUp();
+                pools[stage].SetSpeedLevel(remain / 3 + 1);
                 break;
-
-            // Àû Ã¼·Â Áõ°¡ 3È¸
+            // ì  ì²´ë ¥ ì¦ê°€ 3íšŒ
             case 3:
             case 6:
             case 9:
-                HpUp();
+                pools[stage].SetHpLevel(remain / 3);
                 break;
             default:
                 break;
         }
-    }
-    private void GradeUp()
-    {
-        if (stage < pools.Length - 1)
-        {
-            for (int i = 0; i < stage; i++)
-            {
-                if (pools[i].gameObject.activeSelf && pools[i].actives.Count == 0)
-                {
-                    pools[i].gameObject.SetActive(false);
-                }
-            }
 
-            pools[stage++].isSpawn = false;
-            pools[stage].gameObject.SetActive(true);
-            pools[stage].isSpawn = true;
-        }
-        else
+        // ì—í”½ ë“±ê¸‰ ì²˜ë¦¬
+        if (level == StaticValues.CHECKPOINT_LEVEL)
         {
-            pools[stage].GradeUp();
+            epicPool.SetSpawnState(true);
+            epicPool.gameObject.SetActive(true);
         }
-    }
-    private void SpeedUp()
-    {
-        pools[stage].speedLevel++;
-    }
-    private void HpUp()
-    {
-        pools[stage].hpLevel++;
-    }
-    private void PowerUp()
-    {
-        pools[stage].powerLevel++;
+        else if (level > StaticValues.CHECKPOINT_LEVEL)
+        {
+            int epicLevel = level - StaticValues.CHECKPOINT_LEVEL;
+            epicPool.SetSpawnLevel(epicLevel);
+            epicPool.SetHpLevel(epicLevel);
+            epicPool.SetPowerLevel(epicLevel);
+            epicPool.SetSpeedLevel(epicLevel);
+        }
     }
 }

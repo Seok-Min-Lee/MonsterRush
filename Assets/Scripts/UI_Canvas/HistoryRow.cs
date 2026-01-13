@@ -1,4 +1,4 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -72,17 +72,17 @@ public class HistoryRow : MonoBehaviour
                 weaponAbilities[gameResultLog.weaponAbilities[i]].SetActive(true);
             }
 
-            if (gameResultLog.level < 80)
+            if (gameResultLog.level < StaticValues.CHECKPOINT_LEVEL)
             {
                 resultSticker.color = negativeColor;
                 resultText.color = negativeColor;
-                resultText.text = "ÆÐ¹è";
+                resultText.text = "íŒ¨ë°°";
             }
             else
             {
                 resultSticker.color = positiveColor;
                 resultText.color = positiveColor;
-                resultText.text = "½Â¸®!";
+                resultText.text = "ìŠ¹ë¦¬!";
             }
 
             onData.SetActive(true);

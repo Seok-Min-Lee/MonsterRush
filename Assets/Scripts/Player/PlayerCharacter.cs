@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class PlayerCharacter : MonoBehaviour
     }
     public void UpdateTick(float time)
     {
-        // animation
+        // 애니메이션
         timer += time;
         if (timer > FRAME_INTERVAL)
         {

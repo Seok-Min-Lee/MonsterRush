@@ -1,6 +1,5 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Item : MonoBehaviour
@@ -26,7 +25,7 @@ public class Item : MonoBehaviour
             }
 
             float distance = dir.magnitude;
-            // ÇÃ·¹ÀÌ¾î¿¡°Ô °¡±î¿öÁú¼ö·Ï ´õ ºü¸£°Ô ¿òÁ÷ÀÎ´Ù.
+            // í”Œë ˆì´ì–´ì—ê²Œ ê°€ê¹Œì›Œì§ˆìˆ˜ë¡ ë” ë¹ ë¥´ê²Œ ì›€ì§ì¸ë‹¤.
             float speed = Mathf.Lerp(1f, 10f, 1 - (distance / 10f));
             transform.position += (Vector3)(dir.normalized * speed * Time.deltaTime);
 
@@ -37,7 +36,7 @@ public class Item : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("PlayerArea"))
+        if (collision.gameObject.CompareTag(TagKeys.PLAYER_AREA))
         {
             OnDetected();
         }

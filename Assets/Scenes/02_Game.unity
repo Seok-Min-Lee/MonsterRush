@@ -611,11 +611,7 @@ MonoBehaviour:
   spawnInterval: 0.16667
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 120
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 200
 --- !u!4 &57035047
 Transform:
   m_ObjectHideFlags: 0
@@ -1697,10 +1693,6 @@ MonoBehaviour:
   spawnDistanceMin: 5
   spawnDistanceMax: 6
   countMax: 100
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
 --- !u!1 &258528781
 GameObject:
   m_ObjectHideFlags: 0
@@ -2988,11 +2980,7 @@ MonoBehaviour:
   spawnInterval: 0.1
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 150
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 200
 --- !u!4 &359843838
 Transform:
   m_ObjectHideFlags: 0
@@ -5532,11 +5520,7 @@ MonoBehaviour:
   spawnInterval: 0.5
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 40
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 150
 --- !u!4 &766837558
 Transform:
   m_ObjectHideFlags: 0
@@ -5585,11 +5569,7 @@ MonoBehaviour:
   spawnInterval: 0.05
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 210
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 200
 --- !u!4 &767476727
 Transform:
   m_ObjectHideFlags: 0
@@ -6182,11 +6162,7 @@ MonoBehaviour:
   spawnInterval: 0.33333
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 60
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 150
 --- !u!4 &788229170
 Transform:
   m_ObjectHideFlags: 0
@@ -8125,11 +8101,7 @@ MonoBehaviour:
   spawnInterval: 0.08
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 180
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 200
 --- !u!4 &972684547
 Transform:
   m_ObjectHideFlags: 0
@@ -11669,11 +11641,7 @@ MonoBehaviour:
   spawnInterval: 0.25
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 90
-  isSpawn: 1
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 150
 --- !u!4 &1486652377
 Transform:
   m_ObjectHideFlags: 0
@@ -12984,11 +12952,7 @@ MonoBehaviour:
   spawnInterval: 0.66667
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 20
-  isSpawn: 0
-  speedLevel: 0
-  hpLevel: 0
-  powerLevel: 0
+  countMax: 150
 --- !u!1001 &1684332800
 PrefabInstance:
   m_ObjectHideFlags: 0

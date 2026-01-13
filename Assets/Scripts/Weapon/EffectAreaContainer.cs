@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class EffectAreaContainer : WeaponOneOnOne<EffectArea>
+ï»¿public class EffectAreaContainer : WeaponOneOnOne<EffectArea>
 {
     private EffectArea.State state = EffectArea.State.Poison;
     private int areaLevel = 0;
@@ -31,14 +29,14 @@ public class EffectAreaContainer : WeaponOneOnOne<EffectArea>
     {
         switch (key)
         {
-            case 0: // È¹µæ
-            case 1: // ¿µ¿ª È®Àå
+            case 0: // íšë“
+            case 1: // ì˜ì—­ í™•ì¥
                 StrengthenFirst();
                 break;
-            case 2: // È¿°ú °­È­
+            case 2: // íš¨ê³¼ ê°•í™”
                 weapon.PowerUp(++effectLevel);
                 break;
-            case 99: // µ¿½Ã Àû¿ë
+            case 99: // ë™ì‹œ ì ìš©
                 state = EffectArea.State.Both;
                 weapon.SwitchMode(state);
                 stateToggle.Lock();

@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
 
 public class Saw : Weapon
@@ -16,7 +16,7 @@ public class Saw : Weapon
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag(TagKeys.ENEMY))
         {
             Enemy enemy = collision.GetComponent<Enemy>();
             enemy.OnDamage(power + powerLevel * 2 + Player.Instance.AdditionalDamage);
@@ -26,9 +26,9 @@ public class Saw : Weapon
                 enemy.OnKnockback(Vector3.zero);
             }
         }
-        else if (collision.CompareTag("ItemBox"))
+        else if (collision.CompareTag(TagKeys.ITEM_BOX))
         {
-            collision.GetComponent<ItemBox>().onHit();
+            collision.GetComponent<ItemBox>().OnHit();
         }
     }
     public void PowerUp(int level)

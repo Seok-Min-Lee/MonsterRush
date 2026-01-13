@@ -1,7 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -105,8 +104,8 @@ public class Player : MonoBehaviour
         playerStats[(int)PlayerStat.Type.WeaponB].Init(0, 8);
         playerStats[(int)PlayerStat.Type.WeaponC].Init(0, 8);
         playerStats[(int)PlayerStat.Type.WeaponD].Init(0, 8);
-        playerStats[(int)PlayerStat.Type.Hp].Init(100, int.MaxValue);
-        playerStats[(int)PlayerStat.Type.HpMax].Init(100, int.MaxValue);
+        playerStats[(int)PlayerStat.Type.Hp].Init(10000, int.MaxValue);
+        playerStats[(int)PlayerStat.Type.HpMax].Init(10000, int.MaxValue);
         playerStats[(int)PlayerStat.Type.Exp].Init(0, int.MaxValue);  
         playerStats[(int)PlayerStat.Type.ExpMax].Init(10, int.MaxValue);
 
@@ -214,8 +213,9 @@ public class Player : MonoBehaviour
 
         exp += isExpBoost ? (int)(value * 1.5) : value;
 
-        if (exp >= expMax)
+        while (exp >= expMax)
         {
+            // 레벨업 처리
             exp -= expMax;
             expMax = (int)(expMax * 1.1f);
 
@@ -232,7 +232,7 @@ public class Player : MonoBehaviour
             ExecuteEvents.Execute<IEndDragHandler>(joystick.gameObject, pointerData, ExecuteEvents.endDragHandler);
 
             //
-            if (Level == 80)
+            if (Level == StaticValues.CHECKPOINT_LEVEL)
             {
                 GameCtrl.Instance.OnGameEnd(GameResult.Clear);
             }
@@ -412,7 +412,7 @@ public class Player : MonoBehaviour
         else
         {
             OnDeath();
-            GameCtrl.Instance.OnGameEnd(Level < 80 ? GameResult.Defeat : GameResult.Challenge);
+            GameCtrl.Instance.OnGameEnd(Level < StaticValues.CHECKPOINT_LEVEL ? GameResult.Defeat : GameResult.Challenge);
         }
 
         healTimer = 0f;

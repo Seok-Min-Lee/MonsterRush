@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
+ï»¿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -31,8 +30,9 @@ public class RewardWindow : MonoBehaviour
         }
     }
 #endif
-public void Init(IEnumerable<RewardInfo> rewardInfoes)
+    public void Init(IEnumerable<RewardInfo> rewardInfoes)
     {
+        // ë³´ìƒ ë¶„ë¥˜
         foreach (RewardInfo rewardInfo in rewardInfoes)
         {
             if (rewardInfo.type == RewardInfo.Type.Weapon)
@@ -49,102 +49,122 @@ public void Init(IEnumerable<RewardInfo> rewardInfoes)
             }
         }
     }
-    public void OnClickReward(RewardInfo rewardInfo)
+    public void OnReward(RewardInfo rewardInfo)
     {
         if (abilityRewards.ContainsKey(rewardInfo.UniqueKey))
         {
             abilityRewards.Remove(rewardInfo.UniqueKey);
         }
 
+        GameCtrl.Instance.OnReward(rewardInfo);
         gameObject.SetActive(false);
     }
-    public void Open()
+    public void OpenByLevel(int level)
     {
-        //
-        List<RewardInfo> samples = new List<RewardInfo>();
-
-        if (Player.Instance.Level == 80)
+        if (level == StaticValues.CHECKPOINT_LEVEL)
         {
-            headName.text = "Ã¼Å©Æ÷ÀÎÆ® º¸»ó";
-            headName.color = new Color(1f, 0.5f, 0f);
-            headDesc.text = "¾Æ·¡ º¸»óµéÀº ÀÌÈÄ¿¡ ¾òÀ» ¼ö ¾ø½À´Ï´Ù!";
-            headDesc.color = new Color(0.9f, 0.45f, 0f);
-
-            samples.Add(abilityRewards[96]);
-            samples.Add(abilityRewards[97]);
-            samples.Add(abilityRewards[99]);
+            OpenCheckpointReward();
         }
         else
         {
-            headName.text = "·¹º§¾÷ º¸»ó";
-            headName.color = new Color(0f, 0.5f, 0f);
-            headDesc.text = "¾Æ·¡ º¸»óµé Áß¿¡¼­ 1°³¸¦ ¼±ÅÃÇÒ ¼ö ÀÖ½À´Ï´Ù.";
-            headDesc.color = new Color(0f, 0.45f, 0f);
+            OpenLevelUpReward();
+        }
+    }
+    private void OpenCheckpointReward()
+    {
+        // ì„¤ëª… í…ìŠ¤íŠ¸
+        headName.text = "ì²´í¬í¬ì¸íŠ¸ ë³´ìƒ";
+        headName.color = new Color(1f, 0.5f, 0f);
+        headDesc.text = "ì•„ë˜ ë³´ìƒë“¤ì€ ì´í›„ì— ì–»ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!";
+        headDesc.color = new Color(0.9f, 0.45f, 0f);
 
-            int[,] levelAndGroupIds = new int[4, 2]
+        // ë³´ìƒ ìƒ˜í”Œë§
+        List<RewardInfo> samples = new List<RewardInfo>();
+
+        samples.Add(abilityRewards[96]);
+        samples.Add(abilityRewards[97]);
+        samples.Add(abilityRewards[99]);
+
+        OpenReward(samples);
+    }
+    private void OpenLevelUpReward()
+    {
+        // ì„¤ëª… í…ìŠ¤íŠ¸
+        headName.text = "ë ˆë²¨ì—… ë³´ìƒ";
+        headName.color = new Color(0f, 0.5f, 0f);
+        headDesc.text = "ì•„ë˜ ë³´ìƒë“¤ ì¤‘ì—ì„œ 1ê°œë¥¼ ì„ íƒí•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.";
+        headDesc.color = new Color(0f, 0.45f, 0f);
+
+        // ë³´ìƒ ìƒ˜í”Œë§
+        List<RewardInfo> samples = new List<RewardInfo>();
+
+        int[,] levelAndGroupIds = new int[4, 2]
+        {
+            { Player.Instance.WeaponALevel, 1000 },
+            { Player.Instance.WeaponBLevel, 2000 },
+            { Player.Instance.WeaponCLevel, 3000 },
+            { Player.Instance.WeaponDLevel, 4000 },
+        };
+
+        int firstEndCount = 0;
+        int levelTotal = 0;
+        int rows = levelAndGroupIds.GetLength(0);
+
+        for (int i = 0; i < rows; i++)
+        {
+            int level = levelAndGroupIds[i, 0];
+            int groupId = levelAndGroupIds[i, 1];
+            levelTotal += level;
+
+            if (level < 1)
             {
-                { Player.Instance.WeaponALevel, 1000 },
-                { Player.Instance.WeaponBLevel, 2000 },
-                { Player.Instance.WeaponCLevel, 3000 },
-                { Player.Instance.WeaponDLevel, 4000 },
-            };
-
-            int firstEndCount = 0;
-            int levelTotal = 0;
-            int rows = levelAndGroupIds.GetLength(0);
-
-            for (int i = 0; i < rows; i++)
+                // ë¬´ê¸° íšë“
+                samples.Add(weaponRewards[groupId + 0]);
+            }
+            else if (level < 8)
             {
-                int level = levelAndGroupIds[i, 0];
-                int groupId = levelAndGroupIds[i, 1];
-                levelTotal += level;
-
-                if (level < 1)
-                {
-                    // ¹«±â È¹µæ
-                    samples.Add(weaponRewards[groupId + 0]);
-                }
-                else if (level < 8)
-                {
-                    // 1Â÷ °­È­
-                    samples.Add(weaponRewards[groupId + 1]);
-                }
-                else
-                {
-                    firstEndCount++;
-                }
-
-                // 2Â÷ °­È­
-                if (8 <= level && level < 16 && Player.Instance.IsAvailableSecondEnhance)
-                {
-                    samples.Add(weaponRewards[groupId + 2]);
-                }
-
-                // Æ¯¼ö ´É·Â
-                if (level > 0 && abilityRewards.ContainsKey(groupId + 99) && Random.Range(0, 10) == 0)
-                {
-                    samples.Add(abilityRewards[groupId + 99]);
-                }
+                // 1ì°¨ ê°•í™”
+                samples.Add(weaponRewards[groupId + 1]);
+            }
+            else
+            {
+                firstEndCount++;
             }
 
-            // ÇÃ·¹ÀÌ¾î ´É·Â
-            samples.Add(playerRewards[0]);
-            samples.Add(playerRewards[1]);
-            samples.Add(playerRewards[2]);
-            samples.Add(playerRewards[3]);
-
-            // 2Â÷ °­È­ °³¹æ
-            if (firstEndCount > 0 && levelTotal > 20 && abilityRewards.ContainsKey(98))
+            // 2ì°¨ ê°•í™”
+            if (8 <= level && level < 16 && Player.Instance.IsAvailableSecondEnhance)
             {
-                samples.Add(abilityRewards[98]);
+                samples.Add(weaponRewards[groupId + 2]);
+            }
+
+            // íŠ¹ìˆ˜ ëŠ¥ë ¥
+            if (level > 0 && abilityRewards.ContainsKey(groupId + 99) && Random.Range(0, 10) == 0)
+            {
+                samples.Add(abilityRewards[groupId + 99]);
             }
         }
 
+        // 2ì°¨ ê°•í™” ê°œë°©
+        if (firstEndCount > 0 && levelTotal > 20 && abilityRewards.ContainsKey(98))
+        {
+            samples.Add(abilityRewards[98]);
+        }
+
+        // í”Œë ˆì´ì–´ ëŠ¥ë ¥
+        samples.Add(playerRewards[0]);
+        samples.Add(playerRewards[1]);
+        samples.Add(playerRewards[2]);
+        samples.Add(playerRewards[3]);
+
+        OpenReward(samples);
+    }
+    private void OpenReward(IEnumerable<RewardInfo> samples)
+    {
         List<RewardInfo> randoms = Utils.Shuffle<RewardInfo>(samples);
 
         for (int i = 0; i < rewardButtons.Length; i++)
         {
-            rewardButtons[i].Init(randoms[i]);
+            rewardButtons[i].SetRewardInfo(parent: this, rewardInfo: randoms[i]);
         }
 
         gameObject.SetActive(true);

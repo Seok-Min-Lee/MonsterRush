@@ -1,19 +1,23 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyPool : MonoBehaviour
 {
     [SerializeField] private Enemy prefab;
 
+    [Header("Init Values")]
     [SerializeField] private float spawnInterval;
     [SerializeField] private float spawnDistanceMin;
     [SerializeField] private float spawnDistanceMax;
     [SerializeField] private int countMax;
 
-    public bool isSpawn;
-    public int speedLevel;
-    public int hpLevel;
-    public int powerLevel;
+    public bool isSpawn { get; private set; }
+    public int speedLevel { get; private set; }
+    public int hpLevel { get; private set; }
+    public int powerLevel { get; private set; }
+    public int SpawnLevel { get; private set; }
+
+    private float spawnDelay;
 
     public List<Enemy> actives { get; private set; } = new List<Enemy>();
     private Queue<Enemy> pool = new Queue<Enemy>();
@@ -30,7 +34,7 @@ public class EnemyPool : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            if (timer > spawnInterval)
+            if (timer > spawnDelay)
             {
                 Spawn();
                 timer = 0f;
@@ -47,14 +51,37 @@ public class EnemyPool : MonoBehaviour
             }
         }
     }
-    public void GradeUp()
+    public void SetSpawnState(bool value)
     {
-        spawnInterval *= 0.9f;
+        isSpawn = value;
+        spawnDelay = spawnInterval;
+    }
+    public void SetSpawnLevel(int value)
+    {
+        SpawnLevel = value;
+        spawnDelay = spawnInterval * Mathf.Pow(0.9f, SpawnLevel);
+    }
+    public void SetSpeedLevel(int value)
+    {
+        speedLevel = value;
+    }
+    public void SetHpLevel(int value)
+    {
+        hpLevel = value;
+    }
+    public void SetPowerLevel(int value)
+    {
+        powerLevel = value;
     }
     public void Charge(Enemy enemy)
     {
         pool.Enqueue(enemy);
         actives.Remove(enemy);
+
+        if (!isSpawn && actives.Count == 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void Spawn()

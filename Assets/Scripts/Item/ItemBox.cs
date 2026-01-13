@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
@@ -38,22 +38,24 @@ public class ItemBox : MonoBehaviour
         state = State.Normal;
         gameObject.SetActive(true);
     }
-    public void onHit()
+    public void OnHit()
     {
         if (state == State.Normal)
         {
             if (--hp > 0)
             {
                 hpGaugeBar.SetValue(hp);
-                renderer.transform.DOShakeScale(0.15f, 0.1f, 3, 1, true).OnComplete(() => { state = State.Normal; });
+                // 피격 애니메이션
+                renderer.transform.DOShakeScale(0.15f, 0.1f, 3, 1, true)
+                                  .OnComplete(() => state = State.Normal);
             }
             else
             {
-                onOpen();
+                OnOpen();
             }
         }
     }
-    public void onOpen()
+    public void OnOpen()
     {
         StartCoroutine(Cor());
 
@@ -62,12 +64,14 @@ public class ItemBox : MonoBehaviour
             state = State.Open;
             collider.enabled = false;
 
+            // 오픈 애니메이션
             for (int i = 0; i < opens.Length; i++)
             {
                 renderer.sprite = opens[i];
                 yield return null;
             }
 
+            // 아이템 획득
             ItemContainer.Instance.BatchItem(itemInfo, transform.position);
             ItemContainer.Instance.Charge(this);
             gameObject.SetActive(false);

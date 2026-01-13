@@ -1,16 +1,16 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class MapMaker : MonoBehaviour
 {
     //
-    public GameObject[] tilePrefabs;
-    public int tileScale = 1;
-    public int radius = 1;
-    public int initialPoolSize = 9;
+    [SerializeField] private GameObject[] tilePrefabs;
+    [SerializeField] private int tileScale = 1;
+    [SerializeField] private int radius = 1;
+    [SerializeField] private int initialPoolSize = 9;
 
     //
-    public Transform player;
+    [SerializeField] private Transform player;
 
     //
     private Vector2Int lastTile;
@@ -29,6 +29,7 @@ public class MapMaker : MonoBehaviour
 
     private void Update()
     {
+        // í”Œë ˆì´ì–´ ìœ„ì¹˜ì— ë”°ë¥¸ íƒ€ì¼ ì—…ë°ì´íŠ¸
         Vector2Int currentTile = new Vector2Int(
             Mathf.FloorToInt(player.position.x / tileScale),
             Mathf.FloorToInt(player.position.y / tileScale)
@@ -41,7 +42,7 @@ public class MapMaker : MonoBehaviour
         }
     }
 
-    // Áß½É ÁÂÇ¥ ±âÁØÀ¸·Î ÁÖº¯ Å¸ÀÏ À¯Áö
+    // ì¤‘ì‹¬ ì¢Œí‘œ ê¸°ì¤€ìœ¼ë¡œ ì£¼ë³€ íƒ€ì¼ ìœ ì§€
     HashSet<Vector2Int> neededCoords = new HashSet<Vector2Int>();
     List<Vector2Int> removeCoords = new List<Vector2Int>();
     private void UpdateTiles()
@@ -51,6 +52,7 @@ public class MapMaker : MonoBehaviour
         {
             for (int x = -radius; x <= radius; x++)
             {
+                // í•„ìš”í•œ ì¢Œí‘œ ì§‘í•©ì— ì¶”ê°€
                 Vector2Int coord = lastTile + new Vector2Int(x, y);
                 neededCoords.Add(coord);
 
@@ -58,24 +60,19 @@ public class MapMaker : MonoBehaviour
                 {
                     Vector3 pos = new Vector3(coord.x * tileScale, coord.y * tileScale, 0f);
 
-                    GameObject tile;
-                    if (tilePool.Count > 0)
-                    {
-                        tile = tilePool.Dequeue();
-                        tile.SetActive(true);
-                    }
-                    else
-                    {
-                        tile = Instantiate(tilePrefabs[Random.Range(0, tilePrefabs.Length)], transform);
-                    }
-
+                    GameObject tile = tilePool.Count > 0 ? 
+                                      tilePool.Dequeue() : 
+                                      Instantiate(tilePrefabs[Random.Range(0, tilePrefabs.Length)], transform);
+                    
+                    tile.SetActive(true);
                     tile.transform.position = pos;
+
                     activeTiles.Add(coord, tile);
                 }
             }
         }
 
-        // ÇÊ¿ä ¾ø´Â Å¸ÀÏ ¹İÈ¯
+        // í•„ìš” ì—†ëŠ” íƒ€ì¼ ë°˜í™˜
         removeCoords.Clear();
         foreach (KeyValuePair<Vector2Int, GameObject> pair in activeTiles)
         {

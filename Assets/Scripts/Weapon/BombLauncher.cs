@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BombLauncher : WeaponLauncher<Bomb>
 {
@@ -72,14 +69,14 @@ public class BombLauncher : WeaponLauncher<Bomb>
     {
         switch (key)
         {
-            case 0: // È¹µæ
-            case 1: // °³¼ö Áõ°¡
+            case 0: // íšë“
+            case 1: // ê°œìˆ˜ ì¦ê°€
                 StrengthenFirst();
                 break;
-            case 2: // ³Ë¹é °­È­
+            case 2: // ë„‰ë°± ê°•í™”
                 knockbackLevel++;
                 break;
-            case 99: // Æø¹ß È®Àå
+            case 99: // í­ë°œ í™•ì¥
                 isScaleUp = true;
                 break;
         }

@@ -1,5 +1,4 @@
-using DG.Tweening;
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class Bomb : Weapon
@@ -38,16 +37,16 @@ public class Bomb : Weapon
             return;
         }
 
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag(TagKeys.ENEMY))
         {
             isUsed = true;
             OnExplosion();
         }
-        else if (collision.CompareTag("ItemBox"))
+        else if (collision.CompareTag(TagKeys.ITEM_BOX))
         {
             isUsed = true;
             OnExplosion();
-            collision.GetComponent<ItemBox>().onHit();
+            collision.GetComponent<ItemBox>().OnHit();
         }
     }
     public void OnShot(BombLauncher container, bool isScaleUp, int knockbackLevel, Vector3 position, Vector3 force, float torque)
@@ -89,7 +88,7 @@ public class Bomb : Weapon
             OnReload();
         }
 
-        // DoTweenÀ» ¾²¸é OnReload¿¡¼­ Rigidbody ÃÊ±âÈ­ ¾È µÇ´Â ¿À·ù ¹ß»ý
+        // DoTweenì„ ì“°ë©´ OnReloadì—ì„œ Rigidbody ì´ˆê¸°í™” ì•ˆ ë˜ëŠ” ì˜¤ë¥˜ ë°œìƒ
         //Sequence seq = DOTween.Sequence();
         //seq.AppendCallback(() =>
         //{

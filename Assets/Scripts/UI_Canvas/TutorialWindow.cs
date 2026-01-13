@@ -1,8 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TutorialWindow : MonoBehaviour
 {
@@ -21,14 +20,15 @@ public class TutorialWindow : MonoBehaviour
 
     private bool isUsing;
     private int usedPopupCount = 0;
-    private int stage;
+    private int stage = 0;
     private List<int> indexOrigins = new List<int>();
     private Queue<PopupGuide> popupQueue = new Queue<PopupGuide>();
 
     private Coroutine coroutine;
+
+    private WaitForSeconds WaitForMoment = new WaitForSeconds(0.1f);
     public void Init(bool isUsing)
     {
-        //
         for (int i = 0; i < parts.Length; i++)
         {
             indexOrigins.Add(parts[i].GetSiblingIndex());
@@ -44,38 +44,40 @@ public class TutorialWindow : MonoBehaviour
             popups[i].gameObject.SetActive(false);
         }
 
-        background.gameObject.SetActive(false);
-        tutorial.gameObject.SetActive(false);
-
-        // 
+        //
         if (isUsing)
         {
-            background.gameObject.SetActive(true);
+            // 스와이프 이벤트 연결
             if (background.TryGetComponent<SwipeDetector>(out SwipeDetector swipeDetector))
             {
                 swipeDetector.ToLeft += ShowPrevious;
                 swipeDetector.ToRight += ShowNext;
             }
 
-            tutorial.gameObject.SetActive(true);
-
+            // 첫 스테이지 활성화
             parts[stage].SetSiblingIndex(siblingIndex);
             guides[stage].SetActive(true);
 
+            // 버튼 상태 업데이트
             previousButton.SetActive(false);
             nextButton.SetActive(true);
             startButton.SetActive(false);
 
+            // 페이지네이션 업데이트
             for (int i = 0; i < paginations.Length; i++)
             {
                 paginations[i].SetValue(i == stage);
             }
         }
 
+        background.gameObject.SetActive(isUsing);
+        tutorial.gameObject.SetActive(isUsing);
+
         this.isUsing = isUsing;
     }
     public void OnReward(RewardInfo rewardInfo)
     {
+        // 보상 최초 획득시 팝업 노출
         if (rewardInfo.type == RewardInfo.Type.Weapon && rewardInfo.index == 0)
         {
             PopupGuide pg = null;
@@ -95,6 +97,7 @@ public class TutorialWindow : MonoBehaviour
                     break;
             }
 
+            // 튜토리얼 보기 설정 바뀌었을 수 있으므로 큐에 넣거나 바로 카운트 증가
             if (isUsing && pg != null)
             {
                 popupQueue.Enqueue(pg);
@@ -108,7 +111,6 @@ public class TutorialWindow : MonoBehaviour
     public void OnClickNext()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
-
         ShowNext();
     }
     public void OnClickPrevious()
@@ -125,12 +127,15 @@ public class TutorialWindow : MonoBehaviour
     {
         if (isUsing)
         {
+            // 현재 스테이지 비활성화
             parts[stage].SetSiblingIndex(indexOrigins[stage]);
             guides[stage].SetActive(false);
 
+            // 전체 튜토리얼 비활성화
             background.gameObject.SetActive(false);
             tutorial.gameObject.SetActive(false);
 
+            // 캐릭터별 팝업 큐에 추가
             popupQueue.Enqueue(popups[StaticValues.playerCharacterNum]);
             coroutine = StartCoroutine(RewardGuideCor());
         }
@@ -202,17 +207,21 @@ public class TutorialWindow : MonoBehaviour
     {
         if (stage < guides.Length - 1)
         {
+            // 현재 스테이지 비활성화
             parts[stage].SetSiblingIndex(indexOrigins[stage]);
             guides[stage++].SetActive(false);
 
+            // 다음 스테이지 활성화
             parts[stage].SetSiblingIndex(siblingIndex);
             guides[stage].SetActive(true);
 
+            // 페이지네이션 업데이트
             for (int i = 0; i < paginations.Length; i++)
             {
                 paginations[i].SetValue(i == stage);
             }
 
+            // 버튼 상태 업데이트
             previousButton.SetActive(true);
             nextButton.SetActive(stage < parts.Length - 1);
             startButton.SetActive(stage == parts.Length - 1);
@@ -222,17 +231,21 @@ public class TutorialWindow : MonoBehaviour
     {
         if (stage > 0)
         {
+            // 현재 스테이지 비활성화
             parts[stage].SetSiblingIndex(indexOrigins[stage]);
             guides[stage--].SetActive(false);
 
+            // 이전 스테이지 활성화
             parts[stage].SetSiblingIndex(siblingIndex);
             guides[stage].SetActive(true);
 
+            // 페이지네이션 업데이트
             for (int i = 0; i < paginations.Length; i++)
             {
                 paginations[i].SetValue(i == stage);
             }
 
+            // 버튼 상태 업데이트
             previousButton.SetActive(stage > 0);
             nextButton.SetActive(true);
             startButton.SetActive(false);
@@ -240,6 +253,7 @@ public class TutorialWindow : MonoBehaviour
     }
     private IEnumerator RewardGuideCor()
     {
+        // 팝업 위치 리스트 생성
         List<int> all = new List<int>();
         for (int i = 0; i < popups.Length; i++)
         {
@@ -248,11 +262,13 @@ public class TutorialWindow : MonoBehaviour
 
         while (true)
         {
+            // 모든 팝업이 사용된 경우 종료
             if (usedPopupCount == popups.Length)
             {
                 break;
             }
 
+            // 큐에 대기중인 팝업이 있으면 출력
             if (popupQueue.Count > 0)
             {
                 PopupGuide popupGuide = popupQueue.Dequeue();
@@ -260,23 +276,24 @@ public class TutorialWindow : MonoBehaviour
                 List<int> samples = new List<int>();
                 samples.AddRange(all);
 
+                // 이미 활성화된 팝업의 위치는 제외
                 foreach (PopupGuide guide in popups.Where(x => x.gameObject.activeSelf))
                 {
                     samples.Remove(guide.positionId);
                 }
 
-                int position = samples.Min();
+                // 남은 위치 중에서 가장 앞 쪽에 팝업 출력
+                popupGuide.Show(samples.Min());
 
-                popupGuide.Show(position);
-                
+                // 사용된 팝업 카운트 증가
                 usedPopupCount++;
                 if (usedPopupCount == popups.Length)
                 {
-                    PlayerPrefs.SetInt("visibleTutorial", 0);
+                    PlayerPrefs.SetInt(PlayerPrefKeys.VISIBLE_TUTORIAL, 0);
                 }
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return WaitForMoment;
         }
 
         yield break;

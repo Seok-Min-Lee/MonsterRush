@@ -1,13 +1,10 @@
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class InitCtrl : MonoBehaviour
 {
     private void Start()
     {
-        // PlayerPrefs ¾ø´Â °æ¿ì ±âº»°ªÀ¸·Î ÃÊ±âÈ­
+        // PlayerPrefs ì—†ëŠ” ê²½ìš° ê¸°ë³¸ê°’ìœ¼ë¡œ ì´ˆê¸°í™”
         float volumeBGM = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_BGM, 0.5f);
         float volumeSFX = PlayerPrefs.GetFloat(PlayerPrefKeys.VOLUME_SFX, 0.5f);
         int visibleTutorial = PlayerPrefs.GetInt(PlayerPrefKeys.VISIBLE_TUTORIAL, 1);
@@ -18,6 +15,7 @@ public class InitCtrl : MonoBehaviour
         PlayerPrefs.SetInt(PlayerPrefKeys.VISIBLE_TUTORIAL, visibleTutorial);
         PlayerPrefs.SetInt(PlayerPrefKeys.IS_LEFT_HAND, isLeftHand);
 
+        // ê²Œì„ ê¸°ë¡ ë¶ˆëŸ¬ì˜¤ê¸°
         GameDataContainer.Instance.LoadGameResultLogs();
 
         UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");

@@ -1,6 +1,5 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TitleCtrl : MonoBehaviour
 {
@@ -14,6 +13,7 @@ public class TitleCtrl : MonoBehaviour
 
     private void Start()
     {
+        // 오디오 세팅
         if (!AudioManager.Instance.isLoadComplete)
         {
             AudioManager.Instance.Load(() =>
@@ -26,6 +26,7 @@ public class TitleCtrl : MonoBehaviour
             });
         }
 
+        // 화면 전환 모션
         screenSwitcher.Show(
             preprocess: () => 
             {
@@ -41,6 +42,7 @@ public class TitleCtrl : MonoBehaviour
     }
     private void Update()
     {
+        // 안드로이드 뒤로가기 버튼 처리
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (characterWindow.activeSelf || historyWindow.gameObject.activeSelf)
@@ -85,9 +87,10 @@ public class TitleCtrl : MonoBehaviour
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
 
+        // 선택한 캐릭터 정보 저장
         StaticValues.playerCharacterNum = num;
 
-        
+        // 화면 전환 모션
         screenSwitcher.Hide(
             preprocess: () => 
             {
@@ -102,27 +105,33 @@ public class TitleCtrl : MonoBehaviour
     public void OnClickHistory()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+
         homeWindow.SetActive(false);
         historyWindow.gameObject.SetActive(true);
     }
     public void OnClickSetting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+
         settingWindow.Open();
         homeWindow.SetActive(false);
     }
     public void OnClickSaveSeting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+
         settingWindow.Save();
         settingWindow.Close();
+
         homeWindow.SetActive(true);
     }
     public void OnClickCancelSetting()
     {
         AudioManager.Instance.PlaySFX(SoundKey.GameTouch);
+
         settingWindow.Cancel();
         settingWindow.Close();
+
         homeWindow.SetActive(true);
     }
 }

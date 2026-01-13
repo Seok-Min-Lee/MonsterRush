@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemContainer : MonoBehaviour
@@ -23,12 +23,14 @@ public class ItemContainer : MonoBehaviour
     }
     public void Batch(int index, Vector3 position)
     {
+        // 낮은 확률로 아이템 박스 등장
         if (existItemBox && Random.Range(0, 100) == 0)
         {
             BatchItemBox(position);
         }
         else 
         {
+            // 낮은 확률로 회복 아이템 등장
             if (Random.Range(0, 100) < 2)
             {
                 Vector3 offset = (Vector3)(Random.insideUnitCircle.normalized * 0.1f);
@@ -44,25 +46,29 @@ public class ItemContainer : MonoBehaviour
     }
     public void BatchItem(ItemInfo itemInfo, Vector3 position)
     {
+        // 너무 많으면 가장 오래된 것 회수
         if (actives.Count > 200)
         {
             Charge(actives[0]);
         }
 
+        // 배치
         Item item = pool.Count > 0 ?
                     pool.Dequeue() :
                     GameObject.Instantiate<Item>(prefab, transform);
-
+        
         item.Init(itemInfo, position);
         actives.Add(item);
     }
     public void BatchItemBox(Vector3 position)
     {
+        // 너무 많으면 가장 오래된 것 회수
         if (itemBoxes.Count > 10)
         {
             Charge(itemBoxes[0]);
         }
 
+        // 배치
         ItemBox itemBox = itemBoxPool.Count > 0 ?
                           itemBoxPool.Dequeue() :
                           GameObject.Instantiate<ItemBox>(itemBoxPrefab, transform);
