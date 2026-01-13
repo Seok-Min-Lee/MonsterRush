@@ -26,19 +26,15 @@ public class GameCtrl : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
 #if UNITY_EDITOR
+        // 데이터 에셋 로드
         if (!DataAssetService.Instance.IsLoaded)
         {
             DataAssetService.Instance.Load();
         }
-#endif
 
-        rewardWindow.Init(DataAssetService.Instance.RewardDataAsset.Rewards);
-    }
-    private void Start()
-    {
-        timeText.text = "00:00";
-
+        // 오디오 세팅
         if (!AudioManager.Instance.isLoadComplete)
         {
             AudioManager.Instance.Load(() =>
@@ -50,10 +46,16 @@ public class GameCtrl : MonoBehaviour
                 AudioManager.Instance.PlayBGM(SoundKey.BGM);
             });
         }
-#if UNITY_EDITOR
+
         Application.targetFrameRate = 30;
         QualitySettings.vSyncCount = 0;
 #endif
+
+        rewardWindow.Init(DataAssetService.Instance.RewardDataAsset.Rewards);
+    }
+    private void Start()
+    {
+        timeText.text = "00:00";
 
         screenSwitcher.Show(
             preprocess: () => 
@@ -100,7 +102,7 @@ public class GameCtrl : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Player.Instance.OnClickLevelUp();
+            Player.Instance.IncreaseExp(Player.Instance.ExpMax);
         }
 #endif
     }
@@ -129,7 +131,7 @@ public class GameCtrl : MonoBehaviour
         int[] playerStats = new int[4] { Player.Instance.Heal, Player.Instance.Magnet, Player.Instance.Speed, Player.Instance.Strength };
         int[] weaponLevels = new int[4] { Player.Instance.WeaponALevel, Player.Instance.WeaponBLevel, Player.Instance.WeaponCLevel, Player.Instance.WeaponDLevel };
 
-        GameResultLog newLog = new GameResultLog(
+        HistoryRaw newHisotoryRaw = new HistoryRaw(
             characterNum: StaticValues.playerCharacterNum,
             level: Player.Instance.Level,
             killCount: Player.Instance.killCount,
@@ -141,12 +143,12 @@ public class GameCtrl : MonoBehaviour
             dateTime: System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         );
 
-        if (!GameDataContainer.Instance.IsLoaded)
+        if (!GameHistoryService.Instance.IsLoaded)
         {
-            GameDataContainer.Instance.LoadGameResultLogs();
+            GameHistoryService.Instance.Load();
         }
-        GameDataContainer.Instance.TryAddGameResultLog(newLog);
-        GameDataContainer.Instance.TrySaveGameResultLogs();
+        GameHistoryService.Instance.TryAdd(newHisotoryRaw);
+        GameHistoryService.Instance.TrySave();
 
         // 씬 전환
         screenSwitcher.Hide(
@@ -157,7 +159,7 @@ public class GameCtrl : MonoBehaviour
             },
             postprocess: () => 
             { 
-                UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title"); 
+                UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.TITLE); 
             }
         );
     }

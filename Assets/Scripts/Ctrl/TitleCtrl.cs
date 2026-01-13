@@ -13,6 +13,12 @@ public class TitleCtrl : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_EDITOR
+        // 데이터 에셋 로드
+        if (!DataAssetService.Instance.IsLoaded)
+        {
+            DataAssetService.Instance.Load();
+        }
         // 오디오 세팅
         if (!AudioManager.Instance.isLoadComplete)
         {
@@ -25,6 +31,7 @@ public class TitleCtrl : MonoBehaviour
                 AudioManager.Instance.PlayBGM(SoundKey.BGM);
             });
         }
+#endif
 
         // 화면 전환 모션
         screenSwitcher.Show(
@@ -98,7 +105,7 @@ public class TitleCtrl : MonoBehaviour
             },
             postprocess: () => 
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("02_Game");
+                UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.GAME);
             }
         );
     }

@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
     private float barrierTimer = 0f;
     private float expBoostTimer = 0f;
     private float powerUpTimer = 0f;
-    private int plusHp = 0;
+    private int increasedHp = 0;
     private int extraExp = 1;
 
     private float healTimer = 0f;
@@ -104,11 +104,12 @@ public class Player : MonoBehaviour
         playerStats[(int)PlayerStat.Type.WeaponB].Init(0, 8);
         playerStats[(int)PlayerStat.Type.WeaponC].Init(0, 8);
         playerStats[(int)PlayerStat.Type.WeaponD].Init(0, 8);
-        playerStats[(int)PlayerStat.Type.Hp].Init(10000, int.MaxValue);
-        playerStats[(int)PlayerStat.Type.HpMax].Init(10000, int.MaxValue);
+        playerStats[(int)PlayerStat.Type.Hp].Init(100, int.MaxValue);
+        playerStats[(int)PlayerStat.Type.HpMax].Init(100, int.MaxValue);
         playerStats[(int)PlayerStat.Type.Exp].Init(0, int.MaxValue);  
         playerStats[(int)PlayerStat.Type.ExpMax].Init(10, int.MaxValue);
 
+        // 시작 무기 및 스탯 부여
         switch (StaticValues.playerCharacterNum)
         {
             case 0:
@@ -135,10 +136,9 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        hpGaugeBar.Init(maxValue: HpMax, currentValue: Hp, visible: false);
+        // UI 초기화
         expGaugeBar.fillAmount = 0f;
-
-        //
+        hpGaugeBar.Init(maxValue: HpMax, currentValue: Hp, visible: false);
         stateToggleGroup.Init(isMagentVisible: true);
     }
     private void Update()
@@ -147,6 +147,7 @@ public class Player : MonoBehaviour
 
         if (IsDead || Heal == 0 || StaticValues.isWait) return;
 
+        // HP 자동 회복
         if (Hp < HpMax)
         {
             if (healTimer > healCooltime)
@@ -171,15 +172,9 @@ public class Player : MonoBehaviour
         moveVec = new Vector3(joystick.Horizontal, joystick.Vertical, 0f).normalized * speed;
         transform.position += moveVec;
         character.FlipX(moveVec.x < 0);
-
-        float angle = Mathf.Atan2(joystick.Vertical, joystick.Horizontal) * Mathf.Rad2Deg;
 #else
         transform.position += MoveVec;
 #endif
-    }
-    public void OnClickLevelUp()
-    {
-        IncreaseExp(ExpMax);
     }
     public void OnChangeUI(bool isLeftHand)
     {
@@ -187,6 +182,7 @@ public class Player : MonoBehaviour
     }
     public void IncreaseKill()
     {
+        // 추가 경험치 획득
         if (isAvailableExtraExp)
         {
             IncreaseExp(extraExp);
@@ -196,15 +192,20 @@ public class Player : MonoBehaviour
     }
     public void IncreaseHp(int value)
     {
+        // 현재 HP 증가
         OnHeal(value);
+
+        // 최대 HP 증가
         playerStats[(int)PlayerStat.Type.HpMax].IncreaseValue(value);
+
+        // UI 업데이트
         ShowCombatText(
             type: CombatText.Type.StateChange,
             text: COMBAT_TEXT_INCREASE_HP
         );
 
-        plusHp += value;
-        buffStack.SetValue(0, $"{(int)plusHp}");
+        increasedHp += value;
+        buffStack.SetValue(0, $"{(int)increasedHp}");
     }
     public void IncreaseExp(int value)
     {
@@ -231,7 +232,7 @@ public class Player : MonoBehaviour
             ExecuteEvents.Execute<IPointerUpHandler>(joystick.gameObject, pointerData, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.Execute<IEndDragHandler>(joystick.gameObject, pointerData, ExecuteEvents.endDragHandler);
 
-            //
+            // 게임 진행 처리
             if (Level == StaticValues.CHECKPOINT_LEVEL)
             {
                 GameCtrl.Instance.OnGameEnd(GameResult.Clear);
@@ -241,9 +242,11 @@ public class Player : MonoBehaviour
                 GameCtrl.Instance.OnLevelUp();
             }
 
+            //
             extraExp = (int)(Level * 0.2f);
         }
 
+        // UI 업데이트
         playerStats[(int)PlayerStat.Type.Exp].SetValue(exp);
         expGaugeBar.fillAmount = exp / (float)expMax;
     }
@@ -347,7 +350,7 @@ public class Player : MonoBehaviour
     }
     public void OnDeath()
     {
-        // death 처리 로직
+        // 죽음 처리 로직
         TweenCallback callback = () => 
         {
             IsDead = true;
@@ -364,7 +367,7 @@ public class Player : MonoBehaviour
             buffStack.HideBlockAll();
         };
 
-        // death 연출
+        // 죽음 연출
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(callback);
         seq.AppendInterval(0.75f);
@@ -379,6 +382,7 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // 배리어 피격 무효화 처리
         if (isBarrier)
         {
             AudioManager.Instance.PlaySFX(SoundKey.BarrierHit);
@@ -391,6 +395,7 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // 피격 처리
         AudioManager.Instance.PlaySFX(SoundKey.PlayerHit);
 
         int hp = playerStats[(int)PlayerStat.Type.Hp].Value;
@@ -403,12 +408,12 @@ public class Player : MonoBehaviour
 
         if (hp > 0)
         {
-            hpGaugeBar.SetValue(Hp);
-
-            Character.PlayAnimation(PlayerCharacter.AniType.Hit);
-
             playerStats[(int)PlayerStat.Type.Hp].SetValue(hp);
+            
+            hpGaugeBar.SetValue(hp);
+            Character.PlayAnimation(PlayerCharacter.AniType.Hit);
         }
+        // 죽음 처리
         else
         {
             OnDeath();
@@ -424,8 +429,8 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // 회복
         int amount = Mathf.Clamp(value, 0, HpMax - Hp);
-
         if (amount > 0)
         {
             healParticle.Play();
@@ -440,6 +445,7 @@ public class Player : MonoBehaviour
             }
         }
 
+        // UI 업데이트
         ShowCombatText(
             type: amount > 0 ? CombatText.Type.Heal: CombatText.Type.Cancel,
             text: $"+{amount}"
@@ -499,8 +505,6 @@ public class Player : MonoBehaviour
             MoveVec = new Vector3(v.x, v.y, 0f) * speed;
             Character.PlayAnimation(PlayerCharacter.AniType.Move);
 
-            float angle = Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
-
             Character.FlipX(MoveVec.x < 0);
         }
         else
@@ -511,6 +515,7 @@ public class Player : MonoBehaviour
     }
     private IEnumerator OnBarrierCor()
     {
+        // 배리어 활성화
         isBarrier = true;
         barrierParticle.Play();
 
@@ -519,6 +524,7 @@ public class Player : MonoBehaviour
             text: COMBAT_TEXT_BARRIER
         );
 
+        // 상태 유지
         barrierTimer = 0f;
         while (barrierTimer < BARRIER_DURATION)
         {
@@ -528,6 +534,7 @@ public class Player : MonoBehaviour
             yield return WaitForSecond;
         }
 
+        // 배리어 비활성화
         buffStack.HideBlock(2);
 
         barrierParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -535,6 +542,7 @@ public class Player : MonoBehaviour
     }
     private IEnumerator OnExpBoostCor()
     {
+        // 경험치 부스트 활성화
         isExpBoost = true;
 
         ShowCombatText(
@@ -542,6 +550,7 @@ public class Player : MonoBehaviour
             text: COMBAT_TEXT_EXP_BOOST
         );
 
+        // 상태 유지
         expBoostTimer = 0f;
         while (expBoostTimer < EXP_BOOST_DURATION)
         {
@@ -551,12 +560,14 @@ public class Player : MonoBehaviour
             yield return WaitForSecond;
         }
 
+        // 경험치 부스트 비활성화
         buffStack.HideBlock(1);
 
         isExpBoost = false;
     }
     private IEnumerator OnPowerUpCor()
     {
+        // 강화 알약 활성화
         isPowerUp = true;
 
         ShowCombatText(
@@ -564,6 +575,7 @@ public class Player : MonoBehaviour
             text: COMBAT_TEXT_POWER_UP
         );
 
+        // 상태 유지
         powerUpTimer = 0f;
         while (powerUpTimer < POWER_UP_DURATION)
         {
@@ -573,6 +585,7 @@ public class Player : MonoBehaviour
             yield return WaitForSecond;
         }
 
+        // 강화 알약 비활성화
         buffStack.HideBlock(3);
 
         isPowerUp = false;

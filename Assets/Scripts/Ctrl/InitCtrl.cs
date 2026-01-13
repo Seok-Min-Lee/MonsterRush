@@ -16,9 +16,9 @@ public class InitCtrl : MonoBehaviour
         PlayerPrefs.SetInt(PlayerPrefKeys.IS_LEFT_HAND, isLeftHand);
 
         // 게임 기록 불러오기
-        GameDataContainer.Instance.LoadGameResultLogs();
+        GameHistoryService.Instance.Load();
         DataAssetService.Instance.Load();
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene("01_Title");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.TITLE);
     }
 }

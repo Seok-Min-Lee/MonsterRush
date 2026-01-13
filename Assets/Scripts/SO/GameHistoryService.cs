@@ -3,68 +3,61 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class GameDataContainer : Singleton<GameDataContainer>
+public class GameHistoryService : Singleton<GameHistoryService>
 {
     private readonly string logPath = Path.Combine(Application.persistentDataPath, "GameResultLog.json");
 
-    public bool IsLoaded => gameResultLogs != null;
+    public bool IsLoaded { get; private set; } = false;
 
-    private List<GameResultLog> gameResultLogs;
+    public IReadOnlyList<HistoryRaw> HistoryRaws => historyRaws;
+    private List<HistoryRaw> historyRaws;
 
-    public void LoadGameResultLogs()
+    public void Load()
     {
-        List<GameResultLog> logs;
+        List<HistoryRaw> raws;
 
         if (File.Exists(logPath))
         {
             string json = File.ReadAllText(logPath);
-            logs = JsonConvert.DeserializeObject<List<GameResultLog>>(json);
+            raws = JsonConvert.DeserializeObject<List<HistoryRaw>>(json);
         }
         else
         {
-            logs = new List<GameResultLog>();
-            File.WriteAllText(logPath, JsonConvert.SerializeObject(logs, Formatting.Indented));
+            raws = new List<HistoryRaw>();
+            File.WriteAllText(logPath, JsonConvert.SerializeObject(raws, Formatting.Indented));
         }
 
-        gameResultLogs = logs;
+        historyRaws = raws;
+
+        IsLoaded = true;
     }
-    public bool TrySaveGameResultLogs()
+    public bool TrySave()
     {
         if (IsLoaded)
         {
-            File.WriteAllText(logPath, JsonConvert.SerializeObject(gameResultLogs, Formatting.Indented));
-            return true;
-        }
-
-        return false;
-    }
-    public bool TryAddGameResultLog(GameResultLog newLog)
-    {
-        if (IsLoaded)
-        {
-            gameResultLogs.Add(newLog);
+            File.WriteAllText(logPath, JsonConvert.SerializeObject(historyRaws, Formatting.Indented));
 
             return true;
         }
 
         return false;
     }
-    public bool TryGetGameResultLogs(out List<GameResultLog> value)
+    public bool TryAdd(HistoryRaw newLog)
     {
         if (IsLoaded)
         {
-            value = gameResultLogs;
+            historyRaws.Add(newLog);
+
             return true;
         }
 
-        value = null;
         return false;
     }
 }
 [System.Serializable]
-public class GameResultLog
+public struct HistoryRaw
 {
-    public GameResultLog(int characterNum, int level, int killCount, int[] playerStats, int[] weaponLevels, int[] playerAbilities, int[] weaponAbilities, float playTime, string dateTime)
+    public HistoryRaw(int characterNum, int level, int killCount, int[] playerStats, int[] weaponLevels, int[] playerAbilities, int[] weaponAbilities, float playTime, string dateTime)
     {
         this.characterNum = characterNum;
         this.level = level;

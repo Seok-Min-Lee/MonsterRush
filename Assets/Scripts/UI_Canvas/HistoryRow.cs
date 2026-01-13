@@ -27,39 +27,39 @@ public class HistoryRow : MonoBehaviour
     [SerializeField] private Color positiveColor;
     [SerializeField] private Color negativeColor;
 
-    private GameResultLog gameResultLog;
+    private HistoryRaw raw;
 
     private Sequence seq;
-    public void Init(GameResultLog gameResultLog, Sprite characterIcon, string characterName)
+    public void Init(HistoryRaw raw, Sprite characterIcon, string characterName)
     {
-        if (gameResultLog != null)
+        if (!raw.Equals(default(HistoryRaw)))
         {
-            this.gameResultLog = gameResultLog;
+            this.raw = raw;
 
             this.characterIcon.sprite = characterIcon;
             character.text = characterName;
-            level.text = gameResultLog.level.ToString();
-            killCount.text = gameResultLog.killCount.ToString("#,##0");
-            playTime.text = Utils.FormatTimeTommss(gameResultLog.playTime);
-            dateTime.text = gameResultLog.dateTime;
+            level.text = raw.level.ToString();
+            killCount.text = raw.killCount.ToString("#,##0");
+            playTime.text = Utils.FormatTimeTommss(raw.playTime);
+            dateTime.text = raw.dateTime;
 
-            for (int i = 0; i < gameResultLog.playerStats.Length; i++)
+            for (int i = 0; i < raw.playerStats.Length; i++)
             {
-                playerStats[i].text = gameResultLog.playerStats[i].ToString();
+                playerStats[i].text = raw.playerStats[i].ToString();
             }
 
-            for (int i = 0; i < gameResultLog.weaponLevels.Length; i++)
+            for (int i = 0; i < raw.weaponLevels.Length; i++)
             {
-                weaponLevels[i].text = gameResultLog.weaponLevels[i] == 16 ? "MAX" : gameResultLog.weaponLevels[i].ToString();
+                weaponLevels[i].text = raw.weaponLevels[i] == 16 ? "MAX" : raw.weaponLevels[i].ToString();
             }
             //
             for (int i = 0; i < playerAbilities.Length; i++)
             {
                 playerAbilities[i].SetActive(false);
             }
-            for (int i = 0; i < gameResultLog.playerAbilities.Length; i++)
+            for (int i = 0; i < raw.playerAbilities.Length; i++)
             {
-                playerAbilities[gameResultLog.playerAbilities[i]].SetActive(true);
+                playerAbilities[raw.playerAbilities[i]].SetActive(true);
             }
 
             //
@@ -67,12 +67,12 @@ public class HistoryRow : MonoBehaviour
             {
                 weaponAbilities[i].SetActive(false);
             }
-            for (int i = 0; i < gameResultLog.weaponAbilities.Length; i++)
+            for (int i = 0; i < raw.weaponAbilities.Length; i++)
             {
-                weaponAbilities[gameResultLog.weaponAbilities[i]].SetActive(true);
+                weaponAbilities[raw.weaponAbilities[i]].SetActive(true);
             }
 
-            if (gameResultLog.level < StaticValues.CHECKPOINT_LEVEL)
+            if (raw.level < StaticValues.CHECKPOINT_LEVEL)
             {
                 resultSticker.color = negativeColor;
                 resultText.color = negativeColor;

@@ -27,3 +27,9 @@ public static class LayerKeys
     public const string WEAPON = "Weapon";
     public const string PLAYER = "Player";
 }
+public static class SceneNames
+{
+    public const string TITLE = "01_Title";
+    public const string GAME = "02_Game";
+    public const string RESULT = "00_Init";
+}

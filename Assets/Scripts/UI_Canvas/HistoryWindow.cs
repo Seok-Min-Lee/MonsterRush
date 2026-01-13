@@ -43,52 +43,51 @@ public class HistoryWindow : MonoBehaviour
     }
     public void Init()
     {
-        List<GameResultLog> logs;
         int sumLevel = 0, sumKill = 0, maxLevel = 0, maxKill = 0;
         float sumPlayTime = 0f, maxPlayTime = 0f;
 
 #if UNITY_EDITOR
-        GameDataContainer.Instance.LoadGameResultLogs();
+        GameHistoryService.Instance.Load();
 #endif
-
-        if (GameDataContainer.Instance.TryGetGameResultLogs(value: out logs) && logs.Count > 0)
+        int count = GameHistoryService.Instance.HistoryRaws.Count;
+        if (count > 0)
         {
-            for (int i = 0; i < logs.Count; i++)
+            for (int i = 0; i < count; i++)
             {
-                GameResultLog log = logs[i];
-                CharacterData character = characterDictionary[log.characterNum];
+                HistoryRaw raw = GameHistoryService.Instance.HistoryRaws[i];
+                CharacterData character = characterDictionary[raw.characterNum];
 
                 HistoryRow row = GameObject.Instantiate<HistoryRow>(prefab, content);
                 row.Init(
-                    gameResultLog: log,
+                    raw: raw,
                     characterIcon: character.icon,
                     characterName: character.name
                 );
 
                 rows.Add(row);
 
-                sumLevel += log.level;
-                sumKill += log.killCount;
-                sumPlayTime += log.playTime;
+                sumLevel += raw.level;
+                sumKill += raw.killCount;
+                sumPlayTime += raw.playTime;
 
-                if (log.level > maxLevel)
+                if (raw.level > maxLevel)
                 {
-                    maxLevel = log.level;
+                    maxLevel = raw.level;
                     maxLevelRow = row;
                 }
-                if (log.killCount > maxKill)
+                if (raw.killCount > maxKill)
                 {
-                    maxKill = log.killCount;
+                    maxKill = raw.killCount;
                     maxKillRow = row;
                 }
-                if (log.playTime > maxPlayTime)
+                if (raw.playTime > maxPlayTime)
                 {
-                    maxPlayTime = log.playTime;
+                    maxPlayTime = raw.playTime;
                     maxPlayTimeRow = row;
                 }
             }
 
-            playCount.text = logs.Count.ToString("#,##0");
+            playCount.text = count.ToString("#,##0");
             levelSum.text = sumLevel.ToString("#,##0");
             killSum.text = sumKill.ToString("#,##0");
             playTimeSum.text = Utils.FormatTimeToHHmmss(sumPlayTime);
@@ -107,17 +106,15 @@ public class HistoryWindow : MonoBehaviour
             levelMax.text = "-";
             killMax.text = "-";
             playTimeMax.text = "--:--:--";
-
-            logs = new List<GameResultLog>();
         }
 
-        if (logs.Count < 4)
+        if (count < 4)
         {
-            int emptyCount = 4 - logs.Count;
+            int emptyCount = 4 - count;
             for (int i = 0; i < emptyCount; i++)
             {
                 HistoryRow row = GameObject.Instantiate<HistoryRow>(prefab, content);
-                row.Init(null, null, null);
+                row.Init(default, null, null);
                 rows.Add(row);
             }
         }
