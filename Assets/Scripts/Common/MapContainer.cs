@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class MapMaker : MonoBehaviour
+public class MapContainer : MonoBehaviour
 {
     //
     [SerializeField] private GameObject[] tilePrefabs;

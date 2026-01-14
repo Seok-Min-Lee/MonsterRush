@@ -262,7 +262,7 @@ public class GameCtrl : MonoBehaviour
         });
 
         // 남아있는 몬스터 제거
-        List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
+        List<Enemy> enemies = EnemyContainerGroup.Instance.GetActiveEnemyAll();
         foreach (Enemy enemy in enemies.OrderBy(e => e.toPlayer.sqrMagnitude))
         {
             enemy.OnShutdown();
@@ -367,7 +367,7 @@ public class GameCtrl : MonoBehaviour
         AudioManager.Instance.PlaySFX(SoundKey.PlayerLevelUp);
 
         int targetLevel = lastLevel + 1;
-        EnemyContainer.Instance.UpdateByLevel(targetLevel);
+        EnemyContainerGroup.Instance.UpdateByLevel(targetLevel);
         rewardWindow.OpenByLevel(targetLevel);
 
         lastLevel = targetLevel;

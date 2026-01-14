@@ -3,103 +3,131 @@ using UnityEngine;
 
 public class EnemyContainer : MonoBehaviour
 {
-    public static EnemyContainer Instance { get; private set; }
+    [SerializeField] private Enemy prefab;
 
-    public EnemyPool currentPool => pools[Mathf.Min(stage, pools.Length)];
-    
-    [SerializeField] private EnemyPool[] pools;
-    [SerializeField] private EnemyPool epicPool;
-    [SerializeField] private int stage = 0;
+    [Header("Init Values")]
+    [SerializeField] private float spawnInterval;
+    [SerializeField] private float spawnDistanceMin;
+    [SerializeField] private float spawnDistanceMax;
+    [SerializeField] private int countMax;
 
-    private void Awake()
+    public bool isSpawn { get; private set; }
+    public int speedLevel { get; private set; }
+    public int hpLevel { get; private set; }
+    public int powerLevel { get; private set; }
+    public int SpawnLevel { get; private set; }
+
+    private float spawnDelay;
+
+    public List<Enemy> actives { get; private set; } = new List<Enemy>();
+    private Queue<Enemy> pool = new Queue<Enemy>();
+
+    private float timer = 0f;
+    private void Update()
     {
-        Instance = this;
+        if (StaticValues.isWait)
+        {
+            return;
+        }
+
+        if (isSpawn)
+        {
+            timer += Time.deltaTime;
+
+            if (timer > spawnDelay)
+            {
+                Spawn();
+                timer = 0f;
+            }
+        }
+
+        if (actives.Count > 0)
+        {
+            Enemy[] snapshot = actives.ToArray();
+
+            for (int i = 0; i < snapshot.Length; i++)
+            {
+                actives[i].UpdateTick(Time.deltaTime);
+            }
+        }
     }
-    private void Start()
+    public void SetSpawnState(bool value)
     {
-        for (int i = 1; i < pools.Length; i++)
-        {
-            pools[i].gameObject.SetActive(false);
-            pools[i].SetSpawnState(false);
-        }
-        pools[0].gameObject.SetActive(true);
-        pools[0].SetSpawnState(true);
-
-        epicPool.gameObject.SetActive(false);
-        epicPool.SetSpawnState(false);
+        isSpawn = value;
+        spawnDelay = spawnInterval;
     }
-    public List<Enemy> GetActiveEnemyAll()
+    public void SetSpawnLevel(int value)
     {
-        List<Enemy> enemies = new List<Enemy>();
-
-        for (int i = 0; i < pools.Length; i++)
-        {
-            enemies.AddRange(pools[i].actives);
-        }
-        enemies.AddRange(epicPool.actives);
-
-        return enemies;
+        SpawnLevel = value;
+        spawnDelay = spawnInterval * Mathf.Pow(0.9f, SpawnLevel);
     }
-    public void UpdateByLevel(int level)
+    public void SetSpeedLevel(int value)
     {
-        // 레벨에 따른 등급 및 강화 처리
-        int remain = level % 10;
-        switch (remain)
-        {
-            // 10레벨마다 등급 상승
-            // 최상위 등급 도달 후에는 스폰 레벨 상승
-            case 0:
-                if (level < StaticValues.CHECKPOINT_LEVEL)
-                {
-                    stage = level / 10;
+        speedLevel = value;
+    }
+    public void SetHpLevel(int value)
+    {
+        hpLevel = value;
+    }
+    public void SetPowerLevel(int value)
+    {
+        powerLevel = value;
+    }
+    public void Charge(Enemy enemy)
+    {
+        pool.Enqueue(enemy);
+        actives.Remove(enemy);
 
-                    for (int i = 0; i < pools.Length; i++)
-                    {
-                        pools[i].SetSpawnState(i == stage);
-                    }
-
-                    pools[stage].gameObject.SetActive(true);
-                }
-                else
-                {
-                    pools[stage].SetSpawnLevel((level - StaticValues.CHECKPOINT_LEVEL) / 10);
-                }
-                break;
-            // 적 공격력 증가 3회
-            case 1:
-            case 4:
-            case 7:
-                pools[stage].SetPowerLevel(remain / 3 + 1);
-                break;
-            // 적 이동속도 증가 3회
-            case 2:
-            case 5:
-            case 8:
-                pools[stage].SetSpeedLevel(remain / 3 + 1);
-                break;
-            // 적 체력 증가 3회
-            case 3:
-            case 6:
-            case 9:
-                pools[stage].SetHpLevel(remain / 3);
-                break;
-            default:
-                break;
-        }
-
-        // 에픽 등급 처리
-        if (level == StaticValues.CHECKPOINT_LEVEL)
+        if (!isSpawn && actives.Count == 0)
         {
-            epicPool.SetSpawnState(true);
-            epicPool.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
-        else if (level > StaticValues.CHECKPOINT_LEVEL)
+    }
+
+    private void Spawn()
+    {
+        if (actives.Count < countMax)
         {
-            int epicLevel = level - StaticValues.CHECKPOINT_LEVEL;
-            epicPool.SetSpawnLevel(epicLevel);
-            epicPool.SetHpLevel(epicLevel);
-            epicPool.SetPowerLevel(epicLevel);
-            epicPool.SetSpeedLevel(epicLevel);
+            // 
+            Vector2 direction = Random.insideUnitCircle.normalized;
+            float distance = Random.Range(spawnDistanceMin, spawnDistanceMax);
+
+            Vector2 position = (Vector2)Player.Instance.transform.position + direction * distance;
+
+            //
+            Enemy enemy;
+            if (pool.Count > 0)
+            {
+                enemy = pool.Dequeue();
+                enemy.gameObject.SetActive(true);
+            }
+            else
+            {
+                enemy = Instantiate<Enemy>(prefab, transform.parent);
+            }
+
+            enemy.Spawn(
+                pool: this,
+                hpLevel: hpLevel,
+                speedLevel: speedLevel,
+                powerLevel: powerLevel,
+                position: position, 
+                rotation: Quaternion.identity
+            );
+
+            actives.Add(enemy);
         }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (Player.Instance == null)
+        {
+            return;
+        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMax);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(Player.Instance.transform.position, spawnDistanceMin);
     }
 }

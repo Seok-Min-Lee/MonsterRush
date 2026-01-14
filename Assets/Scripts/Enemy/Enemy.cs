@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
     public Vector3 toPlayer { get; protected set; } = Vector3.zero;
     public State state { get; protected set; } = State.Live;
 
-    protected EnemyPool pool;
+    protected EnemyContainer pool;
 
     // 기본 속성
     protected int hp = 1;
@@ -133,7 +133,7 @@ public class Enemy : MonoBehaviour
     }
 
     public virtual void Spawn(
-        EnemyPool pool, 
+        EnemyContainer pool, 
         int hpLevel, 
         int powerLevel, 
         int speedLevel, 

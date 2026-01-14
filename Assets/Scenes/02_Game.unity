@@ -586,31 +586,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 57035047}
-  - component: {fileID: 57035046}
+  - component: {fileID: 57035048}
   m_Layer: 0
-  m_Name: Enemy Pool (4)
+  m_Name: Enemy Container (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &57035046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 57035045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 7719583536596772918, guid: a44a28bd7b281504987600ebb46ed964, type: 3}
-  spawnInterval: 0.16667
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 200
 --- !u!4 &57035047
 Transform:
   m_ObjectHideFlags: 0
@@ -626,6 +609,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2049672826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &57035048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57035045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
+  prefab: {fileID: 7719583536596772918, guid: a44a28bd7b281504987600ebb46ed964, type: 3}
+  spawnInterval: 0.16667
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 200
 --- !u!1 &60672047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1654,7 +1654,7 @@ GameObject:
   - component: {fileID: 258502895}
   - component: {fileID: 258502896}
   m_Layer: 0
-  m_Name: Enemy Pool (8)
+  m_Name: Enemy Container (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1684,9 +1684,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 258502894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
   prefab: {fileID: 8544507839688036739, guid: 58964a650a5182d489e45e8bbdf782e0, type: 3}
   spawnInterval: 1.2
   spawnDistanceMin: 5
@@ -2955,31 +2955,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 359843838}
-  - component: {fileID: 359843837}
+  - component: {fileID: 359843839}
   m_Layer: 0
-  m_Name: Enemy Pool (5)
+  m_Name: Enemy Container (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &359843837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359843836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 8603666259036758770, guid: f542cac23a427eb4ab5d449c6b0c68ce, type: 3}
-  spawnInterval: 0.1
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 200
 --- !u!4 &359843838
 Transform:
   m_ObjectHideFlags: 0
@@ -2995,6 +2978,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2049672826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &359843839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359843836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
+  prefab: {fileID: 8603666259036758770, guid: f542cac23a427eb4ab5d449c6b0c68ce, type: 3}
+  spawnInterval: 0.1
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 200
 --- !u!1001 &381294306
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5494,31 +5494,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 766837558}
-  - component: {fileID: 766837557}
+  - component: {fileID: 766837559}
   m_Layer: 0
-  m_Name: Enemy Pool (1)
+  m_Name: Enemy Container (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &766837557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766837556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 7494466539951530819, guid: ab4085e6b7684744abee3bd3eaf17ffb, type: 3}
-  spawnInterval: 0.5
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 150
 --- !u!4 &766837558
 Transform:
   m_ObjectHideFlags: 0
@@ -5534,6 +5517,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2049672826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &766837559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766837556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
+  prefab: {fileID: 7494466539951530819, guid: ab4085e6b7684744abee3bd3eaf17ffb, type: 3}
+  spawnInterval: 0.5
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 200
 --- !u!1 &767476725
 GameObject:
   m_ObjectHideFlags: 0
@@ -5543,31 +5543,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 767476727}
-  - component: {fileID: 767476726}
+  - component: {fileID: 767476728}
   m_Layer: 0
-  m_Name: Enemy Pool (7)
+  m_Name: Enemy Container (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &767476726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767476725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 5683854456768978766, guid: 6f1ba8138167219418610b7ac15f90cc, type: 3}
-  spawnInterval: 0.05
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 200
 --- !u!4 &767476727
 Transform:
   m_ObjectHideFlags: 0
@@ -5583,6 +5566,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2049672826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &767476728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767476725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
+  prefab: {fileID: 5683854456768978766, guid: 6f1ba8138167219418610b7ac15f90cc, type: 3}
+  spawnInterval: 0.05
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 200
 --- !u!1 &770785856
 GameObject:
   m_ObjectHideFlags: 0
@@ -6136,31 +6136,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 788229170}
-  - component: {fileID: 788229169}
+  - component: {fileID: 788229171}
   m_Layer: 0
-  m_Name: Enemy Pool (2)
+  m_Name: Enemy Container (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &788229169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 788229168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 1905836794011710109, guid: 6771886ae0edaf64e9c36994e123567f, type: 3}
-  spawnInterval: 0.33333
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 150
 --- !u!4 &788229170
 Transform:
   m_ObjectHideFlags: 0
@@ -6176,6 +6159,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2049672826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &788229171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788229168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
+  prefab: {fileID: 1905836794011710109, guid: 6771886ae0edaf64e9c36994e123567f, type: 3}
+  spawnInterval: 0.33333
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 200
 --- !u!1 &791295798
 GameObject:
   m_ObjectHideFlags: 0
@@ -8074,31 +8074,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 972684547}
-  - component: {fileID: 972684546}
+  - component: {fileID: 972684548}
   m_Layer: 0
-  m_Name: Enemy Pool (6)
+  m_Name: Enemy Container (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &972684546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 972684545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 8869195786773705975, guid: 27db3bba91c317b48bc792af13c0e4e3, type: 3}
-  spawnInterval: 0.08
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 200
 --- !u!4 &972684547
 Transform:
   m_ObjectHideFlags: 0
@@ -8114,6 +8097,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2049672826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &972684548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972684545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
+  prefab: {fileID: 8869195786773705975, guid: 27db3bba91c317b48bc792af13c0e4e3, type: 3}
+  spawnInterval: 0.08
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 200
 --- !u!1 &1027522669
 GameObject:
   m_ObjectHideFlags: 0
@@ -11481,31 +11481,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1486652377}
-  - component: {fileID: 1486652376}
+  - component: {fileID: 1486652378}
   m_Layer: 0
-  m_Name: Enemy Pool (3)
+  m_Name: Enemy Container (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1486652376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1486652375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 7839606582851678925, guid: 910ce5a00635dc24482dc2779987a638, type: 3}
-  spawnInterval: 0.25
-  spawnDistanceMin: 5
-  spawnDistanceMax: 6
-  countMax: 150
 --- !u!4 &1486652377
 Transform:
   m_ObjectHideFlags: 0
@@ -11521,6 +11504,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2049672826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1486652378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486652375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
+  prefab: {fileID: 7839606582851678925, guid: 910ce5a00635dc24482dc2779987a638, type: 3}
+  spawnInterval: 0.25
+  spawnDistanceMin: 5
+  spawnDistanceMax: 6
+  countMax: 200
 --- !u!1001 &1509154283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12643,7 +12643,7 @@ GameObject:
   - component: {fileID: 1678251000}
   - component: {fileID: 1678251001}
   m_Layer: 0
-  m_Name: Enemy Pool (0)
+  m_Name: Enemy Container (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12673,14 +12673,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1678250999}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b3339419b10944990b45d8ce846ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainer
   prefab: {fileID: 8031777229906548014, guid: 4397598642ec0d342be30db318073b04, type: 3}
   spawnInterval: 0.66667
   spawnDistanceMin: 5
   spawnDistanceMax: 6
-  countMax: 150
+  countMax: 200
 --- !u!1001 &1684332800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13483,15 +13483,30 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1771084908}
-  - component: {fileID: 1771084907}
+  - component: {fileID: 1771084909}
   m_Layer: 0
-  m_Name: Map Maker
+  m_Name: Map Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1771084907
+--- !u!4 &1771084908
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771084906}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1771084909
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13500,9 +13515,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1771084906}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22332d6cb42bddf40b23e629d74802e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 63ef21e015fa2f24cabfd4421509c45b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapContainer
   tilePrefabs:
   - {fileID: 7913316347271161765, guid: 611c12f1daac3384eae322f6e807c92f, type: 3}
   - {fileID: 7913316347271161765, guid: 646ffb33274737842b9c165ccca7b6bc, type: 3}
@@ -13533,21 +13548,6 @@ MonoBehaviour:
   radius: 6
   initialPoolSize: 36
   player: {fileID: 405397954}
---- !u!4 &1771084908
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1771084906}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1774432539
 GameObject:
   m_ObjectHideFlags: 0
@@ -16535,7 +16535,7 @@ GameObject:
   - component: {fileID: 2049672826}
   - component: {fileID: 2049672827}
   m_Layer: 0
-  m_Name: Enemy Container
+  m_Name: Enemy Containers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16574,19 +16574,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2049672825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23176f28e6e5aa247bf5166cf9eb9940, type: 3}
+  m_Script: {fileID: 11500000, guid: ec9c0b40081fad347842754a4e6472a3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  pools:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContainerGroup
+  containers:
   - {fileID: 1678251001}
-  - {fileID: 766837557}
-  - {fileID: 788229169}
-  - {fileID: 1486652376}
-  - {fileID: 57035046}
-  - {fileID: 359843837}
-  - {fileID: 972684546}
-  - {fileID: 767476726}
-  epicPool: {fileID: 258502896}
+  - {fileID: 766837559}
+  - {fileID: 788229171}
+  - {fileID: 1486652378}
+  - {fileID: 57035048}
+  - {fileID: 359843839}
+  - {fileID: 972684548}
+  - {fileID: 767476728}
+  epicContainer: {fileID: 258502896}
   stage: 0
 --- !u!1 &2052998580
 GameObject:

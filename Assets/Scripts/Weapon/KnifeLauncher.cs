@@ -29,7 +29,7 @@ public class KnifeLauncher : WeaponLauncher<Knife>
 
             if (!isRandomTarget)
             {
-                foreach (Enemy enemy in EnemyContainer.Instance.GetActiveEnemyAll())
+                foreach (Enemy enemy in EnemyContainerGroup.Instance.GetActiveEnemyAll())
                 {
                     if (enemy.toPlayer.sqrMagnitude < sqrMagnitude)
                     {

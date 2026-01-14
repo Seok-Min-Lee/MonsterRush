@@ -29,7 +29,7 @@ public class BombFlare : Weapon
     {
         particle.Play();
 
-        List<Enemy> enemies = EnemyContainer.Instance.GetActiveEnemyAll();
+        List<Enemy> enemies = EnemyContainerGroup.Instance.GetActiveEnemyAll();
 
         float r = isScaleUp ? radius * radius * SCALE_UP_RATIO * SCALE_UP_RATIO : radius * radius;
         for (int i = 0; i < enemies.Count; i++)
