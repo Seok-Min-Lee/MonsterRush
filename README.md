@@ -1,5 +1,26 @@
 # 개요
-뱀파이어 서바이벌을 모티브로 유니티로 개발한 게임입니다.</br>
+MonsterRush는 Unity로 제작한 Android 액션 게임이며,</br>
+뱀파이어 서바이벌 장르를 모티브로 합니다.
+
+이 프로젝트는 **성능 최적화와 구조적 확장성**에 중점을 두고 설계되었습니다.</br>
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="Previews/home.png" width="200"><br>
+      <b>메인 메뉴</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/ingame.png" width="200"><br>
+      <b>인게임</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/play.gif" width="200"><br>
+      <b>인게임 플레이</b><br>
+    </td>
+  </tr>
+</table>
+
 </br>
 [구글 플레이 스토어 링크](https://play.google.com/store/apps/details?id=com.DefaultCompany.VampireSurvivalLike)
 
@@ -50,15 +71,66 @@
 ├─ Title - 메인 메뉴 씬<br>
 └─ Game - 인게임 플레이 씬<br>
 <br>
+  
 <b>Window</b>- Scene 내부 UI 상태 단위 <br>
-├─ <b>Title</b> <br>
+<table>
+  <tr>
+    <th colspan="4"> Title </th>  
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="Previews/home.png" width="160"><br>
+      <b>Home</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/character.png" width="160"><br>
+      <b>Character</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/setting.png" width="160"><br>
+      <b>Setting</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/history.png" width="160"><br>
+      <b>History</b><br>
+    </td>
+  </tr>
+</table>
+
+
 │&nbsp;&nbsp;&nbsp;&nbsp;├─ Home - 기본 화면<br>
 │&nbsp;&nbsp;&nbsp;&nbsp;├─ Character - 캐릭터 선택 화면<br>
 │&nbsp;&nbsp;&nbsp;&nbsp;├─ Setting - 환경설정 화면 <br>
 │&nbsp;&nbsp;&nbsp;&nbsp;└─ History - 플레이 기록 화면<br>
 │<br>
-└─ <b>Game</b> <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Normal - 기본화면<br>
+<table>
+  <tr>
+    <th colspan="5"> Game </th>  
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="Previews/tutorial.png" width="160"><br>
+      <b>Normal.Tutorial</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/ingame.png" width="160"><br>
+      <b>Normal>Inagme</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/Reward.png" width="160"><br>
+      <b>Reward</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/pause.png" width="160"><br>
+      <b>Pause</b><br>
+    </td>
+    <td align="center">
+      <img src="Previews/ending.png" width="160"><br>
+      <b>Ending</b><br>
+    </td>
+  </tr>
+</table>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Normal - 인게임 및 튜토리얼 화면<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Reward - 보상 선택 화면<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Pause - 메뉴 & 일시정지 화면<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Ending - 엔딩 화면<br>
