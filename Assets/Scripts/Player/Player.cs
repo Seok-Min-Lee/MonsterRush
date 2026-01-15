@@ -26,9 +26,6 @@ public class Player : MonoBehaviour
     [SerializeField] private ParticleSystem healParticle;
     [SerializeField] private ParticleSystem barrierParticle;
 
-    [SerializeField] private float speed = 0.025f;
-    [SerializeField] private float healCooltime = 10f;
-
     [Header("Canvas UI")]
     [SerializeField] private PlayerStat[] playerStats;
     [SerializeField] private Image expGaugeBar;
@@ -40,6 +37,10 @@ public class Player : MonoBehaviour
     [Header("World UI")]
     [SerializeField] private GaugeBar hpGaugeBar;
     [SerializeField] private BuffStack buffStack;
+
+    [Header("Monitor")]
+    [SerializeField] private float speed = 0.025f;
+    [SerializeField] private float healCooltime = 10f;
 
     public int Level => playerStats[(int)PlayerStat.Type.Level].Value;
     public int killCount => playerStats[(int)PlayerStat.Type.Kill].Value;
