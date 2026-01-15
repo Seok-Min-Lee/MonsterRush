@@ -105,31 +105,31 @@
 </br>
 💻 UI
 </br>
-https://www.kenney.nl/assets/ui-pack-pixel-adventure</br>
-https://www.kenney.nl/assets/game-icons</br>
-https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631</br>
+├─ https://www.kenney.nl/assets/ui-pack-pixel-adventure</br>
+├─ https://www.kenney.nl/assets/game-icons</br>
+└─ https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631</br>
 </br>
 
 🖼 Texture
 </br>
-https://assetstore.unity.com/packages/2d/environments/pixel-art-platformer-village-props-166114</br>
-https://assetstore.unity.com/packages/2d/characters/pixel-adventure-1-155360</br>
-https://assetstore.unity.com/packages/2d/characters/pixel-adventure-2-155418</br>
-https://assetstore.unity.com/packages/2d/characters/pixel-art-character-package-312497</br>
-외에는 Figma 자체제작 및 AI 생성</br>
+├─ https://assetstore.unity.com/packages/2d/environments/pixel-art-platformer-village-props-166114</br>
+├─ https://assetstore.unity.com/packages/2d/characters/pixel-adventure-1-155360</br>
+├─ https://assetstore.unity.com/packages/2d/characters/pixel-adventure-2-155418</br>
+├─ https://assetstore.unity.com/packages/2d/characters/pixel-art-character-package-312497</br>
+└─ 외에는 Figma 자체제작 및 AI 생성</br>
 </br>
 
 ✨ VFX
 </br>
-https://assetstore.unity.com/packages/vfx/particles/casual-rpg-vfx-239285</br>
+└─ https://assetstore.unity.com/packages/vfx/particles/casual-rpg-vfx-239285</br>
 </br>
 
 🎵 SFX
 </br>
-https://freesound.org/</br>
-https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256</br>
+├─ https://freesound.org/</br>
+└─ https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256</br>
 </br>
 
 🎞 DoTween
 </br>
-https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676</br>
+└─ https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676</br>
