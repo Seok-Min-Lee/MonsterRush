@@ -7,16 +7,16 @@ MonsterRush는 Unity로 제작한 Android 액션 게임이며,</br>
 <table>
   <tr>
     <td align="center">
-      <img src="Previews/home.png" width="200"><br>
-      <b>메인 메뉴</b><br>
+      <img src="Previews/home.png" width="200"></br>
+      <b>메인 메뉴</b></br>
     </td>
     <td align="center">
-      <img src="Previews/ingame.png" width="200"><br>
-      <b>인게임</b><br>
+      <img src="Previews/ingame.png" width="200"></br>
+      <b>인게임</b></br>
     </td>
     <td align="center">
-      <img src="Previews/play.gif" width="200"><br>
-      <b>인게임 플레이</b><br>
+      <img src="Previews/play.gif" width="200"></br>
+      <b>인게임 플레이</b></br>
     </td>
   </tr>
 </table>
@@ -65,109 +65,111 @@ MonsterRush는 Unity로 제작한 Android 액션 게임이며,</br>
 # 구조
 <details>
 <summary><strong>Scene & UI</strong></summary>
-<br>
-<b>Scene</b> <br>
-├─ Init - 데이터 로드 및 초기화 <br>
-├─ Title - 메인 메뉴 씬<br>
-└─ Game - 인게임 플레이 씬<br>
-<br>
+</br>
+<b>Scene</b> </br>
+├─ Init - 데이터 로드 및 초기화 </br>
+├─ Title - 메인 메뉴 씬</br>
+└─ Game - 인게임 플레이 씬</br>
+</br>
   
-<b>Window</b>- Scene 내부 UI 상태 단위 <br>
+<b>Window</b>- Scene 내부 UI 상태 단위</br>
+├─ <b>Title</b></br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Home - 기본 화면</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Character - 캐릭터 선택 화면</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Setting - 환경설정 화면 </br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ History - 플레이 기록 화면</br>
+│</br>
+└─  <b>Game</b></br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Normal - 인게임 및 튜토리얼 화면</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Reward - 보상 선택 화면</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Pause - 메뉴 & 일시정지 화면</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Ending - 엔딩 화면</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Setting - 환경설정 화면</br>
+
 <table>
   <tr>
-    <th colspan="4"> Title </th>  
+    <th colspan="5"> Title </th>  
   </tr>
   <tr>
     <td align="center">
-      <img src="Previews/home.png" width="160"><br>
-      <b>Home</b><br>
+      <img src="Previews/home.png" width="160"></br>
+      <b>Home</b></br>
     </td>
     <td align="center">
-      <img src="Previews/character.png" width="160"><br>
-      <b>Character</b><br>
+      <img src="Previews/character.png" width="160"></br>
+      <b>Character</b></br>
     </td>
     <td align="center">
-      <img src="Previews/setting.png" width="160"><br>
-      <b>Setting</b><br>
+      <img src="Previews/setting.png" width="160"></br>
+      <b>Setting</b></br>
     </td>
     <td align="center">
-      <img src="Previews/history.png" width="160"><br>
-      <b>History</b><br>
+      <img src="Previews/history.png" width="160"></br>
+      <b>History</b></br>
+    </td>
+    <td align="center">
+      empty
     </td>
   </tr>
-</table>
-
-
-│&nbsp;&nbsp;&nbsp;&nbsp;├─ Home - 기본 화면<br>
-│&nbsp;&nbsp;&nbsp;&nbsp;├─ Character - 캐릭터 선택 화면<br>
-│&nbsp;&nbsp;&nbsp;&nbsp;├─ Setting - 환경설정 화면 <br>
-│&nbsp;&nbsp;&nbsp;&nbsp;└─ History - 플레이 기록 화면<br>
-│<br>
-<table>
   <tr>
     <th colspan="5"> Game </th>  
   </tr>
   <tr>
     <td align="center">
-      <img src="Previews/tutorial.png" width="160"><br>
-      <b>Normal.Tutorial</b><br>
+      <img src="Previews/tutorial.png" width="160"></br>
+      <b>Normal.Tutorial</b></br>
     </td>
     <td align="center">
-      <img src="Previews/ingame.png" width="160"><br>
-      <b>Normal>Inagme</b><br>
+      <img src="Previews/ingame.png" width="160"></br>
+      <b>Normal.Ingame</b></br>
     </td>
     <td align="center">
-      <img src="Previews/Reward.png" width="160"><br>
-      <b>Reward</b><br>
+      <img src="Previews/Reward.png" width="160"></br>
+      <b>Reward</b></br>
     </td>
     <td align="center">
-      <img src="Previews/pause.png" width="160"><br>
-      <b>Pause</b><br>
+      <img src="Previews/pause.png" width="160"></br>
+      <b>Pause</b></br>
     </td>
     <td align="center">
-      <img src="Previews/ending.png" width="160"><br>
-      <b>Ending</b><br>
+      <img src="Previews/ending.png" width="160"></br>
+      <b>Ending</b></br>
     </td>
   </tr>
 </table>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Normal - 인게임 및 튜토리얼 화면<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Reward - 보상 선택 화면<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Pause - 메뉴 & 일시정지 화면<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Ending - 엔딩 화면<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Setting - 환경설정 화면<br>
 </details>
-<br>
+</br>
 <details>
 <summary><strong>Object Pooling System</strong> - 대량 오브젝트 처리</summary>
-<br>
-├─ <b>Map Container</b> - 무한 맵 타일 <br>
-│&nbsp;&nbsp;&nbsp;&nbsp;└─ Map Tile<br>
-│<br>
-├─ <b>Item Container</b> - 아이템 오브젝트 풀링<br>
-│&nbsp;&nbsp;&nbsp;&nbsp;├─ Item<br>
-│&nbsp;&nbsp;&nbsp;&nbsp;└─ Item Box<br>
-│<br>
-├─ <b>Enemy Container Group</b> - 등급별 Enemy Container 관리<br>
-│&nbsp;&nbsp;&nbsp;&nbsp;└─ <b>Enemy Container</b> - 적 오브젝트 풀링 <br>
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Enemy<br>
-│<br>
-└─ <b>UI Container</b> - UI 오브젝트 풀링<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Combat Text<br>
+</br>
+├─ <b>Map Container</b> - 무한 맵 타일 </br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Map Tile</br>
+│</br>
+├─ <b>Item Container</b> - 아이템 오브젝트 풀링</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Item</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Item Box</br>
+│</br>
+├─ <b>Enemy Container Group</b> - 등급별 Enemy Container 관리</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ <b>Enemy Container</b> - 적 오브젝트 풀링 </br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Enemy</br>
+│</br>
+└─ <b>UI Container</b> - UI 오브젝트 풀링</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Combat Text</br>
 </details>
-<br>
+</br>
 <details>
 <summary><strong>Data Management</strong></summary>
-<br>
-├─ <b>Scriptable Object</b> - 대량 오브젝트 참조 <br>
-│&nbsp;&nbsp;&nbsp;&nbsp;├─ Reward<br>
-│&nbsp;&nbsp;&nbsp;&nbsp;├─ Enemy<br>
-│&nbsp;&nbsp;&nbsp;&nbsp;└─ Item<br>
-│<br>
-├─ <b>Inspector</b> - 단일 오브젝트 설정 <br>
-│&nbsp;&nbsp;&nbsp;&nbsp;└─ Enemy Container<br>
-│<br>
-└─ <b>JSON File</b> - 외부 파일 저장 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Game History <br>
+</br>
+├─ <b>Scriptable Object</b> - 대량 오브젝트 참조 </br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Reward</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Enemy</br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Item</br>
+│</br>
+├─ <b>Inspector</b> - 단일 오브젝트 설정 </br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Enemy Container</br>
+│</br>
+└─ <b>JSON File</b> - 외부 파일 저장 </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Game History </br>
 </details>
 
 
@@ -175,33 +177,33 @@ MonsterRush는 Unity로 제작한 Android 액션 게임이며,</br>
 
 # 리소스
 </br>
-💻 UI
+💻 <b>UI</b>
 </br>
 ├─ https://www.kenney.nl/assets/ui-pack-pixel-adventure</br>
 ├─ https://www.kenney.nl/assets/game-icons</br>
 └─ https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631</br>
 </br>
 
-🖼 Texture
+🖼 <b>Texture</b>
 </br>
 ├─ https://assetstore.unity.com/packages/2d/environments/pixel-art-platformer-village-props-166114</br>
 ├─ https://assetstore.unity.com/packages/2d/characters/pixel-adventure-1-155360</br>
 ├─ https://assetstore.unity.com/packages/2d/characters/pixel-adventure-2-155418</br>
 ├─ https://assetstore.unity.com/packages/2d/characters/pixel-art-character-package-312497</br>
-└─ 외에는 Figma 자체제작 및 AI 생성</br>
+└─ Figma 자체제작 및 AI 생성</br>
 </br>
 
-✨ VFX
+✨ <b>VFX</b>
 </br>
 └─ https://assetstore.unity.com/packages/vfx/particles/casual-rpg-vfx-239285</br>
 </br>
 
-🎵 SFX
+🎵 <b>SFX</b>
 </br>
 ├─ https://freesound.org/</br>
 └─ https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256</br>
 </br>
 
-🎞 DoTween
+🎞 <b>DoTween</b>
 </br>
 └─ https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676</br>
