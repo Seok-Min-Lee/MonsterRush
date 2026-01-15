@@ -41,6 +41,66 @@
   - 퀄리티도 미흡하고 일관되지 않아 덕지덕지 붙인 느낌이 강함
 ```
 
+# 구조
+<details>
+<summary><strong>Scene & UI</strong></summary>
+<br>
+<b>Scene</b> <br>
+├─ Init - 데이터 로드 및 초기화 <br>
+├─ Title - 메인 메뉴 씬<br>
+└─ Game - 인게임 플레이 씬<br>
+<br>
+<b>Window</b>- Scene 내부 UI 상태 단위 <br>
+├─ <b>Title</b> <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Home - 기본 화면<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Character - 캐릭터 선택 화면<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Setting - 환경설정 화면 <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ History - 플레이 기록 화면<br>
+│<br>
+└─ <b>Game</b> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Normal - 기본화면<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Reward - 보상 선택 화면<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Pause - 메뉴 & 일시정지 화면<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ Ending - 엔딩 화면<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Setting - 환경설정 화면<br>
+</details>
+<br>
+<details>
+<summary><strong>Object Pooling System</strong> - 대량 오브젝트 처리</summary>
+<br>
+├─ <b>Map Container</b> - 무한 맵 타일 <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Map Tile<br>
+│<br>
+├─ <b>Item Container</b> - 아이템 오브젝트 풀링<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Item<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Item Box<br>
+│<br>
+├─ <b>Enemy Container Group</b> - 등급별 Enemy Container 관리<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ <b>Enemy Container</b> - 적 오브젝트 풀링 <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Enemy<br>
+│<br>
+└─ <b>UI Container</b> - UI 오브젝트 풀링<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Combat Text<br>
+</details>
+<br>
+<details>
+<summary><strong>Data Management</strong></summary>
+<br>
+├─ <b>Scriptable Object</b> - 대량 오브젝트 참조 <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Reward<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;├─ Enemy<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Item<br>
+│<br>
+├─ <b>Inspector</b> - 단일 오브젝트 설정 <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└─ Enemy Container<br>
+│<br>
+└─ <b>JSON File</b> - 외부 파일 저장 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Game History <br>
+</details>
+
+
+
+
 # 리소스
 </br>
 💻 UI
